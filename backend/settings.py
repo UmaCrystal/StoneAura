@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-this-in
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if host.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -158,7 +158,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 _cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS')
 if _cors_origins:
-    CORS_ALLOWED_ORIGINS.extend([origin.strip() for origin in _cors_origins.split(',') if origin.strip()])
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in _cors_origins.split(',') if origin.strip()]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
@@ -166,7 +166,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 _csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS')
 if _csrf_origins:
-    CSRF_TRUSTED_ORIGINS.extend([origin.strip() for origin in _csrf_origins.split(',') if origin.strip()])
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in _csrf_origins.split(',') if origin.strip()]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
