@@ -10,8 +10,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production-use-env-var')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-
-ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if host.strip()]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'stoneaura.onrender.com').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -158,7 +157,11 @@ CORS_ALLOWED_ORIGINS = [
 ]
 _cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS')
 if _cors_origins:
-    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in _cors_origins.split(',') if origin.strip()]
+    # CORS_ALLOWED_ORIGINS (https:// સાથે હોવું જોઈએ)
+    CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'https://stone-aura-nu.vercel.app').split(',')
+
+    # CSRF_TRUSTED_ORIGINS (https:// સાથે હોવું જોઈએ)
+    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://stone-aura-nu.vercel.app').split(',')
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
