@@ -1,0 +1,90 @@
+.account-wrap { position: relative; }
+
+.account-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(201,168,76,0.1); border: 1.5px solid rgba(201,168,76,0.3);
+  color: var(--text-dark); padding: 8px 16px; border-radius: 50px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  transition: var(--transition); font-family: inherit;
+}
+.account-btn:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
+.account-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+}
+.account-label { max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-caret { transition: transform 0.25s ease; }
+.account-caret.open { transform: rotate(180deg); }
+
+.account-dropdown {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  background: white; border-radius: 16px; min-width: 240px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid rgba(201,168,76,0.15);
+  padding: 12px; z-index: 2000;
+  animation: dropIn 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.dropdown-user { display: flex; align-items: center; gap: 12px; padding: 8px 8px 4px; }
+.dropdown-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 700; flex-shrink: 0;
+}
+.dropdown-name { font-weight: 700; font-size: 0.9rem; color: var(--text-dark); }
+.dropdown-role { font-size: 0.72rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1px; }
+.dropdown-divider { height: 1px; background: rgba(201,168,76,0.15); margin: 10px 0; }
+.dropdown-header { padding: 8px 12px 4px; font-size: 0.78rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+.dropdown-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: none; background: none; cursor: pointer;
+  font-size: 0.88rem; color: var(--text-dark); font-family: inherit; font-weight: 500;
+  transition: background 0.2s ease; text-align: left;
+}
+.dropdown-item:hover { background: var(--cream); }
+.admin-item:hover { background: rgba(201,168,76,0.1); color: var(--gold-dark); }
+.logout-item:hover { background: rgba(220,50,50,0.07); color: #c0392b; }
+
+/* Login Panel */
+.login-panel { min-width: 280px; padding: 20px; }
+.login-back { background: none; border: none; color: var(--text-light); font-size: 0.8rem; cursor: pointer; padding: 0 0 12px; font-family: inherit; }
+.login-back:hover { color: var(--gold); }
+.login-title { font-family: "Cormorant Garamond", serif; font-size: 1.6rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+.login-sub { font-size: 0.78rem; color: var(--text-light); margin-bottom: 20px; }
+.login-form { display: flex; flex-direction: column; gap: 14px; }
+.login-field { display: flex; flex-direction: column; gap: 6px; }
+.login-field label { font-size: 0.75rem; font-weight: 600; color: var(--text-mid); letter-spacing: 0.06em; text-transform: uppercase; }
+.login-field input {
+  padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid rgba(201,168,76,0.25); background: var(--cream);
+  font-size: 0.88rem; color: var(--text-dark); font-family: inherit; outline: none;
+  transition: border-color 0.2s ease;
+}
+.login-field input:focus { border-color: var(--gold); }
+.login-error { font-size: 0.8rem; color: #c0392b; background: rgba(192,57,43,0.08); padding: 8px 12px; border-radius: 8px; }
+.login-submit {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: white; border: none; padding: 12px; border-radius: 50px;
+  font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: inherit;
+  transition: var(--transition); box-shadow: 0 4px 15px rgba(201,168,76,0.35);
+  letter-spacing: 0.05em;
+}
+.login-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,0.5); }
+.login-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* Responsive: on very small screens, dropdown goes full-width */
+@media (max-width: 400px) {
+  .account-dropdown {
+    position: fixed;
+    top: 68px; left: 8px; right: 8px;
+    min-width: unset; width: auto;
+  }
+  .login-panel { min-width: unset; }
+  .account-label { display: none; }
+}

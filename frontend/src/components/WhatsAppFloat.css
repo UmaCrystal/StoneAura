@@ -1,0 +1,22 @@
+
+.wa-float {
+  position: fixed; bottom: 28px; right: 28px; z-index: 1500;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 30px rgba(37,211,102,0.5);
+  transition: var(--transition);
+  animation: wa-pulse 3s infinite;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 12px 40px rgba(37,211,102,0.7); }
+@keyframes wa-pulse {
+  0%, 100% { box-shadow: 0 8px 30px rgba(37,211,102,0.5); }
+  50% { box-shadow: 0 8px 30px rgba(37,211,102,0.5), 0 0 0 12px rgba(37,211,102,0.1); }
+}
+.wa-tooltip {
+  position: absolute; right: 70px;
+  background: var(--text-dark); color: var(--white);
+  padding: 8px 14px; border-radius: 8px; font-size: 0.78rem; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: var(--transition);
+}
+.wa-float:hover .wa-tooltip { opacity: 1; }

@@ -1,0 +1,374 @@
+/* =============================================================================
+   ProductCard.css
+   Senior-developer quality — every rule has a clear purpose.
+   ============================================================================= */
+
+/* ── Card shell ─────────────────────────────────────────────────────────── */
+.product-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  /* GPU layer prevents layout shifts on hover */
+  transform: translateZ(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
+}
+
+.product-card:hover,
+.product-card:focus-visible {
+  transform: translateY(-8px) translateZ(0);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 6px 20px rgba(201, 168, 76, 0.18);
+  border-color: rgba(201, 168, 76, 0.35);
+  outline: none;
+}
+
+/* ── Featured badge ─────────────────────────────────────────────────────── */
+.card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--white);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.4);
+  pointer-events: none;
+}
+
+/* ── Wishlist toggle ────────────────────────────────────────────────────── */
+.card-wishlist {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.card-wishlist:hover,
+.card-wishlist.active {
+  background: var(--gold);
+  color: var(--white);
+  transform: scale(1.12);
+}
+
+/* ── Image wrapper ──────────────────────────────────────────────────────── */
+.card-image-wrap {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--cream), var(--cream-dark));
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+
+/* Image styling */
+.card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.product-card:hover .card-image-wrap img {
+  transform: scale(1.07);
+}
+
+/* ── Placeholder (no image available) ──────────────────────────────────── */
+.img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--cream) 0%, #ede8dc 100%);
+}
+
+.img-placeholder-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.img-placeholder-gem {
+  font-size: 2.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(201, 168, 76, 0.3));
+}
+
+.img-placeholder-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold-dark);
+  letter-spacing: 0.04em;
+}
+
+/* ── Hover overlays on image ────────────────────────────────────────────── */
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(26, 18, 8, 0.4) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.product-card:hover .img-overlay {
+  opacity: 1;
+}
+
+.quick-view {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--text-dark);
+  padding: 7px 18px;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.product-card:hover .quick-view {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Card body ──────────────────────────────────────────────────────────── */
+.card-body {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stone-type {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.1);
+  padding: 3px 9px;
+  border-radius: 50px;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+.stars {
+  color: #f5a623;
+  letter-spacing: -1px;
+  font-size: 0.8rem;
+}
+
+.card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+.card-props {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.prop-tag {
+  font-size: 0.67rem;
+  color: var(--text-light);
+  background: var(--cream);
+  padding: 3px 9px;
+  border-radius: 50px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+/* ── Bead size selector ─────────────────────────────────────────────────── */
+.size-section {
+  margin-top: 2px;
+}
+
+.size-label {
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.size-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.size-btn {
+  min-width: 46px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(201, 168, 76, 0.3);
+  background: transparent;
+  font-size: 0.73rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease,
+              background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.size-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.size-btn.selected {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--white);
+  border-color: transparent;
+  box-shadow: 0 3px 10px rgba(201, 168, 76, 0.35);
+}
+
+/* ── Card footer: price + tiers + CTA ──────────────────────────────────── */
+.card-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid rgba(201, 168, 76, 0.1);
+  margin-top: auto;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.price-wrap {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1;
+}
+
+.price-unit {
+  font-size: 0.63rem;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.price-tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1;
+}
+
+.tier-tag {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--gold-dark);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  padding: 2px 7px;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+
+.btn-quote {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--white);
+  padding: 9px 14px;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-quote:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(201, 168, 76, 0.5);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .card-body        { padding: 12px; gap: 8px; }
+  .quick-view       { display: none; }
+  .card-footer      { flex-direction: column; align-items: stretch; }
+  .btn-quote        { justify-content: center; }
+  .price-tiers      { justify-content: flex-start; }
+}
