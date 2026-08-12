@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  FaMapMarkerAlt, FaPhone, FaEnvelope, FaBuilding, FaWhatsapp, FaInstagram, FaFacebookF,
-  FaGem, FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, FaMagic, 
-  FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain, 
-  FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate, 
-  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaLocationArrow 
+import {
+  FaMapMarkerAlt, FaPhone, FaEnvelope, FaWhatsapp, FaInstagram,
+  FaGem, FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, FaMagic,
+  FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain,
+  FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate,
+  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaLocationArrow
 } from 'react-icons/fa';
 import './Footer.css';
 
