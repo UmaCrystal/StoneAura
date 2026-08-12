@@ -47,7 +47,7 @@ export default function Footer() {
             <h4>Contact Us</h4>
             <div className="footer-contact">
               <div className="contact-item"><span><FaMapMarkerAlt /></span><span>Khambhat, Gujarat, India</span></div>
-              <div className="contact-item"><span><FaPhone /></span><span>+91 9104139899</span></div>
+              <div className="contact-item"><span><FaPhone style={{ transform: 'rotate(90deg)' }} /></span><span>+91 9104139899</span></div>
               <div className="contact-item"><span><FaEnvelope /></span><span>umacrystal2909@gmail.com</span></div>
               <div className="contact-item"><span><FaBuilding /></span><span>GSTIN: 24AAACU1234A1Z5</span></div>
             </div>
