@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db.models import Q
-from .models import Product, WristSize
-from .serializers import ProductSerializer, WristSizeSerializer
+from .models import Product, WristSize, ContactMessage
+from .serializers import ProductSerializer, WristSizeSerializer, ContactMessageSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -155,7 +155,7 @@ def featured_products(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def health_check(request):
-    return Response({"status": "ok", "message": "Uma Crystal API is running"})
+    return Response({"status": "ok", "message": "Aurastone API is running"})
 
 
 @api_view(["GET"])
@@ -167,3 +167,13 @@ def me(request):
         "email": request.user.email,
         "is_admin": request.user.is_staff or request.user.is_superuser,
     })
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def contact_create(request):
+    serializer = ContactMessageSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

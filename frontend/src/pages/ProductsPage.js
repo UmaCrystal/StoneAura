@@ -275,7 +275,6 @@ export default function ProductsPage() {
             <div className="stat"><span className="stat-num">₹87</span><span className="stat-label">Starting Price</span></div>
           </div>
         </div>
-        <div className="hero-scroll"><div className="scroll-line"></div>Scroll</div>
       </section>
 
       {/* ── TRUST STRIP ── */}
@@ -570,44 +569,7 @@ export default function ProductsPage() {
           <p>Explore our premium collection of authentic gemstones and healing crystals for wellness, spiritual energy, and beauty.</p>
         </div>
 
-        {/* Collection Tabs */}
-        {!loading && !error && (
-          <div className="collection-tabs fade-in">
-            {['All', ...Object.keys(TAXONOMY)].map(col => (
-              <button
-                key={col}
-                className={`collection-tab${activeCollection === col ? ' active' : ''}`}
-                onClick={() => handleCollectionSelect(col)}
-              >
-                {col === 'All' ? 'All Products' : col}
-                <span className="tab-count">{collectionCounts[col] || 0}</span>
-              </button>
-            ))}
-          </div>
-        )}
 
-        {/* Category Chips */}
-        {!loading && !error && activeCollection !== 'All' && (
-          <div className="category-chips fade-in">
-            <button
-              className={`category-chip${activeCategory === 'All' ? ' active' : ''}`}
-              onClick={() => handleCategorySelect('All')}
-            >
-              All {activeCollection}
-              <span className="chip-count">{categoryCounts.All}</span>
-            </button>
-            {TAXONOMY[activeCollection].map(cat => (
-              <button
-                key={cat}
-                className={`category-chip${activeCategory === cat ? ' active' : ''}`}
-                onClick={() => handleCategorySelect(cat)}
-              >
-                {cat}
-                <span className="chip-count">{categoryCounts[cat] || 0}</span>
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Loading skeletons */}
         {loading && (

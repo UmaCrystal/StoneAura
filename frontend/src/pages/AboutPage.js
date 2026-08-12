@@ -12,7 +12,7 @@ export default function AboutPage() {
       <section className="about-hero">
         <div className="about-hero-content">
           <div className="about-badge">✦ Handcrafted by Nature ✦</div>
-          <h1>About <em>Uma Crystal</em></h1>
+          <h1>About <em>Aurastone</em></h1>
           <p>More than just beautiful stones – we bring you the pure energy of the Earth, ethically sourced and hand-curated.</p>
         </div>
       </section>
@@ -23,7 +23,7 @@ export default function AboutPage() {
           <div className="about-story-visual">
             <div className="visual-card">
               <span className="visual-icon"><FaGem /></span>
-              <h3>Uma Crystal</h3>
+              <h3>Aurastone</h3>
               <p className="visual-tag">More Than Beautiful</p>
               <div className="visual-gold-strip"></div>
             </div>
@@ -35,7 +35,7 @@ export default function AboutPage() {
               <div className="title-divider"></div>
             </div>
             <p>
-              Uma Crystal is a fresh, passionate startup born out of a deep love for natural gemstones and the healing power of crystals. We represent a new generation of crystal enthusiasts dedicated to bringing authenticity, clarity, and beauty to the modern world.
+              Aurastone is a fresh, passionate startup born out of a deep love for natural gemstones and the healing power of crystals. We represent a new generation of crystal enthusiasts dedicated to bringing authenticity, clarity, and beauty to the modern world.
             </p>
             <p>
               Our journey began in Khambhat, the heart of gemstone craftsmanship. With a simple mission to make high-quality, authentic crystals accessible to everyone, we are driven by energy, transparency, and an absolute commitment to quality in every piece we source.
@@ -70,7 +70,7 @@ export default function AboutPage() {
         <div className="section-header">
           <h2>Our Core <span>Values</span></h2>
           <div className="divider"></div>
-          <p>The principles that guide our work and quality standards at Uma Crystal.</p>
+          <p>The principles that guide our work and quality standards at Aurastone.</p>
         </div>
 
         <div className="values-grid">

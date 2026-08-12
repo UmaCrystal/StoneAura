@@ -103,8 +103,13 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand Column */}
           <div className="footer-brand">
-            <div className="logo-text">Uma <span>Crystal</span></div>
-            <div className="logo-tagline">"MORE THAN BEAUTIFUL"</div>
+            <div className="logo-brand-wrap" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <img src="/images/logo.jpeg" alt="Aurastone" className="logo-img" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(201,168,76,0.3)' }} />
+              <div>
+                <div className="logo-text" style={{ fontSize: '1.4rem', fontFamily: "'Cormorant Garamond', serif", fontWeight: '600', color: '#fff' }}>Aura<span>stone</span></div>
+                <div className="logo-tagline" style={{ fontSize: '0.6rem', marginTop: '-2px', textTransform: 'uppercase', color: 'var(--gold-light)', letterSpacing: '0.15em' }}>"MORE THAN BEAUTIFUL"</div>
+              </div>
+            </div>
             <p className="brand-desc">
               A fresh startup dedicated to premium gemstones and healing crystals. Crafted by nature, curated with passion. We represent a new generation of quality and transparency in the world of crystals.
             </p>
@@ -112,7 +117,7 @@ export default function Footer() {
               <a href="https://wa.me/9104139899" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="WhatsApp">
                 <FaWhatsapp size={16} />
               </a>
-              <a href="https://www.instagram.com/_umacrystal_" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Instagram">
+              <a href="https://www.instagram.com/aurastone.wholesale" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Instagram">
                 <FaInstagram size={16} />
               </a>
               {/* <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Facebook">

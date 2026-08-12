@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, WristSize
+from .models import Product, WristSize, ContactMessage
 
 
 class WristSizeSerializer(serializers.ModelSerializer):
@@ -21,3 +21,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'gender', 'shape', 'size_info',
             'image_url', 'collection', 'category', 'whatsapp_link', 'is_featured',
         ]
+
+
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = ['id', 'name', 'email', 'phone', 'message', 'created_at']

@@ -59,13 +59,7 @@
   color: var(--gold-light); display: block;
 }
 .stat-label { font-size: clamp(0.6rem, 1.2vw, 0.7rem); color: rgba(255,255,255,0.5); letter-spacing: 0.12em; text-transform: uppercase; }
-.hero-scroll {
-  position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  color: rgba(255,255,255,0.4); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-}
-.scroll-line { width: 1px; height: 34px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scroll-pulse 2s infinite; }
-@keyframes scroll-pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
 
 /* ── TRUST STRIP ── */
 .trust-strip { background: linear-gradient(135deg, #1a1208, #2d1f0e); padding: clamp(24px, 4vw, 40px) 1.5rem; }

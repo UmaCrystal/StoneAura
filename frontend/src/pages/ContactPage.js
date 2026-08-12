@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaPaperPlane } from 'react-icons/fa';
 import './ContactPage.css';
 
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
@@ -10,6 +12,8 @@ export default function ContactPage() {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,12 +21,34 @@ export default function ContactPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real app, this would send an API request
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    }, 4000);
+    setSubmitting(true);
+    setSubmitError(null);
+
+    fetch(`${API_BASE}/contact/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(Object.values(errData).flat().join(" ") || 'Failed to send message.');
+        }
+        return res.json();
+      })
+      .then(() => {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        setTimeout(() => setSubmitted(false), 4000);
+      })
+      .catch((err) => {
+        setSubmitError(err.message);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
@@ -99,9 +125,14 @@ export default function ContactPage() {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="submit-btn">
-                  Send Message <FaPaperPlane size={12} />
+                <button type="submit" className="submit-btn" disabled={submitting}>
+                  {submitting ? 'Sending...' : 'Send Message'} <FaPaperPlane size={12} />
                 </button>
+                {submitError && (
+                  <div className="form-error-alert" style={{ color: '#e74c3c', fontSize: '0.85rem', marginTop: '12px', textAlign: 'center' }}>
+                    ✕ {submitError}
+                  </div>
+                )}
               </form>
             )}
           </div>
@@ -122,7 +153,7 @@ export default function ContactPage() {
                 <div className="info-icon-box"><FaEnvelope /></div>
                 <div>
                   <div className="info-label">Email</div>
-                  <div className="info-val">Aurastonewholesale@gmail.com</div>
+                  <div className="info-val">aurastonewholesale@gmail.com</div>
                 </div>
               </div>
 

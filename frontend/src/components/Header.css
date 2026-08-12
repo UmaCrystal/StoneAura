@@ -17,6 +17,15 @@
 }
 
 .logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.logo-img {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.2);
+}
 .logo-icon {
   width: 40px; height: 40px; min-width: 40px;
   background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -366,7 +375,7 @@
   .header-inner { height: 60px; }
   .logo-text { font-size: 1.25rem; }
   .logo-tagline { display: none; }
-  .logo-icon { width: 34px; height: 34px; min-width: 34px; font-size: 1rem; }
+  .logo-icon, .logo-img { width: 34px; height: 34px; min-width: 34px; font-size: 1rem; }
 }
 
 /* ── MEGA MENU (DESKTOP) ── */

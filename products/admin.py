@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Product, WristSize
+from .models import Product, WristSize, ContactMessage
 
 
 @admin.register(Product)
@@ -70,6 +70,14 @@ class WristSizeAdmin(admin.ModelAdmin):
     ordering = ("id",)
 
 
-admin.site.site_header = "Uma Crystal Admin"
-admin.site.site_title  = "Uma Crystal Admin"
-admin.site.index_title = "Welcome to Uma Crystal Dashboard"
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "phone", "created_at")
+    search_fields = ("name", "email", "phone", "message")
+    ordering = ("-created_at",)
+    readonly_fields = ("name", "email", "phone", "message", "created_at")
+
+
+admin.site.site_header = "Aurastone Admin"
+admin.site.site_title  = "Aurastone Admin"
+admin.site.index_title = "Welcome to Aurastone Dashboard"

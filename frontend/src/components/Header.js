@@ -153,9 +153,9 @@ export default function Header() {
     <header className={`header${scrolled ? ' scrolled' : ''}`}>
       <div className="header-inner">
         <a href="/" className="logo">
-          <div className="logo-icon"><FaGem /></div>
+          <img src="/images/logo.jpeg" alt="Aurastone" className="logo-img" />
           <div>
-            <div className="logo-text">Uma <span>Crystal</span></div>
+            <div className="logo-text">Aura<span>stone</span></div>
             <div className="logo-tagline">More Than Beautiful</div>
           </div>
         </a>

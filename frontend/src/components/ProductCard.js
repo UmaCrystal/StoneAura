@@ -171,7 +171,7 @@ export default function ProductCard({ product, onOpenModal }) {
             aria-label={`Get WhatsApp quote for ${product.name}`}
           >
             {WA_ICON}
-            Get Quote
+            Quote
           </button>
         </div>
       </div>

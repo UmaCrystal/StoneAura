@@ -44,6 +44,10 @@ def img(key: str, product_name: str) -> str:
     """Return the fully-qualified image URL for a product."""
     original_val = IMG.get(key)
     if original_val:
+        if original_val.startswith("/images/products/"):
+            from urllib.parse import quote
+            filename = original_val.replace("/images/products/", "")
+            return f"https://ik.imagekit.io/stoneaura/products/{quote(filename)}"
         return original_val
     return PLACEHOLDER.format(name=product_name.replace(" ", "+"))
 

@@ -231,7 +231,7 @@ export default function AdminDashboard() {
         <a href="/" className="sidebar-logo">
           <div className="sidebar-logo-icon"><FaGem /></div>
           <div>
-            <div className="sidebar-brand">Uma Crystal</div>
+            <div className="sidebar-brand">Aurastone</div>
             <div className="sidebar-sub">Admin Panel</div>
           </div>
         </a>
@@ -253,7 +253,7 @@ export default function AdminDashboard() {
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon"><FaGem /></div>
           <div>
-            <div className="sidebar-brand">Uma Crystal</div>
+            <div className="sidebar-brand">Aurastone</div>
             <div className="sidebar-sub">Admin Panel</div>
           </div>
         </div>
