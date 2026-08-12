@@ -46,7 +46,7 @@ export default function ProductCard({ product, onOpenModal }) {
     const text = encodeURIComponent(
       `Hi, I am interested in ${product.name} (Size: ${selectedSize}) — price: ₹${product.price}`
     );
-    window.open(`https://wa.me/9104139899?text=${text}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://wa.me/+919104139899?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
   const handleWishlist = (e) => {

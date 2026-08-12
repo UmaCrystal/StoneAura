@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaUser, FaCog, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import "./AccountButton.css";
 
@@ -54,7 +55,7 @@ export default function AccountButton() {
         aria-label="Account"
       >
         <span className="account-avatar">
-          {user ? user.username[0].toUpperCase() : "👤"}
+          {user ? user.username[0].toUpperCase() : <FaUser />}
         </span>
         <span className="account-label">
           {user ? user.username : "Account"}
@@ -78,18 +79,18 @@ export default function AccountButton() {
               <div className="dropdown-divider" />
               {user.is_admin && (
                 <button className="dropdown-item admin-item" onClick={() => { navigate("/admin-dashboard"); setOpen(false); }}>
-                  <span>⚙️</span> Admin Dashboard
+                  <FaCog className="dropdown-icon" /> Admin Dashboard
                 </button>
               )}
               <button className="dropdown-item logout-item" onClick={handleLogout}>
-                <span>🚪</span> Log Out
+                <FaSignOutAlt className="dropdown-icon" /> Log Out
               </button>
             </>
           ) : (
             <>
               <div className="dropdown-header">Welcome back</div>
               <button className="dropdown-item" onClick={() => { setShowLogin(true); setError(""); }}>
-                <span>��</span> Log In
+                <FaSignInAlt className="dropdown-icon" /> Log In
               </button>
             </>
           )}

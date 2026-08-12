@@ -21,10 +21,27 @@
               border-color 0.3s ease;
 }
 
+/* Golden glow backdrop */
+.product-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(circle at center, rgba(201, 168, 76, 0.1) 0%, transparent 75%);
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  border-radius: var(--radius);
+}
+
+.product-card:hover::before {
+  opacity: 1;
+}
+
 .product-card:hover,
 .product-card:focus-visible {
-  transform: translateY(-8px) translateZ(0);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 6px 20px rgba(201, 168, 76, 0.18);
+  transform: translateY(-6px) translateZ(0);
+  box-shadow: 0 15px 35px rgba(26, 18, 8, 0.08), 0 4px 15px rgba(201, 168, 76, 0.12);
   border-color: rgba(201, 168, 76, 0.35);
   outline: none;
 }
@@ -221,10 +238,15 @@
 
 .card-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
   font-weight: 600;
   color: var(--text-dark);
-  line-height: 1.3;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.7em;
 }
 
 .card-props {
@@ -364,11 +386,25 @@
   box-shadow: 0 8px 25px rgba(201, 168, 76, 0.5);
 }
 
-/* ── Responsive ─────────────────────────────────────────────────────────── */
+/* ── Responsive ── */
 @media (max-width: 480px) {
-  .card-body        { padding: 12px; gap: 8px; }
-  .quick-view       { display: none; }
-  .card-footer      { flex-direction: column; align-items: stretch; }
-  .btn-quote        { justify-content: center; }
-  .price-tiers      { justify-content: flex-start; }
+  .card-body { padding: 10px; gap: 6px; }
+  .quick-view { display: none; }
+  
+  .card-meta { gap: 4px; }
+  .stone-type { font-size: 0.58rem; padding: 2px 6px; max-width: 90px; }
+  .card-rating { font-size: 0.63rem; }
+  .stars { font-size: 0.68rem; letter-spacing: -1.2px; }
+  
+  .size-label { font-size: 0.6rem; margin-bottom: 4px; }
+  .size-btn { min-width: 34px; height: 24px; padding: 0 6px; font-size: 0.65rem; border-radius: 6px; }
+  .size-options { gap: 4px; }
+  
+  .card-footer { padding-top: 8px; flex-direction: column; align-items: stretch; gap: 8px; }
+  .price { font-size: 1.25rem; }
+  .price-unit { font-size: 0.58rem; }
+  .price-tiers { gap: 3px; }
+  .tier-tag { font-size: 0.55rem; padding: 1px 5px; }
+  
+  .btn-quote { justify-content: center; padding: 7px 10px; font-size: 0.68rem; gap: 4px; }
 }

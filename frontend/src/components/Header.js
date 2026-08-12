@@ -1,11 +1,24 @@
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
+import { FaGem, FaCog, FaSignOutAlt, FaSignInAlt } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 import AccountButton from './AccountButton';
 import './Header.css';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, login, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Mobile login form states
+  const [mobileLoginOpen, setMobileLoginOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -13,11 +26,49 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
+  // Reset mobile login when menu closes
+  useEffect(() => {
+    if (!menuOpen) {
+      setMobileLoginOpen(false);
+      setUsername("");
+      setPassword("");
+      setError("");
+    }
+  }, [menuOpen]);
+
+  const handleMobileLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await login(username, password);
+      setMobileLoginOpen(false);
+      setUsername("");
+      setPassword("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <header className={`header${scrolled ? ' scrolled' : ''}`}>
       <div className="header-inner">
         <a href="/" className="logo">
-          <div className="logo-icon">💎</div>
+          <div className="logo-icon"><FaGem /></div>
           <div>
             <div className="logo-text">Uma <span>Crystal</span></div>
             <div className="logo-tagline">More Than Beautiful</div>
@@ -43,32 +94,104 @@ export default function Header() {
           WhatsApp Us
         </a>
 
-        <AccountButton />
+        <div className="header-account-desktop">
+          <AccountButton />
+        </div>
 
         <button
-          className="hamburger"
+          className={`hamburger${menuOpen ? ' active' : ''}`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
         >
-          <span className={menuOpen ? 'open' : ''}></span>
-          <span className={menuOpen ? 'open' : ''}></span>
-          <span className={menuOpen ? 'open' : ''}></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
 
-      {menuOpen && (
-        <div className="mobile-nav">
-          <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
-          <a href="#products" onClick={() => setMenuOpen(false)}>Bracelets</a>
-          <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a
-            href="https://wa.me/919510010383"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mobile-cta"
-          >WhatsApp Us</a>
-          <button className="mobile-close" onClick={() => setMenuOpen(false)}>✕</button>
-        </div>
+      {createPortal(
+        <div className={`mobile-nav-overlay${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)}>
+          <div className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
+            <button className="mobile-nav-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
+            <div className="mobile-nav-links">
+              <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
+              <a href="#products" onClick={() => setMenuOpen(false)}>Bracelets</a>
+              <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+              
+              <a
+                href="https://wa.me/919510010383"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mobile-cta"
+                onClick={() => setMenuOpen(false)}
+              >
+                WhatsApp Us
+              </a>
+
+              <div className="mobile-divider"></div>
+
+              {/* Integrated Mobile User Actions */}
+              {user ? (
+                <div className="mobile-user-section">
+                  <div className="mobile-user-info">
+                    <div className="mobile-avatar">{user.username[0].toUpperCase()}</div>
+                    <div>
+                      <div className="mobile-username">{user.username}</div>
+                      <div className="mobile-userole">{user.is_admin ? "Administrator" : "User"}</div>
+                    </div>
+                  </div>
+                  {user.is_admin && (
+                    <button className="mobile-nav-btn admin-btn" onClick={() => { navigate("/admin-dashboard"); setMenuOpen(false); }}>
+                      <FaCog /> Admin Dashboard
+                    </button>
+                  )}
+                  <button className="mobile-nav-btn logout-btn" onClick={() => { logout(); setMenuOpen(false); }}>
+                    <FaSignOutAlt /> Log Out
+                  </button>
+                </div>
+              ) : !mobileLoginOpen ? (
+                <button className="mobile-nav-btn login-btn" onClick={() => { setMobileLoginOpen(true); setError(""); }}>
+                  <FaSignInAlt /> Log In
+                </button>
+              ) : (
+                <form onSubmit={handleMobileLogin} className="mobile-login-form">
+                  <div className="mobile-login-header">
+                    <h3>Sign In</h3>
+                    <button type="button" className="mobile-login-back" onClick={() => setMobileLoginOpen(false)}>
+                      ← Back
+                    </button>
+                  </div>
+                  <div className="mobile-field">
+                    <label>Username</label>
+                    <input
+                      type="text"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)}
+                      placeholder="Enter username"
+                      required
+                    />
+                  </div>
+                  <div className="mobile-field">
+                    <label>Password</label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      placeholder="Enter password"
+                      required
+                    />
+                  </div>
+                  {error && <div className="mobile-login-error">{error}</div>}
+                  <button type="submit" className="mobile-login-submit" disabled={loading}>
+                    {loading ? "Signing in..." : "Sign In"}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </header>
   );

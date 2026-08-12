@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaGem, FaHome, FaSignOutAlt, FaSearch, FaStar, FaArrowDown, FaArrowUp, FaEdit, FaTrash, FaUpload, FaImage, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import "./AdminDashboard.css";
 
@@ -28,6 +29,7 @@ export default function AdminDashboard() {
   const [deleteId, setDeleteId]   = useState(null);
   const [stats, setStats]         = useState({ total: 0, featured: 0, minPrice: 0, maxPrice: 0 });
   const [currentPage, setCurrentPage] = useState(1);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const PAGE_SIZE = 10;
 
   // Redirect if not admin
@@ -181,24 +183,46 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-page">
+      {/* MOBILE TOP BAR */}
+      <div className="admin-mobile-header">
+        <a href="/" className="sidebar-logo">
+          <div className="sidebar-logo-icon"><FaGem /></div>
+          <div>
+            <div className="sidebar-brand">Uma Crystal</div>
+            <div className="sidebar-sub">Admin Panel</div>
+          </div>
+        </a>
+        <button className="admin-hamburger" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      {/* OVERLAY BACKDROP */}
+      {sidebarOpen && (
+        <div className="admin-sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* SIDEBAR */}
-      <aside className="admin-sidebar">
+      <aside className={`admin-sidebar${sidebarOpen ? " open" : ""}`}>
+        <button className="admin-sidebar-close" onClick={() => setSidebarOpen(false)} aria-label="Close menu">✕</button>
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">💎</div>
+          <div className="sidebar-logo-icon"><FaGem /></div>
           <div>
             <div className="sidebar-brand">Uma Crystal</div>
             <div className="sidebar-sub">Admin Panel</div>
           </div>
         </div>
         <nav className="sidebar-nav">
-          <button className={`sidebar-item active`}>
-            <span>💍</span> Bracelets
+          <button className={`sidebar-item active`} onClick={() => setSidebarOpen(false)}>
+            <FaGem className="sidebar-icon-react" /> Bracelets
           </button>
-          <button className="sidebar-item" onClick={() => navigate("/")}>
-            <span>🏠</span> View Store
+          <button className="sidebar-item" onClick={() => { setSidebarOpen(false); navigate("/"); }}>
+            <FaHome className="sidebar-icon-react" /> View Store
           </button>
-          <button className="sidebar-item logout" onClick={() => { logout(); navigate("/"); }}>
-            <span>🚪</span> Log Out
+          <button className="sidebar-item logout" onClick={() => { setSidebarOpen(false); logout(); navigate("/"); }}>
+            <FaSignOutAlt className="sidebar-icon-react" /> Log Out
           </button>
         </nav>
         <div className="sidebar-footer">
@@ -238,10 +262,10 @@ export default function AdminDashboard() {
             {/* STATS */}
             <div className="admin-stats">
               {[
-                { icon: "💍", label: "Total Bracelets", value: stats.total },
-                { icon: "⭐", label: "Featured",        value: stats.featured },
-                { icon: "📉", label: "Lowest Price",    value: `₹${stats.minPrice}` },
-                { icon: "📈", label: "Highest Price",   value: `₹${stats.maxPrice}` },
+                { icon: <FaGem />, label: "Total Bracelets", value: stats.total },
+                { icon: <FaStar />, label: "Featured",        value: stats.featured },
+                { icon: <FaArrowDown />, label: "Lowest Price",    value: `₹${stats.minPrice}` },
+                { icon: <FaArrowUp />, label: "Highest Price",   value: `₹${stats.maxPrice}` },
               ].map(s => (
                 <div key={s.label} className="stat-card">
                   <div className="stat-card-icon">{s.icon}</div>
@@ -253,7 +277,7 @@ export default function AdminDashboard() {
 
             {/* SEARCH */}
             <div className="admin-search-bar">
-              <span>🔍</span>
+              <span><FaSearch /></span>
               <input
                 type="search"
                 placeholder="Search by name or stone type…"
@@ -295,12 +319,12 @@ export default function AdminDashboard() {
                           onClick={() => toggleFeatured(p)}
                           title={p.is_featured ? "Remove from featured" : "Mark as featured"}
                         >
-                          {p.is_featured ? "⭐ Yes" : "☆ No"}
+                          {p.is_featured ? <><FaStar /> Yes</> : <><FaStar style={{ opacity: 0.3 }} /> No</>}
                         </button>
                       </td>
                       <td className="table-actions">
-                        <button className="btn-edit" onClick={() => openEdit(p)}>✏️ Edit</button>
-                        <button className="btn-delete" onClick={() => setDeleteId(p.id)}>🗑️ Delete</button>
+                        <button className="btn-edit" onClick={() => openEdit(p)}><FaEdit /> Edit</button>
+                        <button className="btn-delete" onClick={() => setDeleteId(p.id)}><FaTrash /> Delete</button>
                       </td>
                     </tr>
                   ))}
@@ -354,7 +378,7 @@ export default function AdminDashboard() {
                   <img src={form.image_url} alt="Preview" onError={e => { e.target.style.display="none"; }} />
                 ) : (
                   <div className="preview-placeholder">
-                    <span>🖼️</span>
+                    <span><FaImage /></span>
                     <p>Select an image to see preview</p>
                   </div>
                 )}
@@ -415,7 +439,7 @@ export default function AdminDashboard() {
                   <label>Bracelet Image</label>
                   <div className="upload-container">
                     <label className="upload-box-btn">
-                      <span className="upload-box-icon">📤</span>
+                      <span className="upload-box-icon"><FaUpload /></span>
                       <span className="upload-box-text">
                         {selectedFile ? selectedFile.name : (form.image_url ? "Change Image File" : "Choose Image File")}
                       </span>
@@ -461,7 +485,7 @@ export default function AdminDashboard() {
       {deleteId && (
         <div className="confirm-overlay" onClick={() => setDeleteId(null)}>
           <div className="confirm-box" onClick={e => e.stopPropagation()}>
-            <div className="confirm-icon">🗑️</div>
+            <div className="confirm-icon"><FaTrash /></div>
             <h3>Delete Bracelet?</h3>
             <p>This action cannot be undone.</p>
             <div className="confirm-btns">
@@ -475,7 +499,7 @@ export default function AdminDashboard() {
       {/* TOAST */}
       {toast && (
         <div className={`admin-toast ${toast.type}`}>
-          {toast.type === "success" ? "✅" : "❌"} {toast.msg}
+          {toast.type === "success" ? <FaCheckCircle /> : <FaTimesCircle />} {toast.msg}
         </div>
       )}
     </div>

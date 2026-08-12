@@ -279,12 +279,16 @@
    ── RESPONSIVE
 ───────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .products-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+  .products-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 20px; }
   .trust-inner { grid-template-columns: repeat(2, 1fr); }
 }
 
+@media (max-width: 900px) {
+  .toolbar { top: 68px; }
+}
+
 @media (max-width: 768px) {
-  .toolbar { top: 60px; padding: 8px 1rem; }
+  .toolbar { padding: 8px 1rem; }
   .tb-search { max-width: 100%; }
 }
 
@@ -297,11 +301,13 @@
 
 @media (max-width: 480px) {
   .toolbar { top: 60px; padding: 8px 1rem; }
-  .toolbar-inner { gap: 7px; }
+  .toolbar-inner { gap: 8px; }
   .tb-search { max-width: 100%; flex: 1 1 100%; order: -1; }
+  .tb-dropdown-wrap { flex: 1; }
+  .tb-btn { width: 100%; justify-content: center; font-size: 0.78rem; padding: 8px 12px; }
   .tb-count { display: none; }
-  .products-section { padding: 24px 1rem; }
-  .products-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .products-section { padding: 20px 1rem; }
+  .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .hero { padding: 60px 1rem 80px; }
   .hero-stats { gap: 1rem; }
   .hero-badge { font-size: 0.6rem; padding: 6px 14px; }

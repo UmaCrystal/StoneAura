@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { FaGem, FaTruck, FaWhatsapp, FaExclamationTriangle } from 'react-icons/fa';
+import { HiSparkles } from 'react-icons/hi';
 import ProductCard from '../components/ProductCard';
 import ProductModal from '../components/ProductModal';
 import './ProductsPage.css';
@@ -23,12 +26,14 @@ const SORT_OPTIONS = [
 ];
 
 export default function ProductsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeFilter = searchParams.get('filter') || 'All';
+
   const [products, setProducts]         = useState([]);
   const [filtered, setFiltered]         = useState([]);
   const [loading, setLoading]           = useState(true);
   const [error, setError]               = useState(null);
   const [search, setSearch]             = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
   const [sortBy, setSortBy]             = useState('name');
   const [modalProduct, setModalProduct] = useState(null);
   const [backTop, setBackTop]           = useState(false);
@@ -91,6 +96,16 @@ export default function ProductsPage() {
     setFiltered(result);
   }, [search, activeFilter, products]);
 
+  // Scroll to products grid when activeFilter changes to a specific gemstone
+  useEffect(() => {
+    if (activeFilter !== 'All') {
+      const el = document.getElementById('products');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [activeFilter]);
+
   /* ── Close dropdowns on outside click ──────────────────────────────────── */
   useEffect(() => {
     const handler = (e) => {
@@ -136,7 +151,13 @@ export default function ProductsPage() {
   const activeSortLabel = SORT_OPTIONS.find(o => o.value === sortBy)?.label || 'Sort';
 
   const handleFilterSelect = (f) => {
-    setActiveFilter(f);
+    const newParams = new URLSearchParams(searchParams);
+    if (f === 'All') {
+      newParams.delete('filter');
+    } else {
+      newParams.set('filter', f);
+    }
+    setSearchParams(newParams);
     setFilterOpen(false);
   };
 
@@ -172,10 +193,10 @@ export default function ProductsPage() {
       <div className="trust-strip">
         <div className="trust-inner">
           {[
-            { icon: '🔮', title: '100% Natural',        sub: 'Authentic gemstones' },
-            { icon: '🚚', title: 'Pan India Delivery',  sub: 'Fast & secure shipping' },
-            { icon: '💬', title: 'WhatsApp Support',    sub: 'Instant response' },
-            { icon: '✨', title: 'Handcrafted',          sub: 'Made with love' },
+            { icon: <FaGem />, title: '100% Natural',        sub: 'Authentic gemstones' },
+            { icon: <FaTruck />, title: 'Pan India Delivery',  sub: 'Fast & secure shipping' },
+            { icon: <FaWhatsapp />, title: 'WhatsApp Support',    sub: 'Instant response' },
+            { icon: <HiSparkles />, title: 'Handcrafted',          sub: 'Made with love' },
           ].map(t => (
             <div key={t.title} className="trust-item">
               <div className="trust-icon">{t.icon}</div>
@@ -287,7 +308,12 @@ export default function ProductsPage() {
           {(activeFilter !== 'All' || search) && (
             <button
               className="tb-clear-all"
-              onClick={() => { setActiveFilter('All'); setSearch(''); }}
+              onClick={() => {
+                setSearch('');
+                const newParams = new URLSearchParams(searchParams);
+                newParams.delete('filter');
+                setSearchParams(newParams);
+              }}
             >
               Clear all ✕
             </button>
@@ -329,7 +355,7 @@ export default function ProductsPage() {
         {/* Error state — auto-retries, no manual button needed */}
         {error && !loading && (
           <div className="error-state">
-            <div className="error-icon">⚠️</div>
+            <div className="error-icon"><FaExclamationTriangle /></div>
             <p>Could not load products.</p>
             <button onClick={loadProducts} className="retry-btn">Try again</button>
           </div>
@@ -338,10 +364,15 @@ export default function ProductsPage() {
         {/* Empty filter result */}
         {!loading && !error && filtered.length === 0 && (
           <div className="empty-state">
-            <div className="empty-icon">🔮</div>
+            <div className="empty-icon"><FaGem /></div>
             <h3>No bracelets found</h3>
             <p>Try a different search or filter</p>
-            <button onClick={() => { setSearch(''); setActiveFilter('All'); }} className="retry-btn">
+            <button onClick={() => {
+              setSearch('');
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete('filter');
+              setSearchParams(newParams);
+            }} className="retry-btn">
               Clear Filters
             </button>
           </div>
