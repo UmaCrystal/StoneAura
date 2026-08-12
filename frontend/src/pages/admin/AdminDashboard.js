@@ -6,10 +6,46 @@ import "./AdminDashboard.css";
 
 const API = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
+const TAXONOMY = {
+  "BEST SELLERS": [
+    "Gemstone Bracelets",
+    "Tumbled Stones",
+    "Pyramid Stone",
+    "Gemstone Tree",
+    "Selenite Stone",
+    "Orgone Pyramid",
+    "Healing Crystals"
+  ],
+  "SPIRITUAL & HEALING": [
+    "Rudraksha",
+    "Gemstone Angels",
+    "Unique Products",
+    "Jap Mala",
+    "Fancy Product",
+    "Crystal Shivling"
+  ],
+  "HOME & DECOR": [
+    "Rough Stone",
+    "Gemstone Ball",
+    "Crystal Flowers",
+    "Zibu Coin"
+  ],
+  "JEWELRY & ACCESSORIES": [
+    "Beads String 8mm",
+    "Gemstone Pendant",
+    "Palm Stone",
+    "Gemstone",
+    "Crystal Heart Stone",
+    "Crystal Rakhi",
+    "Roller And Guasha",
+    "Tumbled Bracelets"
+  ]
+};
+
 const EMPTY = {
   name: "", price: "", stone_type: "", material: "",
   bead_size: "", color: "", gender: "", shape: "",
-  size_info: "", image_url: "", category: "Gemstone Bracelets", is_featured: false,
+  size_info: "", image_url: "", collection: "BEST SELLERS", category: "Gemstone Bracelets", is_featured: false,
 };
 
 export default function AdminDashboard() {
@@ -85,6 +121,7 @@ export default function AdminDashboard() {
       material: p.material || "", bead_size: p.bead_size || "",
       color: p.color || "", gender: p.gender || "", shape: p.shape || "",
       size_info: p.size_info || "", image_url: p.image_url || "",
+      collection: p.collection || "BEST SELLERS",
       category: p.category || "Gemstone Bracelets", is_featured: p.is_featured,
     });
     setSelectedFile(null);
@@ -94,7 +131,13 @@ export default function AdminDashboard() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm(f => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+    setForm(f => {
+      const updated = { ...f, [name]: type === "checkbox" ? checked : value };
+      if (name === "collection") {
+        updated.category = TAXONOMY[value]?.[0] || "";
+      }
+      return updated;
+    });
   };
 
   const handleFileChange = (e) => {
@@ -310,7 +353,12 @@ export default function AdminDashboard() {
                           onError={e => { e.target.src = "https://via.placeholder.com/60x45?text=No+Img"; }}
                         />
                       </td>
-                      <td className="table-name">{p.name}</td>
+                      <td className="table-name">
+                        <div>{p.name}</div>
+                        <div style={{ fontSize: "0.75rem", color: "var(--text-light)", marginTop: "2px" }}>
+                          {p.collection} &rsaquo; {p.category}
+                        </div>
+                      </td>
                       <td><span className="stone-chip">{p.stone_type || "—"}</span></td>
                       <td className="table-price">₹{p.price}</td>
                       <td>
@@ -458,15 +506,30 @@ export default function AdminDashboard() {
 
                 <div className="form-row two">
                   <div className="form-group">
-                    <label>Category</label>
-                    <input name="category" value={form.category} onChange={handleChange} />
+                    <label>Collection</label>
+                    <select name="collection" value={form.collection} onChange={handleChange}>
+                      {Object.keys(TAXONOMY).map(col => (
+                        <option key={col} value={col}>{col}</option>
+                      ))}
+                    </select>
                   </div>
+                  <div className="form-group">
+                    <label>Category</label>
+                    <select name="category" value={form.category} onChange={handleChange}>
+                      {(TAXONOMY[form.collection] || []).map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="form-row two">
                   <div className="form-group featured-check">
                     <label className="checkbox-label">
                       <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={handleChange} />
                       <span>Mark as Featured</span>
                     </label>
                   </div>
+                  <div className="form-group"></div>
                 </div>
 
                 <div className="form-actions">

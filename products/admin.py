@@ -1,14 +1,14 @@
-﻿from django.contrib import admin
+from django.contrib import admin
 from django.utils.html import format_html
 from .models import Product, WristSize
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display   = ("image_preview", "name", "stone_type", "price", "is_featured", "category")
+    list_display   = ("image_preview", "name", "stone_type", "price", "is_featured", "collection", "category")
     list_display_links = ("name",)
     list_editable  = ("price", "is_featured")
-    list_filter    = ("is_featured", "category", "stone_type")
+    list_filter    = ("is_featured", "collection", "category", "stone_type")
     search_fields  = ("name", "stone_type", "material", "color")
     ordering       = ("name",)
     prepopulated_fields = {"slug": ("name",)}
@@ -16,7 +16,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ("Basic Info", {
-            "fields": ("name", "slug", "category", "is_featured")
+            "fields": ("name", "slug", "collection", "category", "is_featured")
         }),
         ("Pricing", {
             "fields": ("price",)

@@ -4,6 +4,8 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProductsPage from "./pages/ProductsPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import WhatsAppFloat from "./components/WhatsAppFloat";
 import "./App.css";
@@ -22,6 +24,22 @@ function AppRoutes() {
         <>
           <Header />
           <main><ProductsPage /></main>
+          <Footer />
+          <WhatsAppFloat />
+        </>
+      } />
+      <Route path="/about" element={
+        <>
+          <Header />
+          <main><AboutPage /></main>
+          <Footer />
+          <WhatsAppFloat />
+        </>
+      } />
+      <Route path="/contact" element={
+        <>
+          <Header />
+          <main><ContactPage /></main>
           <Footer />
           <WhatsAppFloat />
         </>

@@ -19,5 +19,5 @@ class ProductSerializer(serializers.ModelSerializer):
             'price', 'price_10pc', 'price_50pc', 'price_100pc',
             'stone_type', 'material', 'bead_size', 'color',
             'gender', 'shape', 'size_info',
-            'image_url', 'category', 'whatsapp_link', 'is_featured',
+            'image_url', 'collection', 'category', 'whatsapp_link', 'is_featured',
         ]

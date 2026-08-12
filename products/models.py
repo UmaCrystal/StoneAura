@@ -23,6 +23,7 @@ class Product(models.Model):
     shape       = models.CharField(max_length=50,  blank=True)
     size_info   = models.CharField(max_length=100, blank=True)
     image_url   = models.CharField(max_length=500, blank=True, default='')
+    collection  = models.CharField(max_length=100, default='BEST SELLERS', blank=True)
     category    = models.CharField(max_length=100, default='Gemstone Bracelets')
     whatsapp_link = models.URLField(max_length=800, blank=True)
     is_featured = models.BooleanField(default=False)

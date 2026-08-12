@@ -24,10 +24,13 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = super().get_queryset()
+        collection = self.request.query_params.get("collection")
         category  = self.request.query_params.get("category")
         min_price = self.request.query_params.get("min_price")
         max_price = self.request.query_params.get("max_price")
         stone     = self.request.query_params.get("stone_type")
+        if collection:
+            qs = qs.filter(collection__icontains=collection)
         if category:
             qs = qs.filter(category__icontains=category)
         if min_price:

@@ -2,10 +2,82 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { FaGem, FaCog, FaSignOutAlt, FaSignInAlt } from 'react-icons/fa';
+import { 
+  FaGem, FaCog, FaSignOutAlt, FaSignInAlt,
+  FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, FaMagic, 
+  FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain, 
+  FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate, 
+  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaLocationArrow 
+} from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import AccountButton from './AccountButton';
 import './Header.css';
+
+const TAXONOMY = {
+  "BEST SELLERS": [
+    "Gemstone Bracelets",
+    "Tumbled Stones",
+    "Pyramid Stone",
+    "Gemstone Tree",
+    "Selenite Stone",
+    "Orgone Pyramid",
+    "Healing Crystals"
+  ],
+  "SPIRITUAL & HEALING": [
+    "Rudraksha",
+    "Gemstone Angels",
+    "Unique Products",
+    "Jap Mala",
+    "Fancy Product",
+    "Crystal Shivling"
+  ],
+  "HOME & DECOR": [
+    "Rough Stone",
+    "Gemstone Ball",
+    "Crystal Flowers",
+    "Zibu Coin"
+  ],
+  "JEWELRY & ACCESSORIES": [
+    "Beads String 8mm",
+    "Gemstone Pendant",
+    "Palm Stone",
+    "Gemstone",
+    "Crystal Heart Stone",
+    "Crystal Rakhi",
+    "Roller And Guasha",
+    "Tumbled Bracelets"
+  ]
+};
+
+const CATEGORY_ICONS = {
+  "Gemstone Bracelets": <FaCircleNotch />,
+  "Tumbled Stones": <FaBoxes />,
+  "Pyramid Stone": <FaGem />,
+  "Gemstone Tree": <FaTree />,
+  "Selenite Stone": <FaFeatherAlt />,
+  "Orgone Pyramid": <FaLocationArrow />,
+  "Healing Crystals": <FaMagic />,
+  "Rudraksha": <FaSun />,
+  "Gemstone Angels": <FaPray />,
+  "Unique Products": <FaStar />,
+  "Jap Mala": <FaRing />,
+  "Fancy Product": <FaCrown />,
+  "Crystal Shivling": <FaOm />,
+  "Rough Stone": <FaMountain />,
+  "Gemstone Ball": <FaCircle />,
+  "Crystal Flowers": <FaSeedling />,
+  "Zibu Coin": <FaCoins />,
+  "Beads String 8mm": <FaEllipsisH />,
+  "Gemstone Pendant": <FaCertificate />,
+  "Palm Stone": <FaHandPaper />,
+  "Gemstone": <FaGem />,
+  "Crystal Heart Stone": <FaHeart />,
+  "Crystal Rakhi": <FaStar />,
+  "Roller And Guasha": <FaSpa />,
+  "Tumbled Bracelets": <FaSyncAlt />
+};
+
+const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -13,12 +85,25 @@ export default function Header() {
   const { user, login, logout } = useAuth();
   const navigate = useNavigate();
 
+  // Collapsible accordion for mobile
+  const [mobileCollectionsOpen, setMobileCollectionsOpen] = useState(false);
+  const [activeMobileColl, setActiveMobileColl] = useState(null);
+
   // Mobile login form states
   const [mobileLoginOpen, setMobileLoginOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleCategoryClick = (e, col, cat) => {
+    e.preventDefault();
+    navigate(`/?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`);
+    setTimeout(() => {
+      const el = document.getElementById('products');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -77,8 +162,29 @@ export default function Header() {
 
         <nav className="nav">
           <a href="/">Home</a>
-          <a href="#products">Bracelets</a>
-          <a href="#contact">Contact</a>
+          <div className="nav-dropdown-trigger">
+            <span className="nav-dropdown-title">Products</span>
+            <div className="mega-menu">
+              <div className="mega-menu-grid">
+                {Object.keys(TAXONOMY).map(col => (
+                  <div key={col} className="mega-menu-column">
+                    <div className="mega-menu-header">{col}</div>
+                    <ul className="mega-menu-links">
+                      {TAXONOMY[col].map(cat => (
+                        <li key={cat}>
+                          <a href={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`} onClick={(e) => handleCategoryClick(e, col, cat)}>
+                            <span className="cat-icon-inline">{getCategoryIcon(cat)}</span> {cat}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
         </nav>
 
         <a
@@ -116,8 +222,50 @@ export default function Header() {
             <button className="mobile-nav-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
             <div className="mobile-nav-links">
               <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
-              <a href="#products" onClick={() => setMenuOpen(false)}>Bracelets</a>
-              <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+
+              <div className="mobile-accordion">
+                <button
+                  type="button"
+                  className={`mobile-accordion-btn${mobileCollectionsOpen ? ' open' : ''}`}
+                  onClick={() => setMobileCollectionsOpen(!mobileCollectionsOpen)}
+                >
+                  Collections <span>{mobileCollectionsOpen ? '▼' : '▶'}</span>
+                </button>
+                {mobileCollectionsOpen && (
+                  <div className="mobile-accordion-content">
+                    {Object.keys(TAXONOMY).map(col => (
+                      <div key={col} className="mobile-sub-accordion">
+                        <button
+                          type="button"
+                          className={`mobile-sub-accordion-btn${activeMobileColl === col ? ' active' : ''}`}
+                          onClick={() => setActiveMobileColl(activeMobileColl === col ? null : col)}
+                        >
+                          {col} <span>{activeMobileColl === col ? '−' : '+'}</span>
+                        </button>
+                        {activeMobileColl === col && (
+                          <div className="mobile-sub-links">
+                            {TAXONOMY[col].map(cat => (
+                              <a
+                                key={cat}
+                                href={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`}
+                                onClick={(e) => {
+                                  handleCategoryClick(e, col, cat);
+                                  setMenuOpen(false);
+                                }}
+                              >
+                                <span className="cat-icon-inline">{getCategoryIcon(cat)}</span> {cat}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
+              <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
 
               <a
                 href="https://wa.me/+919104139899"

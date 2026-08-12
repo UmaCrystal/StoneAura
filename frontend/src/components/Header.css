@@ -368,3 +368,197 @@
   .logo-tagline { display: none; }
   .logo-icon { width: 34px; height: 34px; min-width: 34px; font-size: 1rem; }
 }
+
+/* ── MEGA MENU (DESKTOP) ── */
+.nav-dropdown-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  height: 68px;
+}
+.nav-dropdown-title {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  padding-bottom: 4px;
+}
+.nav-dropdown-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gold);
+  transition: var(--transition);
+}
+.nav-dropdown-trigger:hover .nav-dropdown-title {
+  color: var(--gold);
+}
+.nav-dropdown-trigger:hover .nav-dropdown-title::after {
+  width: 100%;
+}
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  width: 820px;
+  background: rgba(253, 248, 240, 0.98);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1.5px solid rgba(201, 168, 76, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 5px 15px rgba(201, 168, 76, 0.06);
+  padding: 26px;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;
+}
+.nav-dropdown-trigger:hover .mega-menu {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.mega-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.mega-menu-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mega-menu-header {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold-dark);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid rgba(201, 168, 76, 0.18);
+  padding-bottom: 6px;
+}
+.mega-menu-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mega-menu-links li a {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  color: var(--text-mid) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  transition: var(--transition) !important;
+  display: block;
+  padding: 2px 0;
+}
+.mega-menu-links li a:hover {
+  color: var(--gold) !important;
+  padding-left: 6px !important;
+}
+.cat-icon-inline {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+  color: var(--gold);
+  font-size: 0.72rem;
+  transition: var(--transition);
+}
+.mega-menu-links li a:hover .cat-icon-inline {
+  color: var(--gold-dark);
+  transform: scale(1.15);
+}
+
+/* ── COLLAPSIBLE ACCORDION (MOBILE) ── */
+.mobile-accordion {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.mobile-accordion-btn {
+  background: none;
+  border: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  transition: var(--transition);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 0;
+}
+.mobile-accordion-btn span {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+.mobile-accordion-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 12px;
+  border-left: 2px solid rgba(201, 168, 76, 0.25);
+  margin-top: 4px;
+}
+.mobile-sub-accordion {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.mobile-sub-accordion-btn {
+  background: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 0;
+  cursor: pointer;
+}
+.mobile-sub-accordion-btn.active {
+  color: var(--gold-dark);
+}
+.mobile-sub-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 12px 10px;
+}
+.mobile-sub-links a {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: var(--text-light) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  text-align: left;
+  display: block;
+}
+.mobile-sub-links a:hover {
+  color: var(--gold) !important;
+}

@@ -138,28 +138,35 @@ class Command(BaseCommand):
                 name=name, price=p1, price_10pc=p10, price_50pc=p50,
                 stone_type=stone, color=color, material=material,
                 bead_size=bead, is_featured=featured,
-                img_key=img_key, category="Gemstone Bracelets",
+                img_key=img_key, collection="BEST SELLERS", category="Gemstone Bracelets",
             )
             created += 1
         self.stdout.write(self.style.SUCCESS(f"  [OK]  {created} bracelets"))
 
     def _seed_other_items(self):
         created = 0
+        other_mappings = {
+            "Seven Chakra Selenite Plate": ("BEST SELLERS", "Selenite Stone"),
+            "Rashi Selenite Plate": ("BEST SELLERS", "Selenite Stone"),
+            "Pyrite Frame with 7 Horses": ("HOME & DECOR", "Rough Stone"),
+            "Crystal Keychain": ("JEWELRY & ACCESSORIES", "Gemstone"),
+        }
         for row in SELENITE_ITEMS:
-            num, name, p1, p10, p50, stone, color, material, category = row
+            num, name, p1, p10, p50, stone, color, material, orig_cat = row
             img_key = name.upper().replace(" ", "_")
+            coll, cat = other_mappings.get(name, ("BEST SELLERS", orig_cat))
             self._create(
                 name=name, price=p1 or 0, price_10pc=p10, price_50pc=p50,
                 stone_type=stone, color=color, material=material,
                 bead_size="", is_featured=False,
-                img_key=img_key, category=category,
+                img_key=img_key, collection=coll, category=cat,
             )
             created += 1
         self.stdout.write(self.style.SUCCESS(f"  [OK]  {created} other items"))
 
     def _create(self, *, name, price, price_10pc, price_50pc,
                 stone_type, color, material, bead_size,
-                is_featured, img_key, category):
+                is_featured, img_key, collection, category):
         slug = slugify(name)
         base, n = slug, 1
         while Product.objects.filter(slug=slug).exists():
@@ -178,6 +185,7 @@ class Command(BaseCommand):
             material=material,
             bead_size=bead_size,
             gender="Unisex",
+            collection=collection,
             category=category,
             is_featured=is_featured,
             image_url=img(img_key, name),

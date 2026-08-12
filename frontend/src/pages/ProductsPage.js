@@ -9,6 +9,42 @@ import './ProductsPage.css';
 // Relative URL fallback — works whether running on port 8000, 3000, or any host
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
+const TAXONOMY = {
+  "BEST SELLERS": [
+    "Gemstone Bracelets",
+    "Tumbled Stones",
+    "Pyramid Stone",
+    "Gemstone Tree",
+    "Selenite Stone",
+    "Orgone Pyramid",
+    "Healing Crystals"
+  ],
+  "SPIRITUAL & HEALING": [
+    "Rudraksha",
+    "Gemstone Angels",
+    "Unique Products",
+    "Jap Mala",
+    "Fancy Product",
+    "Crystal Shivling"
+  ],
+  "HOME & DECOR": [
+    "Rough Stone",
+    "Gemstone Ball",
+    "Crystal Flowers",
+    "Zibu Coin"
+  ],
+  "JEWELRY & ACCESSORIES": [
+    "Beads String 8mm",
+    "Gemstone Pendant",
+    "Palm Stone",
+    "Gemstone",
+    "Crystal Heart Stone",
+    "Crystal Rakhi",
+    "Roller And Guasha",
+    "Tumbled Bracelets"
+  ]
+};
+
 const STONE_FILTERS = [
   'Amethyst', 'Amazonite', 'Black Obsidian', 'Calcite', 'Carnelian',
   'Citrine', 'Green Aventurine', 'Green Jade', 'Howlite',
@@ -28,6 +64,8 @@ const SORT_OPTIONS = [
 export default function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeFilter = searchParams.get('filter') || 'All';
+  const activeCollection = searchParams.get('collection') || 'All';
+  const activeCategory = searchParams.get('category') || 'All';
 
   const [products, setProducts]         = useState([]);
   const [filtered, setFiltered]         = useState([]);
@@ -38,8 +76,10 @@ export default function ProductsPage() {
   const [modalProduct, setModalProduct] = useState(null);
   const [backTop, setBackTop]           = useState(false);
   const [filterOpen, setFilterOpen]     = useState(false);
+  const [catFilterOpen, setCatFilterOpen] = useState(false);
   const [sortOpen, setSortOpen]         = useState(false);
   const filterRef = useRef(null);
+  const catFilterRef = useRef(null);
   const sortRef   = useRef(null);
   const searchRef = useRef(null);
 
@@ -78,6 +118,12 @@ export default function ProductsPage() {
   /* ── Filter + search ────────────────────────────────────────────────────── */
   useEffect(() => {
     let result = [...products];
+    if (activeCollection !== 'All') {
+      result = result.filter(p => (p.collection || 'BEST SELLERS').toLowerCase() === activeCollection.toLowerCase());
+    }
+    if (activeCategory !== 'All') {
+      result = result.filter(p => (p.category || 'Gemstone Bracelets').toLowerCase() === activeCategory.toLowerCase());
+    }
     if (activeFilter !== 'All') {
       result = result.filter(p =>
         p.stone_type?.toLowerCase().includes(activeFilter.toLowerCase()) ||
@@ -94,22 +140,35 @@ export default function ProductsPage() {
       );
     }
     setFiltered(result);
-  }, [search, activeFilter, products]);
+  }, [search, activeFilter, activeCollection, activeCategory, products]);
 
-  // Scroll to products grid when activeFilter changes to a specific gemstone
+  // Scroll to products grid when filters change to specific choices
   useEffect(() => {
-    if (activeFilter !== 'All') {
+    if (activeFilter !== 'All' || activeCollection !== 'All' || activeCategory !== 'All') {
       const el = document.getElementById('products');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, [activeFilter]);
+  }, [activeFilter, activeCollection, activeCategory]);
+
+  // Calculate product counts dynamically for filter badges
+  const collectionCounts = { All: products.length };
+  Object.keys(TAXONOMY).forEach(col => {
+    collectionCounts[col] = products.filter(p => (p.collection || 'BEST SELLERS').toLowerCase() === col.toLowerCase()).length;
+  });
+
+  const categoryCounts = { All: activeCollection === 'All' ? products.length : (collectionCounts[activeCollection] || 0) };
+  products.forEach(p => {
+    const cat = p.category || 'Gemstone Bracelets';
+    categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+  });
 
   /* ── Close dropdowns on outside click ──────────────────────────────────── */
   useEffect(() => {
     const handler = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false);
+      if (catFilterRef.current && !catFilterRef.current.contains(e.target)) setCatFilterOpen(false);
       if (sortRef.current   && !sortRef.current.contains(e.target))   setSortOpen(false);
     };
     document.addEventListener('mousedown', handler);
@@ -161,6 +220,36 @@ export default function ProductsPage() {
     setFilterOpen(false);
   };
 
+  const handleCollectionSelect = (col) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (col === 'All') {
+      newParams.delete('collection');
+      newParams.delete('category');
+    } else {
+      newParams.set('collection', col);
+      newParams.delete('category');
+    }
+    setSearchParams(newParams);
+  };
+
+  const handleCategorySelect = (cat) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (cat === 'All') {
+      newParams.delete('collection');
+      newParams.delete('category');
+    } else {
+      newParams.set('category', cat);
+    }
+    setSearchParams(newParams);
+  };
+
+  const handleCategorySelectWithCollection = (col, cat) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('collection', col);
+    newParams.set('category', cat);
+    setSearchParams(newParams);
+  };
+
   const handleSortSelect = (v) => {
     setSortBy(v);
     setSortOpen(false);
@@ -205,6 +294,79 @@ export default function ProductsPage() {
           ))}
         </div>
       </div>
+
+      {/* ── STUNNING COLLECTIONS HIGHLIGHT SECTION ── */}
+      <section className="home-collections-showcase">
+        <div className="showcase-inner">
+          <div className="section-header">
+            <div className="badge-glow">✦ Premium Minerals & Jewelry ✦</div>
+            <h2>Shop by <span>Collections</span></h2>
+            <div className="divider"></div>
+            <p>Explore our masterfully sorted energy groups. Select a collection or click directly on any category to view items.</p>
+          </div>
+
+          <div className="collections-highlight-grid">
+            {[
+              {
+                title: "BEST SELLERS",
+                desc: "Our highly sought-after natural bracelets and charge plates sourced from premium ores.",
+                categories: ["Gemstone Bracelets", "Selenite Stone", "Healing Crystals"]
+              },
+              {
+                title: "SPIRITUAL & HEALING",
+                desc: "Sacred tools, Jap Malas, and prayer beads handcrafted to enhance mindfulness and meditation.",
+                categories: ["Rudraksha", "Jap Mala", "Gemstone Angels"]
+              },
+              {
+                title: "HOME & DECOR",
+                desc: "Elevate your ambient living spaces with raw stones, rough specimens, and visual gemstone trees.",
+                categories: ["Rough Stone", "Crystal Flowers", "Gemstone Tree"]
+              },
+              {
+                title: "JEWELRY & ACCESSORIES",
+                desc: "Wearable energy pieces, elegant pendants, beads strings, and natural crystal massage rollers.",
+                categories: ["Gemstone Pendant", "Palm Stone", "Roller And Guasha"]
+              }
+            ].map(col => (
+              <div 
+                key={col.title} 
+                className="showcase-card"
+                onClick={() => {
+                  handleCollectionSelect(col.title);
+                  const el = document.getElementById('products');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <div className="card-bg-glow"></div>
+                <div className="showcase-card-content">
+                  <div className="showcase-badge">Explore Collection</div>
+                  <h3>{col.title}</h3>
+                  <p>{col.desc}</p>
+                  <div className="showcase-card-tags">
+                    {col.categories.map(cat => (
+                      <span 
+                        key={cat} 
+                        className="showcase-tag"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCategorySelectWithCollection(col.title, cat);
+                          const el = document.getElementById('products');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        ✦ {cat}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="showcase-action-link">
+                    View Entire Collection <span>→</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── TOOLBAR ── */}
       <div className="toolbar" id="products">
@@ -271,6 +433,62 @@ export default function ProductsPage() {
             )}
           </div>
 
+          {/* Category filter dropdown */}
+          <div className="tb-dropdown-wrap" ref={catFilterRef}>
+            <button
+              className={`tb-btn${catFilterOpen ? ' open' : ''}${activeCategory !== 'All' ? ' active' : ''}`}
+              onClick={() => { setCatFilterOpen(o => !o); setFilterOpen(false); setSortOpen(false); }}
+              aria-haspopup="listbox"
+              aria-expanded={catFilterOpen}
+            >
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+              {activeCategory === 'All' ? 'Filter by Category' : activeCategory}
+              <svg className={`tb-chevron${catFilterOpen ? ' up' : ''}`} viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+
+            {catFilterOpen && (
+              <div className="tb-dropdown" role="listbox">
+                <div className="tb-dropdown-header">Filter by Category</div>
+                <button
+                  className={`tb-option${activeCategory === 'All' ? ' selected' : ''}`}
+                  onClick={() => { handleCategorySelect('All'); setCatFilterOpen(false); }}
+                  role="option"
+                  aria-selected={activeCategory === 'All'}
+                >
+                  <span className="tb-option-dot"></span>
+                  All Categories
+                  {activeCategory === 'All' && <svg className="tb-check" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>}
+                </button>
+                {Object.keys(TAXONOMY).map(col => (
+                  <React.Fragment key={col}>
+                    <div className="tb-dropdown-divider"/>
+                    <div style={{ padding: '8px 16px 4px', fontSize: '0.62rem', fontWeight: '700', color: 'var(--gold)', letterSpacing: '0.05em' }}>
+                      {col}
+                    </div>
+                    {TAXONOMY[col].map(cat => (
+                      <button
+                        key={cat}
+                        className={`tb-option${activeCategory === cat ? ' selected' : ''}`}
+                        onClick={() => {
+                          handleCategorySelectWithCollection(col, cat);
+                          setCatFilterOpen(false);
+                        }}
+                        role="option"
+                        aria-selected={activeCategory === cat}
+                      >
+                        <span className="tb-option-dot"></span>
+                        {cat}
+                        {activeCategory === cat && <svg className="tb-check" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>}
+                      </button>
+                    ))}
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Sort dropdown */}
           <div className="tb-dropdown-wrap" ref={sortRef}>
             <button
@@ -305,13 +523,15 @@ export default function ProductsPage() {
           </div>
 
           {/* Active filter pill + clear */}
-          {(activeFilter !== 'All' || search) && (
+          {(activeFilter !== 'All' || activeCollection !== 'All' || activeCategory !== 'All' || search) && (
             <button
               className="tb-clear-all"
               onClick={() => {
                 setSearch('');
                 const newParams = new URLSearchParams(searchParams);
                 newParams.delete('filter');
+                newParams.delete('collection');
+                newParams.delete('category');
                 setSearchParams(newParams);
               }}
             >
@@ -322,7 +542,7 @@ export default function ProductsPage() {
           {/* Count */}
           {!loading && !error && (
             <span className="tb-count">
-              {filtered.length} {filtered.length === 1 ? 'bracelet' : 'bracelets'}
+              <strong>{filtered.length}</strong> {filtered.length === 1 ? 'item' : 'items'}
             </span>
           )}
         </div>
@@ -331,10 +551,63 @@ export default function ProductsPage() {
       {/* ── PRODUCTS SECTION ── */}
       <section className="products-section">
         <div className="section-header fade-in">
-          <h2>Gemstone <span>Bracelets</span></h2>
+          <h2>
+            {activeCategory !== 'All' ? (
+              <>
+                {activeCategory.split(" ")[0]} <span>{activeCategory.split(" ").slice(1).join(" ")}</span>
+              </>
+            ) : activeCollection !== 'All' ? (
+              <>
+                {activeCollection.split(" ")[0]} <span>{activeCollection.split(" ").slice(1).join(" ")}</span>
+              </>
+            ) : (
+              <>
+                Our <span>Collections</span>
+              </>
+            )}
+          </h2>
           <div className="divider"></div>
-          <p>Explore our premium collection of authentic gemstone bracelets for spiritual healing, wellness, and aesthetic beauty.</p>
+          <p>Explore our premium collection of authentic gemstones and healing crystals for wellness, spiritual energy, and beauty.</p>
         </div>
+
+        {/* Collection Tabs */}
+        {!loading && !error && (
+          <div className="collection-tabs fade-in">
+            {['All', ...Object.keys(TAXONOMY)].map(col => (
+              <button
+                key={col}
+                className={`collection-tab${activeCollection === col ? ' active' : ''}`}
+                onClick={() => handleCollectionSelect(col)}
+              >
+                {col === 'All' ? 'All Products' : col}
+                <span className="tab-count">{collectionCounts[col] || 0}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Category Chips */}
+        {!loading && !error && activeCollection !== 'All' && (
+          <div className="category-chips fade-in">
+            <button
+              className={`category-chip${activeCategory === 'All' ? ' active' : ''}`}
+              onClick={() => handleCategorySelect('All')}
+            >
+              All {activeCollection}
+              <span className="chip-count">{categoryCounts.All}</span>
+            </button>
+            {TAXONOMY[activeCollection].map(cat => (
+              <button
+                key={cat}
+                className={`category-chip${activeCategory === cat ? ' active' : ''}`}
+                onClick={() => handleCategorySelect(cat)}
+              >
+                {cat}
+                <span className="chip-count">{categoryCounts[cat] || 0}</span>
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Loading skeletons */}
         {loading && (
@@ -365,12 +638,14 @@ export default function ProductsPage() {
         {!loading && !error && filtered.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon"><FaGem /></div>
-            <h3>No bracelets found</h3>
+            <h3>No products found</h3>
             <p>Try a different search or filter</p>
             <button onClick={() => {
               setSearch('');
               const newParams = new URLSearchParams(searchParams);
               newParams.delete('filter');
+              newParams.delete('collection');
+              newParams.delete('category');
               setSearchParams(newParams);
             }} className="retry-btn">
               Clear Filters
