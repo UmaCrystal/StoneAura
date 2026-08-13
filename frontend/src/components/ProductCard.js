@@ -44,7 +44,7 @@ export default function ProductCard({ product, onOpenModal }) {
   const handleQuote = (e) => {
     e.stopPropagation();
     const text = encodeURIComponent(
-      `Hi, I am interested in ${product.name} (Size: ${selectedSize}) — price: ₹${product.price}`
+      `Hi, I am interested in ${product.name} (Size: ${selectedSize}) priced at ₹${product.price}`
     );
     window.open(`https://wa.me/+919104139899?text=${text}`, '_blank', 'noopener,noreferrer');
   };

@@ -37,7 +37,7 @@ IMG: dict[str, str] = {
 }
 
 PLACEHOLDER = "https://placehold.co/480x480/f5f0e8/c9a84c?text={name}"
-WA_BASE     = "https://wa.me/919510010383?text=Hi%2C%20I%20am%20interested%20in%20"
+WA_BASE     = "https://wa.me/919104139899?text=Hi%2C%20I%20am%20interested%20in%20"
 
 
 def img(key: str, product_name: str) -> str:
