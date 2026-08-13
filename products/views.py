@@ -177,3 +177,32 @@ def contact_create(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+@permission_classes([IsAdminUser])
+def contact_list(request):
+    """Admin-only: list all contact messages, newest first. Supports ?search= filter."""
+    qs = ContactMessage.objects.all().order_by("-created_at")
+    search = request.query_params.get("search", "").strip()
+    if search:
+        qs = qs.filter(
+            Q(name__icontains=search) |
+            Q(email__icontains=search) |
+            Q(phone__icontains=search) |
+            Q(message__icontains=search)
+        )
+    serializer = ContactMessageSerializer(qs, many=True)
+    return Response({"count": qs.count(), "results": serializer.data})
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAdminUser])
+def contact_delete(request, pk):
+    """Admin-only: delete a single contact message by ID."""
+    try:
+        msg = ContactMessage.objects.get(pk=pk)
+    except ContactMessage.DoesNotExist:
+        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+    msg.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
