@@ -28,7 +28,7 @@ export default function ProductModal({ product, onClose }) {
     const msg = encodeURIComponent(
       `Hi, I am interested in ${product.name} (Size: ${selectedSize}) priced at ₹${product.price}`
     );
-    window.open(`https://wa.me/919510010383?text=${msg}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://wa.me/919104139899?text=${msg}`, '_blank', 'noopener,noreferrer');
   };
 
   const props = [
