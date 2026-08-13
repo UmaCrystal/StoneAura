@@ -72,7 +72,9 @@ class WristSizeAdmin(admin.ModelAdmin):
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "phone", "created_at")
+    list_display = ("name", "email", "phone", "is_read", "created_at")
+    list_editable = ("is_read",)
+    list_filter = ("is_read", "created_at")
     search_fields = ("name", "email", "phone", "message")
     ordering = ("-created_at",)
     readonly_fields = ("name", "email", "phone", "message", "created_at")

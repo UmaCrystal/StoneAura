@@ -193,16 +193,31 @@ def contact_list(request):
             Q(message__icontains=search)
         )
     serializer = ContactMessageSerializer(qs, many=True)
-    return Response({"count": qs.count(), "results": serializer.data})
+    unread_count = ContactMessage.objects.filter(is_read=False).count()
+    return Response({
+        "count": qs.count(),
+        "unread_count": unread_count,
+        "results": serializer.data
+    })
 
 
-@api_view(["DELETE"])
+@api_view(["PATCH", "DELETE"])
 @permission_classes([IsAdminUser])
-def contact_delete(request, pk):
-    """Admin-only: delete a single contact message by ID."""
+def contact_detail(request, pk):
+    """Admin-only: PATCH to mark as read/unread, DELETE to delete a message."""
     try:
         msg = ContactMessage.objects.get(pk=pk)
     except ContactMessage.DoesNotExist:
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-    msg.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+        
+    if request.method == "PATCH":
+        is_read = request.data.get("is_read")
+        if is_read is not None:
+            msg.is_read = bool(is_read)
+            msg.save()
+        serializer = ContactMessageSerializer(msg)
+        return Response(serializer.data)
+        
+    elif request.method == "DELETE":
+        msg.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

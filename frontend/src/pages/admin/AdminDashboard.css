@@ -642,3 +642,29 @@
   .msg-detail-actions { flex-direction: column-reverse; }
   .btn-reply { width: 100%; justify-content: center; }
 }
+
+/* ========= MESSAGES — UNREAD STATE ========= */
+.contacts-table .contact-row.unread-row {
+  background: #fdfaf4;
+}
+.contacts-table .contact-row.unread-row:hover {
+  background: #fcf4e4;
+}
+.contacts-table .contact-row.unread-row .contact-name-cell {
+  font-weight: 800;
+  color: #1a1208;
+}
+.contacts-table .contact-row.unread-row .msg-snippet {
+  font-weight: 700;
+  color: #2d1f0e;
+}
+.contact-unread-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #c9a84c, #a07830);
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 1px 6px rgba(201,168,76,0.5);
+  vertical-align: middle;
+}

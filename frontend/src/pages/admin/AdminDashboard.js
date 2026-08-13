@@ -58,6 +58,7 @@ export default function AdminDashboard() {
   // ── Messages state
   const [contacts, setContacts]         = useState([]);
   const [contactsCount, setContactsCount] = useState(0);
+  const [unreadCount, setUnreadCount]     = useState(0);
   const [contactsFetching, setContactsFetching] = useState(false);
   const [contactSearch, setContactSearch] = useState("");
   const [contactPage, setContactPage]   = useState(1);
@@ -196,14 +197,15 @@ export default function AdminDashboard() {
       const data = await res.json();
       setContacts(data.results || []);
       setContactsCount(data.count || 0);
+      setUnreadCount(data.unread_count || 0);
     } catch { showToast("Failed to load messages", "error"); }
     finally { setContactsFetching(false); }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch contacts when tab becomes active
+  // Fetch contacts when tab becomes active or on mount
   useEffect(() => {
-    if (activeTab === "messages") { fetchContacts(contactSearch); }
+    fetchContacts(contactSearch);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
@@ -211,6 +213,28 @@ export default function AdminDashboard() {
     setContactSearch(e.target.value);
     setContactPage(1);
     fetchContacts(e.target.value);
+  };
+
+  const markMessageAsRead = async (msg) => {
+    if (msg.is_read) return;
+    const token = getToken();
+    try {
+      const res = await fetch(`${API}/contacts/${msg.id}/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ is_read: true }),
+      });
+      if (res.ok) {
+        setContacts(prev => prev.map(c => c.id === msg.id ? { ...c, is_read: true } : c));
+        setUnreadCount(prev => Math.max(0, prev - 1));
+        setSelectedMsg(prev => prev && prev.id === msg.id ? { ...prev, is_read: true } : prev);
+      }
+    } catch (err) {
+      console.error("Failed to mark message as read", err);
+    }
   };
 
   const handleDeleteContact = async (id) => {
@@ -285,18 +309,16 @@ export default function AdminDashboard() {
           >
             <FaGem className="sidebar-icon-react" /> Bracelets
           </button>
-
           <button
             className={`sidebar-item${activeTab === "messages" ? " active" : ""}`}
             onClick={() => { setActiveTab("messages"); setSidebarOpen(false); }}
           >
             <FaEnvelope className="sidebar-icon-react" />
             <span>Messages</span>
-            {contactsCount > 0 && (
-              <span className="msg-badge">{contactsCount > 99 ? "99+" : contactsCount}</span>
+            {unreadCount > 0 && (
+              <span className="msg-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>
             )}
           </button>
-
           <button className="sidebar-item" onClick={() => { setSidebarOpen(false); navigate("/"); }}>
             <FaHome className="sidebar-icon-react" /> View Store
           </button>
@@ -329,7 +351,9 @@ export default function AdminDashboard() {
             ) : (
               <>
                 <h1 className="admin-title">Contact Messages</h1>
-                <p className="admin-sub">{contactsFetching ? "Loading…" : `${contactsCount} message${contactsCount !== 1 ? "s" : ""} received`}</p>
+                <p className="admin-sub">
+                  {contactsFetching ? "Loading…" : `${contactsCount} message${contactsCount !== 1 ? "s" : ""} received (${unreadCount} unread)`}
+                </p>
               </>
             )}
           </div>
@@ -560,10 +584,15 @@ export default function AdminDashboard() {
         {/* ═══════════════════════════ MESSAGES TAB ═══════════════════════════ */}
         {activeTab === "messages" && (
           <>
-            {/* STAT */}
-            <div className="admin-stats" style={{ gridTemplateColumns: "repeat(1,240px)" }}>
+            {/* STATS */}
+            <div className="admin-stats" style={{ gridTemplateColumns: "repeat(2, 240px)" }}>
               <div className="stat-card">
-                <div className="stat-card-icon"><FaEnvelope /></div>
+                <div className="stat-card-icon" style={{ color: "#c9a84c" }}><FaEnvelope /></div>
+                <div className="stat-card-value">{unreadCount}</div>
+                <div className="stat-card-label">Unread Messages</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-card-icon" style={{ color: "#7a6555" }}><FaCheckCircle /></div>
                 <div className="stat-card-value">{contactsCount}</div>
                 <div className="stat-card-label">Total Messages</div>
               </div>
@@ -609,11 +638,14 @@ export default function AdminDashboard() {
                       {paginatedContacts.map(msg => (
                         <tr
                           key={msg.id}
-                          className="contact-row"
-                          onClick={() => setSelectedMsg(msg)}
+                          className={`contact-row${!msg.is_read ? " unread-row" : ""}`}
+                          onClick={() => { setSelectedMsg(msg); markMessageAsRead(msg); }}
                           title="Click to read full message"
                         >
-                          <td className="contact-name-cell">{msg.name}</td>
+                          <td className="contact-name-cell">
+                            {!msg.is_read && <span className="contact-unread-dot" />}
+                            {msg.name}
+                          </td>
                           <td className="contact-email-cell">
                             <a href={`mailto:${msg.email}`} onClick={e => e.stopPropagation()} className="contact-link">
                               {msg.email}
