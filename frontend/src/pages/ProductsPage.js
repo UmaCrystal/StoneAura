@@ -12,37 +12,26 @@ const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 const TAXONOMY = {
   "BEST SELLERS": [
     "Gemstone Bracelets",
-    "Tumbled Stones",
-    "Pyramid Stone",
-    "Gemstone Tree",
-    "Selenite Stone",
-    "Orgone Pyramid",
-    "Healing Crystals"
-  ],
-  "SPIRITUAL & HEALING": [
-    "Rudraksha",
-    "Gemstone Angels",
-    "Unique Products",
-    "Jap Mala",
-    "Fancy Product",
-    "Crystal Shivling"
-  ],
-  "HOME & DECOR": [
-    "Rough Stone",
-    "Gemstone Ball",
-    "Crystal Flowers",
-    "Zibu Coin"
+    "TREE",
+    "TUMBLE STONE",
+    "PYRAMIDS",
+    "SELENITE PRODUCTS",
+    "CHIPS"
   ],
   "JEWELRY & ACCESSORIES": [
-    "Beads String 8mm",
-    "Gemstone Pendant",
-    "Palm Stone",
-    "Gemstone",
-    "Crystal Heart Stone",
-    "Crystal Rakhi",
-    "Roller And Guasha",
-    "Tumbled Bracelets",
-    "Anklets"
+    "ANKLET",
+    "BRACELET CHIP",
+    "PEDANTS",
+    "RING"
+  ],
+  "HOME & DECOR": [
+    "ROUGH",
+    "ZIBU COINS",
+    "TORTOISE"
+  ],
+  "SPIRITUAL & HEALING": [
+    "HANGINGS",
+    "Unique Products"
   ]
 };
 
@@ -309,23 +298,23 @@ export default function ProductsPage() {
             {[
               {
                 title: "BEST SELLERS",
-                desc: "Our highly sought-after natural bracelets and charge plates sourced from premium ores.",
-                categories: ["Gemstone Bracelets", "Selenite Stone", "Healing Crystals"]
+                desc: "Our highly sought-after natural bracelets, trees, and tumbles sourced from premium ores.",
+                categories: ["Gemstone Bracelets", "TREE", "TUMBLE STONE", "SELENITE PRODUCTS"]
               },
               {
                 title: "SPIRITUAL & HEALING",
-                desc: "Sacred tools, Jap Malas, and prayer beads handcrafted to enhance mindfulness and meditation.",
-                categories: ["Rudraksha", "Jap Mala", "Gemstone Angels"]
+                desc: "Sacred tools, hangings, and unique energy products handcrafted for spiritual wellness.",
+                categories: ["HANGINGS", "Unique Products"]
               },
               {
                 title: "HOME & DECOR",
-                desc: "Elevate your ambient living spaces with raw stones, rough specimens, and visual gemstone trees.",
-                categories: ["Rough Stone", "Crystal Flowers", "Gemstone Tree"]
+                desc: "Elevate your ambient living spaces with raw rough stones, zibu coins, and gemstone tortoises.",
+                categories: ["ROUGH", "ZIBU COINS", "TORTOISE"]
               },
               {
                 title: "JEWELRY & ACCESSORIES",
-                desc: "Wearable energy pieces, elegant pendants, beads strings, and natural crystal massage rollers.",
-                categories: ["Gemstone Pendant", "Palm Stone", "Roller And Guasha"]
+                desc: "Wearable energy pieces, anklets, chip bracelets, gemstone pendants, and crystal rings.",
+                categories: ["ANKLET", "BRACELET CHIP", "PEDANTS", "RING"]
               }
             ].map(col => (
               <div 

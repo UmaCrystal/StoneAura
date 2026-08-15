@@ -37,6 +37,7 @@ export default function ProductModal({ product, onClose }) {
     product.stone_type && { key: 'Stone Type', val: product.stone_type },
     product.material   && { key: 'Material',   val: product.material },
     product.bead_size  && { key: 'Bead Size',  val: product.bead_size },
+    product.size_info  && { key: 'Option',     val: product.size_info },
     product.color      && { key: 'Color',      val: product.color },
     product.gender     && { key: 'Gender',     val: product.gender },
     product.shape      && { key: 'Shape',      val: product.shape },

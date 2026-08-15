@@ -4,10 +4,10 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { 
   FaGem, FaCog, FaSignOutAlt, FaSignInAlt,
-  FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, FaMagic, 
+  FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, 
   FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain, 
   FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate, 
-  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaLocationArrow 
+  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaShieldAlt, FaMagic
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import AccountButton from './AccountButton';
@@ -16,67 +16,45 @@ import './Header.css';
 const TAXONOMY = {
   "BEST SELLERS": [
     "Gemstone Bracelets",
-    "Tumbled Stones",
-    "Pyramid Stone",
-    "Gemstone Tree",
-    "Selenite Stone",
-    "Orgone Pyramid",
-    "Healing Crystals"
-  ],
-  "SPIRITUAL & HEALING": [
-    "Rudraksha",
-    "Gemstone Angels",
-    "Unique Products",
-    "Jap Mala",
-    "Fancy Product",
-    "Crystal Shivling"
-  ],
-  "HOME & DECOR": [
-    "Rough Stone",
-    "Gemstone Ball",
-    "Crystal Flowers",
-    "Zibu Coin"
+    "TREE",
+    "TUMBLE STONE",
+    "PYRAMIDS",
+    "SELENITE PRODUCTS",
+    "CHIPS"
   ],
   "JEWELRY & ACCESSORIES": [
-    "Beads String 8mm",
-    "Gemstone Pendant",
-    "Palm Stone",
-    "Gemstone",
-    "Crystal Heart Stone",
-    "Crystal Rakhi",
-    "Roller And Guasha",
-    "Tumbled Bracelets",
-    "Anklets"
+    "ANKLET",
+    "BRACELET CHIP",
+    "PEDANTS",
+    "RING"
+  ],
+  "HOME & DECOR": [
+    "ROUGH",
+    "ZIBU COINS",
+    "TORTOISE"
+  ],
+  "SPIRITUAL & HEALING": [
+    "HANGINGS",
+    "Unique Products"
   ]
 };
 
 const CATEGORY_ICONS = {
   "Gemstone Bracelets": <FaCircleNotch />,
-  "Tumbled Stones": <FaBoxes />,
-  "Pyramid Stone": <FaGem />,
-  "Gemstone Tree": <FaTree />,
-  "Selenite Stone": <FaFeatherAlt />,
-  "Orgone Pyramid": <FaLocationArrow />,
-  "Healing Crystals": <FaMagic />,
-  "Rudraksha": <FaSun />,
-  "Gemstone Angels": <FaPray />,
-  "Unique Products": <FaStar />,
-  "Jap Mala": <FaRing />,
-  "Fancy Product": <FaCrown />,
-  "Crystal Shivling": <FaOm />,
-  "Rough Stone": <FaMountain />,
-  "Gemstone Ball": <FaCircle />,
-  "Crystal Flowers": <FaSeedling />,
-  "Zibu Coin": <FaCoins />,
-  "Beads String 8mm": <FaEllipsisH />,
-  "Gemstone Pendant": <FaCertificate />,
-  "Palm Stone": <FaHandPaper />,
-  "Gemstone": <FaGem />,
-  "Crystal Heart Stone": <FaHeart />,
-  "Crystal Rakhi": <FaStar />,
-  "Roller And Guasha": <FaSpa />,
-  "Tumbled Bracelets": <FaSyncAlt />,
-  "Anklets": <FaSyncAlt />
+  "TREE": <FaTree />,
+  "ANKLET": <FaSyncAlt />,
+  "TUMBLE STONE": <FaBoxes />,
+  "ROUGH": <FaMountain />,
+  "HANGINGS": <FaStar />,
+  "ZIBU COINS": <FaCoins />,
+  "BRACELET CHIP": <FaCircleNotch />,
+  "PYRAMIDS": <FaGem />,
+  "SELENITE PRODUCTS": <FaFeatherAlt />,
+  "TORTOISE": <FaShieldAlt />,
+  "PEDANTS": <FaCertificate />,
+  "RING": <FaRing />,
+  "CHIPS": <FaMagic />,
+  "Unique Products": <FaStar />
 };
 
 const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;

@@ -1,102 +1,27 @@
+import os
+from urllib.parse import quote
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from products.models import Product, WristSize
 
-# Precise mapping of filenames under /images/products/
-IMG: dict[str, str] = {
-    "ROSE_QUARTZ_BRACELET":            "/images/products/ROSE QUATZ IM 1.jpg",
-    "PYRITE_NATURAL_STAR_BRACELET":    "/images/products/NATURAL_PYRITE.webp",
-    "TURQUOISE_BRACELET":              "/images/products/TOURQOUIS.webp",
-    "GREEN_AVENTURINE_BRACELET":       "/images/products/GREEN_AVENTURINE_37360b00-daef-412f-a484-51ebfba2092e.webp",
-    "AMETHYST_BRACELET":               "/images/products/AMETHYST.jpg",
-    "APATITE_BRACELET":                "/images/products/apatite.png",
-    "TIGER_EYE_BRACELET":              "/images/products/TIGER_EYE.webp",
-    "LAVA_STONE_BRACELET":             "/images/products/lava bracelet.webp",
-    "RED_JASPER_BRACELET":             "/images/products/RED JASPER_.jpg",
-    "BLACK_TOURMALINE_BRACELET":       "/images/products/black-tourmaline.png",
-    "CITRINE_NATURAL_BRACELET":        "/images/products/CITRINE.webp",
-    "CITRINE_HYDRO_BRACELET":          "/images/products/CITRINE 2.jpg",
-    "CLEAR_QUARTZ_BRACELET":           "/images/products/clear-quartz.png",
-    "MONEY_MAGNET_BRACELET":           "/images/products/money magnet.jpg",
-    "SEVEN_CHAKRA_BRACELET":           "/images/products/seven chakra.png",
-    "RASHI_BRACELET":                  "/images/products/rashi bracelet.webp",
-    "SEVEN_CHAKRA_LAVA_BRACELET":      "/images/products/seven chakra (2).png",
-    "DHANYOG_BRACELET":                "/images/products/money magnet.jpg",
-    "MOONSTONE_BRACELET":              "/images/products/moon stone.jpg",
-    "CARNELIAN_BRACELET":              "/images/products/carnelian92.webp",
-    "GREEN_JADE_BRACELET":             "/images/products/Green-Jade-Bracelet-Final-1.webp",
-    "LAPIS_LAZULI_BRACELET":           "/images/products/lapiz.webp",
-    "SODALITE_BRACELET":               "/images/products/sodalite-gemstones-bracelet-1.jpg",
-    "CALCITE_BRACELET":                "/images/products/calcite.jpg",
-    "SUNSTONE_BRACELET":               "/images/products/sunstone.jpg",
-    "BLACK_OBSIDIAN_BRACELET":         "/images/products/black obsedian.webp",
-    "AMAZONITE_BRACELET":              "/images/products/amazomite.webp",
-    "RHODONITE_BRACELET":              "/images/products/RHODONITE_001fd9ac-08a2-4d42-9b10-30a73fbc9134.webp",
-    "RHODOCHROSITE_BRACELET":          "/images/products/RHODOCROSITE_00ac6fb4-328e-467b-aa89-ec1a5213876b.webp",
-    "DHANVRUDDHI_BRACELET":            "/images/products/money magnet.jpg",
+# ── TAXONOMY & CATEGORY MAPPING ───────────────────────────────────────────────
+# Maps spreadsheet category header to (Collection, Category Display Name)
+TAXONOMY = {
+    "Gemstone Bracelets": ("BEST SELLERS", "Gemstone Bracelets"),
+    "TREE": ("BEST SELLERS", "TREE"),
+    "ANKLET": ("JEWELRY & ACCESSORIES", "ANKLET"),
+    "TUMBLE STONE": ("BEST SELLERS", "TUMBLE STONE"),
+    "ROUGH": ("HOME & DECOR", "ROUGH"),
+    "HANGINGS": ("SPIRITUAL & HEALING", "HANGINGS"),
+    "ZIBU COINS": ("HOME & DECOR", "ZIBU COINS"),
+    "BRACELET CHIP": ("JEWELRY & ACCESSORIES", "BRACELET CHIP"),
+    "PYRAMIDS": ("BEST SELLERS", "PYRAMIDS"),
+    "SELENITE PRODUCTS": ("BEST SELLERS", "SELENITE PRODUCTS"),
+    "TORTOISE": ("HOME & DECOR", "TORTOISE"),
+    "PEDANTS": ("JEWELRY & ACCESSORIES", "PEDANTS"),
+    "RING": ("JEWELRY & ACCESSORIES", "RING"),
+    "CHIPS": ("BEST SELLERS", "CHIPS"),
 }
-
-PLACEHOLDER = "https://placehold.co/480x480/f5f0e8/c9a84c?text={name}"
-WA_BASE     = "https://wa.me/919104139899?text=Hi%2C%20I%20am%20interested%20in%20"
-
-
-def img(key: str, product_name: str) -> str:
-    """Return the fully-qualified image URL for a product."""
-    original_val = IMG.get(key)
-    if original_val:
-        if original_val.startswith("/images/products/"):
-            from urllib.parse import quote
-            filename = original_val.replace("/images/products/", "")
-            return f"https://ik.imagekit.io/stoneaura/products/{quote(filename)}"
-        return original_val
-    return PLACEHOLDER.format(name=product_name.replace(" ", "+"))
-
-
-def wa(name: str, price: int) -> str:
-    return f"{WA_BASE}{name.replace(' ', '%20')}%20priced%20at%20%E2%82%B9{price}"
-
-
-BRACELETS = [
-    # No.  Name                              1pc   10pc  50pc   stone              color                material                    bead   featured
-    (  1, "Rose Quartz Bracelet",            280,  250,  190,  "Rose Quartz",     "Baby Pink",         "Natural Rose Quartz",      "8mm",  True),
-    (  2, "Pyrite Natural Star Bracelet",    280,  250,  210,  "Pyrite",          "Golden",            "Natural Pyrite",           "8mm",  True),
-    (  3, "Turquoise Bracelet",              290,  260,  195,  "Turquoise",       "Sky Blue",          "Natural Turquoise",        "8mm",  True),
-    (  4, "Green Aventurine Bracelet",       200,  180,  150,  "Green Aventurine","Forest Green",      "Natural Green Aventurine", "8mm",  True),
-    (  5, "Amethyst Bracelet",               300,  280,  250,  "Amethyst",        "Purple",            "Natural Amethyst",         "8mm",  True),
-    (  6, "Apatite Bracelet",                380,  350,  310,  "Apatite",         "Blue Green",        "Natural Apatite",          "8mm", False),
-    (  7, "Tiger Eye Bracelet",              250,  200,  180,  "Tiger Eye",       "Golden Brown",      "Natural Tiger Eye",        "8mm",  True),
-    (  8, "Lava Stone Bracelet",             170,  150,  110,  "Lava Stone",      "Black",             "Natural Volcanic Lava",    "8mm", False),
-    (  9, "Red Jasper Bracelet",             250,  230,  190,  "Red Jasper",      "Deep Red",          "Natural Red Jasper",       "8mm",  True),
-    ( 10, "Black Tourmaline Bracelet",       280,  250,  180,  "Black Tourmaline","Jet Black",         "Natural Black Tourmaline", "8mm",  True),
-    ( 11, "Citrine Natural Bracelet",        380,  350,  300,  "Citrine",         "Golden Yellow",     "Natural Citrine",          "8mm",  True),
-    ( 12, "Citrine Hydro Bracelet",          250,  200,  180,  "Citrine",         "Light Yellow",      "Hydro Citrine",            "8mm", False),
-    ( 13, "Clear Quartz Bracelet",           280,  250,  210,  "Clear Quartz",    "Crystal Clear",     "Natural Clear Quartz",     "8mm", False),
-    ( 14, "Money Magnet Bracelet",           280,  250,  210,  "Mixed Crystals",  "Mixed",             "Natural Stone",            "8mm",  True),
-    ( 15, "Seven Chakra Bracelet",           250,  230,  180,  "Seven Chakra",    "Rainbow",           "Mixed Natural Gemstones",  "8mm",  True),
-    ( 16, "Rashi Bracelet",                  290,  250,  220,  "Zodiac Crystals", "Mixed",             "Natural Gemstone",         "8mm", False),
-    ( 17, "Seven Chakra Lava Bracelet",      200,  260,  210,  "Seven Chakra",    "Rainbow",           "Natural Lava & Crystal",   "8mm", False),
-    ( 18, "Dhanyog Bracelet",                280,  250,  210,  "Mixed Crystals",  "Mixed",             "Natural Gemstone",         "8mm", False),
-    ( 19, "Moonstone Bracelet",              360,  320,  290,  "Moonstone",       "Pearly White",      "Natural Moonstone",        "8mm",  True),
-    ( 20, "Carnelian Bracelet",              290,  250,  210,  "Carnelian",       "Orange Red",        "Natural Carnelian",        "8mm",  True),
-    ( 21, "Green Jade Bracelet",             200,  180,  150,  "Green Jade",      "Jade Green",        "Natural Green Jade",       "8mm",  True),
-    ( 22, "Lapis Lazuli Bracelet",           400,  360,  300,  "Lapis Lazuli",    "Royal Blue",        "Natural Lapis Lazuli",     "8mm",  True),
-    ( 23, "Sodalite Bracelet",               250,  200,  180,  "Sodalite",        "Royal Blue & White","Natural Sodalite",         "8mm", False),
-    ( 24, "Calcite Bracelet",                280,  250,  190,  "Calcite",         "White / Orange",    "Natural Calcite",          "8mm", False),
-    ( 25, "Sunstone Bracelet",               280,  250,  190,  "Sunstone",        "Orange / Gold",     "Natural Sunstone",         "8mm",  True),
-    ( 26, "Black Obsidian Bracelet",         250,  200,  180,  "Black Obsidian",  "Jet Black",         "Natural Black Obsidian",   "8mm",  True),
-    ( 27, "Amazonite Bracelet",              250,  230,  180,  "Amazonite",       "Teal Green",        "Natural Amazonite",        "8mm",  True),
-    ( 28, "Rhodonite Bracelet",              270,  240,  210,  "Rhodonite",       "Pink & Black",      "Natural Rhodonite",        "8mm", False),
-    ( 29, "Rhodochrosite Bracelet",          280,  250,  220,  "Rhodochrosite",   "Pink / Rose",       "Natural Rhodochrosite",    "8mm", False),
-    ( 30, "Dhanvruddhi Bracelet",            300,  260,  230,  "Mixed Crystals",  "Mixed",             "Natural Gemstone",         "8mm", False),
-]
-
-SELENITE_ITEMS = [
-    # No.   Name                               1pc  10pc  50pc  stone       color    material              category
-    ( 60, "Seven Chakra Selenite Plate",      180,  150,  130, "Selenite", "White", "Natural Selenite", "Selenite Plates"),
-    ( 61, "Rashi Selenite Plate",             230,  190,  160, "Selenite", "White", "Natural Selenite", "Selenite Plates"),
-    ( 62, "Pyrite Frame with 7 Horses",         0, None, None, "Pyrite",   "Golden","Natural Pyrite",   "Home Decor"),
-    ( 63, "Crystal Keychain",                 180,  150,  120, "Mixed Crystals","Mixed","Natural Gemstone","Keychains"),
-]
 
 WRIST_SIZES = [
     {"label": "XS", "cm": "13–14 cm", "inches": '5.1–5.5"'},
@@ -106,92 +31,236 @@ WRIST_SIZES = [
     {"label": "XL", "cm": "18–20 cm", "inches": '7.1–7.9"'},
 ]
 
+# Helper for ImageKit Cloud URLs
+IK_BASE = "https://ik.imagekit.io/stoneaura/products/"
+
+def ik_url(path: str) -> str:
+    if not path or path == "*BLANK*":
+        return ""
+    # Encode spaces and special characters cleanly for URL
+    parts = path.split("/")
+    encoded_parts = [quote(p) for p in parts]
+    return IK_BASE + "/".join(encoded_parts)
+
+# Complete 147 Product Dataset directly aligned with Spreadsheet & ImageKit
+PRODUCTS_DATA = [
+    # ── Gemstone Bracelets ───────────────────────────────────────────────────
+    {"id": 1,  "name": "Amethyst Bracelet", "cat_key": "Gemstone Bracelets", "price": 280, "p10": 250, "p50": 190, "unit": "per piece", "img": "Amethyst Bracelet.jpg", "bead": "8mm", "feat": True},
+    {"id": 2,  "name": "Carnilane Bracelet", "cat_key": "Gemstone Bracelets", "price": 200, "p10": 180, "p50": 150, "unit": "per piece", "img": "Carnilane Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 3,  "name": "Green Aventurine Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "Green Aventurine Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 4,  "name": "Green Jade Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "Green Jade Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 5,  "name": "Appetitte Bracelet", "cat_key": "Gemstone Bracelets", "price": 250, "p10": 220, "p50": 190, "unit": "per piece", "img": "", "bead": "8mm", "feat": False},
+    {"id": 6,  "name": "Lapiz Bracelet", "cat_key": "Gemstone Bracelets", "price": 390, "p10": 350, "p50": 300, "unit": "per piece", "img": "Lapiz Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 7,  "name": "Sodalite Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "Sodalite Bracelet.jpg", "bead": "8mm", "feat": False},
+    {"id": 8,  "name": "Rose Quartz Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "Rose Quatz Bracelet.jpg", "bead": "8mm", "feat": True},
+    {"id": 9,  "name": "Calcite Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "Calcite Bracelet.jpg", "bead": "8mm", "feat": False},
+    {"id": 10, "name": "Sunstone Dyed Bracelet", "cat_key": "Gemstone Bracelets", "price": 270, "p10": 240, "p50": 200, "unit": "per piece", "img": "Sunstone Dyed Bracelet.jpg", "bead": "8mm", "feat": False},
+    {"id": 11, "name": "Sunstone Natural Bracelet", "cat_key": "Gemstone Bracelets", "price": 280, "p10": 250, "p50": 210, "unit": "per piece", "img": "Sunstone Bracelet.jpg", "bead": "8mm", "feat": True},
+    {"id": 12, "name": "Turquoise Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "TOURQOUIS.webp", "bead": "8mm", "feat": True},
+    {"id": 13, "name": "Black Obsidian Bracelet", "cat_key": "Gemstone Bracelets", "price": 180, "p10": 160, "p50": 130, "unit": "per piece", "img": "Black Obsedian Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 14, "name": "Black Obsidian 6mm Bracelet", "cat_key": "Gemstone Bracelets", "price": 160, "p10": 140, "p50": 110, "unit": "per piece", "img": "Black Obsedian 6 Mm Bracelet.webp", "bead": "6mm", "feat": False},
+    {"id": 15, "name": "Black Tourmaline Bracelet", "cat_key": "Gemstone Bracelets", "price": 280, "p10": 250, "p50": 200, "unit": "per piece", "img": "black-tourmaline.png", "bead": "8mm", "feat": True},
+    {"id": 16, "name": "Tiger Eye Bracelet", "cat_key": "Gemstone Bracelets", "price": 180, "p10": 160, "p50": 130, "unit": "per piece", "img": "Tiger Eye Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 17, "name": "Citrine Hydro Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "Citrine Hydro Bracelet.webp", "bead": "8mm", "feat": False},
+    {"id": 18, "name": "Citrine Natural Bracelet", "cat_key": "Gemstone Bracelets", "price": 380, "p10": 340, "p50": 290, "unit": "per piece", "img": "Citrine Bracelet.jpg", "bead": "8mm", "feat": True},
+    {"id": 19, "name": "Lava Bracelet", "cat_key": "Gemstone Bracelets", "price": 150, "p10": 130, "p50": 100, "unit": "per piece", "img": "Lava Bracelet.webp", "bead": "8mm", "feat": False},
+    {"id": 20, "name": "Amazonite Bracelet", "cat_key": "Gemstone Bracelets", "price": 250, "p10": 220, "p50": 180, "unit": "per piece", "img": "Amazonite Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 21, "name": "Sulemani Akik Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "", "bead": "8mm", "feat": False},
+    {"id": 22, "name": "Rhodonite Bracelet", "cat_key": "Gemstone Bracelets", "price": 200, "p10": 180, "p50": 150, "unit": "per piece", "img": "Rhodonite Bracelet.webp", "bead": "8mm", "feat": False},
+    {"id": 23, "name": "Rhodocrosite Bracelet", "cat_key": "Gemstone Bracelets", "price": 230, "p10": 200, "p50": 170, "unit": "per piece", "img": "Rhodocrosite Bracelet.webp", "bead": "8mm", "feat": False},
+    {"id": 24, "name": "Hematite Bracelet", "cat_key": "Gemstone Bracelets", "price": 150, "p10": 130, "p50": 100, "unit": "per piece", "img": "", "bead": "8mm", "feat": False},
+    {"id": 25, "name": "Golden Pyrite Bracelet", "cat_key": "Gemstone Bracelets", "price": 150, "p10": 130, "p50": 100, "unit": "per piece", "img": "", "bead": "8mm", "feat": False},
+    {"id": 26, "name": "Natural Pyrite Bracelet", "cat_key": "Gemstone Bracelets", "price": 280, "p10": 250, "p50": 210, "unit": "per piece", "img": "Natural Pyrite Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 27, "name": "Moonstone Bracelet", "cat_key": "Gemstone Bracelets", "price": 390, "p10": 350, "p50": 300, "unit": "per piece", "img": "Moonstone Bracelet.webp", "bead": "8mm", "feat": True},
+    {"id": 28, "name": "Clear Quartz Bracelet", "cat_key": "Gemstone Bracelets", "price": 290, "p10": 260, "p50": 220, "unit": "per piece", "img": "clear-quartz.png", "bead": "8mm", "feat": False},
+    {"id": 29, "name": "Red Jasper Bracelet", "cat_key": "Gemstone Bracelets", "price": 190, "p10": 170, "p50": 140, "unit": "per piece", "img": "Red Jasper Bracelet.jpg", "bead": "8mm", "feat": True},
+    {"id": 30, "name": "Yellow Cat-Eye Bracelet", "cat_key": "Gemstone Bracelets", "price": 290, "p10": 260, "p50": 210, "unit": "per piece", "img": "", "bead": "8mm", "feat": False},
+    {"id": 31, "name": "Black Cat Eye Bracelet", "cat_key": "Gemstone Bracelets", "price": 460, "p10": 420, "p50": 390, "unit": "per piece", "img": "", "bead": "8mm", "feat": False},
+    {"id": 32, "name": "Karungilini Mala", "cat_key": "Gemstone Bracelets", "price": 250, "p10": 220, "p50": 180, "unit": "per piece", "img": "", "bead": "8mm", "feat": False},
+
+    # ── TREE Category ────────────────────────────────────────────────────────
+    {"id": 33, "name": "Seven Chakra Tree", "cat_key": "TREE", "price": 350, "p10": 295, "p50": 255, "unit": "per piece", "img": "tree photos/Seven Charka Tree.jpg", "feat": True},
+    {"id": 34, "name": "Money Magnet Tree", "cat_key": "TREE", "price": 320, "p10": 290, "p50": 275, "unit": "per piece", "img": "tree photos/Money Magnet Tree.png", "feat": True},
+    {"id": 35, "name": "Rose Quartz Tree", "cat_key": "TREE", "price": 360, "p10": 295, "p50": 250, "unit": "per piece", "img": "tree photos/Rose Quatz Tree.jpg", "feat": True},
+    {"id": 36, "name": "Evil Eye Tree", "cat_key": "TREE", "price": 350, "p10": 300, "p50": 260, "unit": "per piece", "img": "tree photos/Pyrite cluster tree.jpg", "feat": False},
+
+    # ── ANKLET Category ──────────────────────────────────────────────────────
+    {"id": 37, "name": "Dhanyog Anklet", "cat_key": "ANKLET", "price": 180, "unit": "single/pair", "size_info": "180 SINGLE PC / 220 PAIR", "img": "anklet/Dhanyog Anklet.jpeg", "feat": True},
+    {"id": 38, "name": "Pyrite Anklet", "cat_key": "ANKLET", "price": 180, "unit": "single/pair", "size_info": "180 SINGLE PC / 220 PAIR", "img": "anklet/Pyrite Anklet.jpeg", "feat": True},
+    {"id": 39, "name": "Triple Protection Anklet", "cat_key": "ANKLET", "price": 180, "unit": "single/pair", "size_info": "180 SINGLE PC / 220 PAIR", "img": "anklet/Triple Protection Anklet.jpeg", "feat": True},
+
+    # ── TUMBLE STONE Category ────────────────────────────────────────────────
+    {"id": 40, "name": "Rose Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "tumble stones/Rose Tumble Stone.jpeg", "feat": True},
+    {"id": 41, "name": "Amethyst Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "tumble stones/Amethyst Tumble Stone.jpeg", "feat": True},
+    {"id": 42, "name": "Selenite Tumble Stone", "cat_key": "TUMBLE STONE", "price": 700, "unit": "per kg", "img": "", "feat": False},
+    {"id": 43, "name": "Clear Quartz Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "", "feat": False},
+    {"id": 44, "name": "Black Obsidian Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "", "feat": False},
+    {"id": 45, "name": "Black Tourmaline Tumble Stone", "cat_key": "TUMBLE STONE", "price": 750, "unit": "per kg", "img": "", "feat": False},
+    {"id": 46, "name": "Red Jasper Tumble Stone", "cat_key": "TUMBLE STONE", "price": 500, "unit": "per kg", "img": "", "feat": False},
+    {"id": 47, "name": "Green Aventurine Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "tumble stones/Green Aventurine Tumble Stone.jpeg", "feat": False},
+    {"id": 48, "name": "Green Jade Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "tumble stones/Green Jade Tumble Stone.jpeg", "feat": False},
+    {"id": 49, "name": "Tiger Eye Tumble Stone", "cat_key": "TUMBLE STONE", "price": 750, "unit": "per kg", "img": "tumble stones/Tiger Eye Tumble Stone.jpeg", "feat": True},
+    {"id": 50, "name": "Pyrite Tumble Stone", "cat_key": "TUMBLE STONE", "price": 780, "unit": "per kg", "img": "", "feat": False},
+    {"id": 51, "name": "Multi Flourite Tumble Stone", "cat_key": "TUMBLE STONE", "price": 1480, "unit": "per kg", "img": "", "feat": False},
+    {"id": 52, "name": "Citrine Natural Tumble Stone", "cat_key": "TUMBLE STONE", "price": 1990, "unit": "per kg", "img": "tumble stones/Citrine Natural Tumble Stone.jpeg", "feat": True},
+    {"id": 53, "name": "Citrine Hydro Tumble Stone", "cat_key": "TUMBLE STONE", "price": 3680, "unit": "per kg", "img": "tumble stones/Citrine Hydro Tumble Stone.jpeg", "feat": False},
+    {"id": 54, "name": "Aquamarine Tumble Stone", "cat_key": "TUMBLE STONE", "price": 1200, "unit": "per kg", "img": "", "feat": False},
+    {"id": 55, "name": "Carnilane Tumble Stone", "cat_key": "TUMBLE STONE", "price": 750, "unit": "per kg", "img": "tumble stones/Carnilane Tumble Stone.jpeg", "feat": False},
+    {"id": 56, "name": "Dalmatian Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "", "feat": False},
+    {"id": 57, "name": "Sodalite Tumble Stone", "cat_key": "TUMBLE STONE", "price": 650, "unit": "per kg", "img": "tumble stones/Sodalite Tumble Stone.jpeg", "feat": False},
+    {"id": 58, "name": "Lapis Lazuli Tumble Stone", "cat_key": "TUMBLE STONE", "price": 850, "unit": "per kg", "img": "tumble stones/lapiz lazuli tumble stone .jpeg", "feat": False},
+    {"id": 59, "name": "Hematite Tumble Stone", "cat_key": "TUMBLE STONE", "price": 500, "unit": "per kg", "img": "", "feat": False},
+    {"id": 60, "name": "Labradorite Tumble Stone", "cat_key": "TUMBLE STONE", "price": 750, "unit": "per kg", "img": "", "feat": False},
+
+    # ── ROUGH Category ───────────────────────────────────────────────────────
+    {"id": 64, "name": "Multi Flourite Rough Stone", "cat_key": "ROUGH", "price": 270, "unit": "per kg", "img": "", "feat": False},
+    {"id": 65, "name": "Carnilane Rough Stone", "cat_key": "ROUGH", "price": 300, "unit": "per kg", "img": "", "feat": False},
+    {"id": 66, "name": "Black Tourmaline Rough Stone", "cat_key": "ROUGH", "price": 260, "unit": "per kg", "img": "", "feat": False},
+    {"id": 67, "name": "Green Aventurine Rough Stone", "cat_key": "ROUGH", "price": 300, "unit": "per kg", "img": "", "feat": False},
+    {"id": 68, "name": "Citrine Natural Rough Stone", "cat_key": "ROUGH", "price": 850, "unit": "per kg", "img": "", "feat": False},
+    {"id": 69, "name": "Amethyst Rough Stone", "cat_key": "ROUGH", "price": 450, "unit": "per kg", "img": "", "feat": False},
+    {"id": 70, "name": "Rose Quartz Rough Stone", "cat_key": "ROUGH", "price": 280, "unit": "per kg", "img": "", "feat": False},
+
+    # ── HANGINGS Category ────────────────────────────────────────────────────
+    {"id": 71, "name": "Seven Chakra Tumble with Evil Hanging (Dori)", "cat_key": "HANGINGS", "price": 190, "unit": "per piece", "img": "", "feat": False},
+    {"id": 72, "name": "Seven Chakra Tumble with Chip Hanging", "cat_key": "HANGINGS", "price": 190, "unit": "per piece", "img": "", "feat": False},
+    {"id": 73, "name": "Pyrite Cluster Evil Eye Hanging", "cat_key": "HANGINGS", "price": 190, "unit": "per piece", "img": "", "feat": True},
+    {"id": 74, "name": "Metal Pyrite Cluster Hanging", "cat_key": "HANGINGS", "price": 190, "unit": "per piece", "img": "", "feat": False},
+    {"id": 75, "name": "Clear Quartz Tumble with Evil Eye Hanging", "cat_key": "HANGINGS", "price": 230, "unit": "per piece", "img": "", "feat": False},
+    {"id": 76, "name": "Metal Seven Chakra 21 Beads Hanging", "cat_key": "HANGINGS", "price": 160, "unit": "per piece", "img": "", "feat": False},
+    {"id": 77, "name": "Metal Seven Chakra 15 Beads (Dori)", "cat_key": "HANGINGS", "price": 150, "unit": "per piece", "img": "", "feat": False},
+    {"id": 78, "name": "3 Evil Eye with Pyrite Cluster Hanging", "cat_key": "HANGINGS", "price": 160, "unit": "per piece", "img": "", "feat": True},
+    {"id": 79, "name": "Black Tourmaline & Selenite with Evil Eye (Dori)", "cat_key": "HANGINGS", "price": 180, "unit": "per piece", "img": "", "feat": False},
+    {"id": 80, "name": "Black Tourmaline (Dori)", "cat_key": "HANGINGS", "price": 110, "unit": "per piece", "img": "", "feat": False},
+    {"id": 81, "name": "Selenite Hanging", "cat_key": "HANGINGS", "price": 110, "unit": "per piece", "img": "", "feat": False},
+    {"id": 82, "name": "Black Tourmaline with Evil Eye (Dori)", "cat_key": "HANGINGS", "price": 120, "unit": "per piece", "img": "", "feat": False},
+    {"id": 83, "name": "Selenite with Evil Eye", "cat_key": "HANGINGS", "price": 120, "unit": "per piece", "img": "", "feat": False},
+    {"id": 84, "name": "Pyrite Cluster Key Chain 3 PC", "cat_key": "HANGINGS", "price": 110, "unit": "per piece", "img": "", "feat": False},
+    {"id": 85, "name": "Pyrite Cluster Key Chain 1 PC", "cat_key": "HANGINGS", "price": 110, "unit": "per piece", "img": "", "feat": False},
+
+    # ── ZIBU COINS Category ──────────────────────────────────────────────────
+    {"id": 86, "name": "Green Jade Zibu Coin", "cat_key": "ZIBU COINS", "price": 150, "unit": "per piece", "img": "zibu coins/Green Jade Zibu Coin.jpeg", "feat": True},
+    {"id": 87, "name": "Pyrite Zibu Coin", "cat_key": "ZIBU COINS", "price": 150, "unit": "per piece", "img": "zibu coins/Pyrite Zibu Coin.jpeg", "feat": True},
+    {"id": 88, "name": "Rose Quartz Zibu Coin", "cat_key": "ZIBU COINS", "price": 150, "unit": "per piece", "img": "zibu coins/Rose Zibu Coin.jpeg", "feat": True},
+    {"id": 89, "name": "Seven Chakra Zibu Coin", "cat_key": "ZIBU COINS", "price": 150, "unit": "per piece", "img": "zibu coins/Seven Chakra Zibu Coin.jpeg", "feat": True},
+
+    # ── BRACELET CHIP Category ───────────────────────────────────────────────
+    {"id": 90, "name": "7 Chakra Chip Bracelet", "cat_key": "BRACELET CHIP", "price": 250, "unit": "per piece", "img": "", "feat": False},
+    {"id": 91, "name": "Dhanyog Chip Bracelet", "cat_key": "BRACELET CHIP", "price": 250, "unit": "per piece", "img": "", "feat": False},
+    {"id": 92, "name": "Money Magnet Chip Bracelet", "cat_key": "BRACELET CHIP", "price": 250, "unit": "per piece", "img": "Money Magnet.jpg", "feat": True},
+    {"id": 93, "name": "Carnilane Chip Bracelet", "cat_key": "BRACELET CHIP", "price": 250, "unit": "per piece", "img": "Carnilane.webp", "feat": False},
+    {"id": 94, "name": "Rose Chip Bracelet", "cat_key": "BRACELET CHIP", "price": 250, "unit": "per piece", "img": "Rose.jpg", "feat": True},
+    {"id": 95, "name": "Amethyst Chip Bracelet", "cat_key": "BRACELET CHIP", "price": 250, "unit": "per piece", "img": "Amethyst.jpg", "feat": True},
+
+    # ── PYRAMIDS Category ────────────────────────────────────────────────────
+    {"id": 96, "name": "Citrine 3 Inch Pyramid", "cat_key": "PYRAMIDS", "price": 250, "unit": "per piece", "img": "", "feat": False},
+    {"id": 97, "name": "Laxmi Shree Yantra 4 Inch Pyramid", "cat_key": "PYRAMIDS", "price": 290, "unit": "per piece", "img": "", "feat": True},
+    {"id": 98, "name": "Pyrite Laxmi Pyramid", "cat_key": "PYRAMIDS", "price": 250, "unit": "per piece", "img": "", "feat": True},
+    {"id": 99, "name": "Money Magnet Pyramid", "cat_key": "PYRAMIDS", "price": 250, "unit": "per piece", "img": "", "feat": True},
+    {"id": 100, "name": "Black Tourmaline Pyramid", "cat_key": "PYRAMIDS", "price": 250, "unit": "per piece", "img": "", "feat": False},
+
+    # ── SELENITE PRODUCTS Category ───────────────────────────────────────────
+    {"id": 101, "name": "Selenite Round Shape Plate Plain", "cat_key": "SELENITE PRODUCTS", "price": 180, "unit": "per piece", "img": "selenite charging plates and lamp/PLAIN ROUND SHAPE SELENITE PLATE.jpeg", "feat": False},
+    {"id": 102, "name": "Selenite Round Shape Plate Carving", "cat_key": "SELENITE PRODUCTS", "price": 220, "unit": "per piece", "img": "selenite charging plates and lamp/Selenite Round Shape Plate Carving.jpeg", "feat": True},
+    {"id": 103, "name": "Selenite Round Bowl", "cat_key": "SELENITE PRODUCTS", "price": 450, "unit": "per piece", "img": "", "feat": False},
+    {"id": 104, "name": "Selenite Star Moon Bowl", "cat_key": "SELENITE PRODUCTS", "price": 460, "unit": "per piece", "img": "", "feat": False},
+    {"id": 105, "name": "Selenite Any Shape Bowl 3 Inch", "cat_key": "SELENITE PRODUCTS", "price": 460, "unit": "per piece", "img": "", "feat": False},
+    {"id": 106, "name": "Selenite Lamp (Owl)", "cat_key": "SELENITE PRODUCTS", "price": 220, "unit": "per piece", "img": "", "feat": False},
+    {"id": 107, "name": "Selenite Lamp (Square)", "cat_key": "SELENITE PRODUCTS", "price": 220, "unit": "per piece", "img": "", "feat": False},
+    {"id": 108, "name": "Seven Chakra Selenite Lamp", "cat_key": "SELENITE PRODUCTS", "price": 280, "unit": "per piece", "img": "", "feat": False},
+    {"id": 109, "name": "Citrine Selenite Lamp", "cat_key": "SELENITE PRODUCTS", "price": 300, "unit": "per piece", "img": "", "feat": False},
+
+    # ── TORTOISE Category ────────────────────────────────────────────────────
+    {"id": 110, "name": "Money Magnet Tortoise", "cat_key": "TORTOISE", "price": 250, "unit": "per piece", "img": "", "feat": False},
+    {"id": 111, "name": "Pyrite Tortoise", "cat_key": "TORTOISE", "price": 250, "unit": "per piece", "img": "", "feat": True},
+    {"id": 112, "name": "Seven Chakra Tortoise", "cat_key": "TORTOISE", "price": 250, "unit": "per piece", "img": "", "feat": False},
+
+    # ── PEDANTS Category ─────────────────────────────────────────────────────
+    {"id": 113, "name": "Rose Quartz Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 114, "name": "Amethyst Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 115, "name": "Green Aventurine Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 116, "name": "Clear Quartz Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 117, "name": "Tiger Eye Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 118, "name": "Red Jasper Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 119, "name": "Opal Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 120, "name": "Lapis Lazuli Pendant", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+    {"id": 121, "name": "Pencil Cap Pendant Single Point", "cat_key": "PEDANTS", "price": 130, "unit": "per piece", "img": "", "feat": False},
+
+    # ── RING Category ────────────────────────────────────────────────────────
+    {"id": 129, "name": "Citrine Ring", "cat_key": "RING", "price": 150, "unit": "per piece", "img": "", "feat": False},
+    {"id": 130, "name": "Amethyst Ring", "cat_key": "RING", "price": 150, "unit": "per piece", "img": "", "feat": False},
+    {"id": 131, "name": "Pyrite Ring", "cat_key": "RING", "price": 150, "unit": "per piece", "img": "", "feat": False},
+    {"id": 132, "name": "Black Obsidian Ring", "cat_key": "RING", "price": 150, "unit": "per piece", "img": "", "feat": False},
+    {"id": 133, "name": "Tiger Eye Ring", "cat_key": "RING", "price": 150, "unit": "per piece", "img": "", "feat": False},
+
+    # ── CHIPS Category ───────────────────────────────────────────────────────
+    {"id": 134, "name": "Amethyst Chips", "cat_key": "CHIPS", "price": 170, "unit": "per kg", "img": "chips/Amethyst Chips.jpeg", "feat": True},
+    {"id": 135, "name": "Clear Quartz Chips", "cat_key": "CHIPS", "price": 170, "unit": "per kg", "img": "chips/Clear Quatz Chips.jpeg", "feat": False},
+    {"id": 136, "name": "Rose Quartz Chips", "cat_key": "CHIPS", "price": 170, "unit": "per kg", "img": "", "feat": False},
+    {"id": 137, "name": "Garnet Chips", "cat_key": "CHIPS", "price": 210, "unit": "per kg", "img": "chips/Garnet Chips.jpeg", "feat": False},
+    {"id": 138, "name": "Rainbow Moonstone Chips", "cat_key": "CHIPS", "price": 250, "unit": "per kg", "img": "chips/Rainbow Moonstone Chips.jpeg", "feat": True},
+    {"id": 139, "name": "Amazonite Chips", "cat_key": "CHIPS", "price": 180, "unit": "per kg", "img": "chips/Amazonite Chips.jpeg", "feat": False},
+    {"id": 140, "name": "Green Jade Chips", "cat_key": "CHIPS", "price": 180, "unit": "per kg", "img": "chips/Green Jade Chips.jpeg", "feat": False},
+    {"id": 141, "name": "Green Aventurine Chips", "cat_key": "CHIPS", "price": 180, "unit": "per kg", "img": "chips/Green Aventurin E Chips.jpeg", "feat": False},
+    {"id": 142, "name": "Sunstone Chips", "cat_key": "CHIPS", "price": 180, "unit": "per kg", "img": "", "feat": False},
+    {"id": 143, "name": "Black Agate Chips", "cat_key": "CHIPS", "price": 160, "unit": "per kg", "img": "chips/Black Agate Chips.jpeg", "feat": False},
+    {"id": 144, "name": "Carnilane Chips", "cat_key": "CHIPS", "price": 170, "unit": "per kg", "img": "chips/Carnilane Chips.jpeg", "feat": False},
+    {"id": 145, "name": "White Agate Chips", "cat_key": "CHIPS", "price": 160, "unit": "per kg", "img": "chips/White Agate Chips.jpeg", "feat": False},
+    {"id": 146, "name": "Red Jasper Chips", "cat_key": "CHIPS", "price": 170, "unit": "per kg", "img": "", "feat": False},
+    {"id": 147, "name": "Yellow Aventurine Chips", "cat_key": "CHIPS", "price": 180, "unit": "per kg", "img": "chips/Yello Aventurine Chips.jpeg", "feat": False},
+    {"id": 148, "name": "Lapis Lazuli Chips", "cat_key": "CHIPS", "price": 410, "unit": "per kg", "img": "chips/Lapiz Chips.jpeg", "feat": True},
+]
 
 class Command(BaseCommand):
-    help = "Seed database with exactly the Aurastone wholesale catalogue."
+    help = "Seed database with exact product taxonomy, names, prices, categories, and ImageKit links from spreadsheet."
 
     def handle(self, *args, **options):
-        # 1. Clean up ALL existing products to ensure no duplicates or extra ovals
+        # 1. Clean up ALL existing products
         Product.objects.all().delete()
         self.stdout.write(self.style.WARNING("Cleared all products from the database."))
 
         # 2. Seed wrist sizes
-        self._seed_wrist_sizes()
-
-        # 3. Seed bracelets
-        self._seed_bracelets()
-
-        # 4. Seed selenite plates & accessories
-        self._seed_other_items()
-
-        self.stdout.write(self.style.SUCCESS("Database seeding completed successfully!"))
-
-    # ── private helpers ───────────────────────────────────────────────────
-
-    def _seed_wrist_sizes(self):
         WristSize.objects.all().delete()
         WristSize.objects.bulk_create([WristSize(**ws) for ws in WRIST_SIZES])
-        self.stdout.write(self.style.SUCCESS(f"  [OK]  {len(WRIST_SIZES)} wrist sizes"))
+        self.stdout.write(self.style.SUCCESS(f"  [OK]  {len(WRIST_SIZES)} wrist sizes seeded."))
 
-    def _seed_bracelets(self):
+        # 3. Seed Products
         created = 0
-        for row in BRACELETS:
-            num, name, p1, p10, p50, stone, color, material, bead, featured = row
-            img_key = name.upper().replace(" ", "_")
-            self._create(
-                name=name, price=p1, price_10pc=p10, price_50pc=p50,
-                stone_type=stone, color=color, material=material,
-                bead_size=bead, is_featured=featured,
-                img_key=img_key, collection="BEST SELLERS", category="Gemstone Bracelets",
+        for item in PRODUCTS_DATA:
+            coll, cat = TAXONOMY.get(item["cat_key"], ("BEST SELLERS", item["cat_key"]))
+            
+            slug = slugify(item["name"])
+            base, n = slug, 1
+            while Product.objects.filter(slug=slug).exists():
+                slug = f"{base}-{n}"
+                n += 1
+
+            stone_type = item["name"].replace(" Bracelet", "").replace(" Anklet", "").replace(" Tree", "").replace(" Tumble Stone", "").replace(" Rough Stone", "").replace(" Zibu Coin", "").replace(" Chip Bracelet", "").replace(" Chips", "").replace(" Pyramid", "").replace(" Pendant", "").replace(" Ring", "").strip()
+
+            img_url = ik_url(item["img"]) if item.get("img") else f"https://placehold.co/480x480/f5f0e8/c9a84c?text={quote(item['name'])}"
+
+            wa_link = f"https://wa.me/919104139899?text=Hi%2C%20I%20am%20interested%20in%20{quote(item['name'])}"
+
+            Product.objects.create(
+                id=item["id"],
+                name=item["name"],
+                slug=slug,
+                price=item.get("price"),
+                price_10pc=item.get("p10"),
+                price_50pc=item.get("p50"),
+                price_unit=item.get("unit", "per piece"),
+                stone_type=stone_type,
+                color="",
+                material="Natural Gemstone",
+                bead_size=item.get("bead", ""),
+                size_info=item.get("size_info", ""),
+                gender="Unisex",
+                collection=coll,
+                category=cat,
+                image_url=img_url,
+                whatsapp_link=wa_link,
+                is_featured=item.get("feat", False),
             )
             created += 1
-        self.stdout.write(self.style.SUCCESS(f"  [OK]  {created} bracelets"))
 
-    def _seed_other_items(self):
-        created = 0
-        other_mappings = {
-            "Seven Chakra Selenite Plate": ("BEST SELLERS", "Selenite Stone"),
-            "Rashi Selenite Plate": ("BEST SELLERS", "Selenite Stone"),
-            "Pyrite Frame with 7 Horses": ("HOME & DECOR", "Rough Stone"),
-            "Crystal Keychain": ("JEWELRY & ACCESSORIES", "Gemstone"),
-        }
-        for row in SELENITE_ITEMS:
-            num, name, p1, p10, p50, stone, color, material, orig_cat = row
-            img_key = name.upper().replace(" ", "_")
-            coll, cat = other_mappings.get(name, ("BEST SELLERS", orig_cat))
-            self._create(
-                name=name, price=p1 or 0, price_10pc=p10, price_50pc=p50,
-                stone_type=stone, color=color, material=material,
-                bead_size="", is_featured=False,
-                img_key=img_key, collection=coll, category=cat,
-            )
-            created += 1
-        self.stdout.write(self.style.SUCCESS(f"  [OK]  {created} other items"))
-
-    def _create(self, *, name, price, price_10pc, price_50pc,
-                stone_type, color, material, bead_size,
-                is_featured, img_key, collection, category):
-        slug = slugify(name)
-        base, n = slug, 1
-        while Product.objects.filter(slug=slug).exists():
-            slug = f"{base}-{n}"
-            n += 1
-
-        Product.objects.create(
-            name=name,
-            slug=slug,
-            price=price,
-            price_10pc=price_10pc,
-            price_50pc=price_50pc,
-            price_100pc=None,
-            stone_type=stone_type,
-            color=color,
-            material=material,
-            bead_size=bead_size,
-            gender="Unisex",
-            collection=collection,
-            category=category,
-            is_featured=is_featured,
-            image_url=img(img_key, name),
-            whatsapp_link=wa(name, price),
-        )
+        self.stdout.write(self.style.SUCCESS(f"Successfully seeded {created} products with exact categories and ImageKit links!"))
