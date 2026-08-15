@@ -16,7 +16,7 @@ function ProductImage({ src, alt, stoneName }) {
 
   const isPlaceholder = src?.includes('placehold.co');
 
-  if (isPlaceholder || hasError) {
+  if (!src || isPlaceholder || hasError) {
     return (
       <div className="img-placeholder" aria-label={alt}>
         <div className="img-placeholder-inner">
@@ -44,8 +44,9 @@ export default function ProductCard({ product, onOpenModal }) {
   const handleQuote = (e) => {
     e.stopPropagation();
     const priceText = product.price ? ` priced at ₹${product.price}` : '';
+    const sizeText = product.price_unit !== 'per kg' ? ` (Size: ${selectedSize})` : '';
     const text = encodeURIComponent(
-      `Hi, I am interested in ${product.name} (Size: ${selectedSize})${priceText}`
+      `Hi, I am interested in ${product.name}${sizeText}${priceText}`
     );
     window.open(`https://wa.me/+919104139899?text=${text}`, '_blank', 'noopener,noreferrer');
   };
@@ -126,27 +127,29 @@ export default function ProductCard({ product, onOpenModal }) {
         )}
 
         {/* ── Bead size selector ── */}
-        <div
-          className="size-section"
-          onClick={e => e.stopPropagation()}
-          role="group"
-          aria-label="Select bead size"
-        >
-          <div className="size-label">Bead Size</div>
-          <div className="size-options">
-            {BEAD_SIZES.map(sz => (
-              <button
-                key={sz}
-                className={`size-btn${selectedSize === sz ? ' selected' : ''}`}
-                onClick={() => setSelectedSize(sz)}
-                aria-label={`Bead size ${sz}`}
-                aria-pressed={selectedSize === sz}
-              >
-                {sz}
-              </button>
-            ))}
+        {product.price_unit !== 'per kg' && (
+          <div
+            className="size-section"
+            onClick={e => e.stopPropagation()}
+            role="group"
+            aria-label="Select bead size"
+          >
+            <div className="size-label">Bead Size</div>
+            <div className="size-options">
+              {BEAD_SIZES.map(sz => (
+                <button
+                  key={sz}
+                  className={`size-btn${selectedSize === sz ? ' selected' : ''}`}
+                  onClick={() => setSelectedSize(sz)}
+                  aria-label={`Bead size ${sz}`}
+                  aria-pressed={selectedSize === sz}
+                >
+                  {sz}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* ── Footer: price + tiers + CTA ── */}
         <div className="card-footer">

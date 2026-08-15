@@ -26,8 +26,9 @@ export default function ProductModal({ product, onClose }) {
 
   const handleQuote = () => {
     const priceText = product.price ? ` priced at ₹${product.price}` : '';
+    const sizeText = product.price_unit !== 'per kg' ? ` (Size: ${selectedSize})` : '';
     const msg = encodeURIComponent(
-      `Hi, I am interested in ${product.name} (Size: ${selectedSize})${priceText}`
+      `Hi, I am interested in ${product.name}${sizeText}${priceText}`
     );
     window.open(`https://wa.me/919104139899?text=${msg}`, '_blank', 'noopener,noreferrer');
   };
@@ -50,13 +51,22 @@ export default function ProductModal({ product, onClose }) {
           <div className="modal-inner">
             {/* LEFT: Image */}
             <div className="modal-image">
-              <img
-                src={product.image_url}
-                alt={product.name}
-                loading="eager"
-                decoding="async"
-                onError={(e) => { e.target.src = 'https://placehold.co/500x500/f5f0e8/c9a84c?text=StoneAura'; }}
-              />
+              {product.image_url ? (
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  loading="eager"
+                  decoding="async"
+                  onError={(e) => { e.target.src = 'https://placehold.co/500x500/f5f0e8/c9a84c?text=StoneAura'; }}
+                />
+              ) : (
+                <div className="img-placeholder" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f0e8' }}>
+                  <div className="img-placeholder-inner" style={{ textAlign: 'center' }}>
+                    <span className="img-placeholder-gem" style={{ fontSize: '2.5rem' }}>💎</span>
+                    <div className="img-placeholder-name" style={{ fontSize: '1rem', color: '#8c763e', marginTop: '8px', fontWeight: '500' }}>{product.stone_type || product.name}</div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* RIGHT: Details */}
@@ -122,37 +132,39 @@ export default function ProductModal({ product, onClose }) {
               )}
 
               {/* Wrist Size Selector */}
-              <div className="modal-size-section">
-                <div className="modal-size-label">
-                  Select Bead Size
-                  <button className="size-guide-link" onClick={() => setShowSizeGuide(true)}>
-                    Size Guide →
-                  </button>
-                </div>
-                <div className="modal-sizes">
-                  {WRIST_SIZES.map(sz => (
-                    <button
-                      key={sz.label}
-                      className={`modal-size-btn${selectedSize === sz.label ? ' selected' : ''}`}
-                      onClick={() => setSelectedSize(sz.label)}
-                      title={`${sz.cm} / ${sz.inches}`}
-                    >
-                      {sz.label}
+              {product.price_unit !== 'per kg' && (
+                <div className="modal-size-section">
+                  <div className="modal-size-label">
+                    Select Bead Size
+                    <button className="size-guide-link" onClick={() => setShowSizeGuide(true)}>
+                      Size Guide →
                     </button>
-                  ))}
+                  </div>
+                  <div className="modal-sizes">
+                    {WRIST_SIZES.map(sz => (
+                      <button
+                        key={sz.label}
+                        className={`modal-size-btn${selectedSize === sz.label ? ' selected' : ''}`}
+                        onClick={() => setSelectedSize(sz.label)}
+                        title={`${sz.cm} / ${sz.inches}`}
+                      >
+                        {sz.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="selected-size-info">
+                    {WRIST_SIZES.find(s => s.label === selectedSize)?.cm} &nbsp;·&nbsp;
+                    {WRIST_SIZES.find(s => s.label === selectedSize)?.inches}
+                  </div>
                 </div>
-                <div className="selected-size-info">
-                  {WRIST_SIZES.find(s => s.label === selectedSize)?.cm} &nbsp;·&nbsp;
-                  {WRIST_SIZES.find(s => s.label === selectedSize)?.inches}
-                </div>
-              </div>
+              )}
 
               <button className="modal-cta" onClick={handleQuote}>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                   <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.855L0 24l6.335-1.508A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.214-3.727.977.994-3.634-.235-.374A9.818 9.818 0 1112 21.818z"/>
                 </svg>
-                Get Quote on WhatsApp (Size: {selectedSize})
+                {product.price_unit === 'per kg' ? 'Get Quote on WhatsApp' : `Get Quote on WhatsApp (Size: ${selectedSize})`}
               </button>
             </div>
           </div>

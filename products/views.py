@@ -8,9 +8,17 @@ from .models import Product, WristSize, ContactMessage
 from .serializers import ProductSerializer, WristSizeSerializer, ContactMessageSerializer
 
 
+from rest_framework.pagination import PageNumberPagination
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 1000  # Load all by default to make sure client sees everything
+    page_size_query_param = 'page_size'
+    max_page_size = 5000
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = StandardResultsSetPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["name", "stone_type", "material", "color"]
     ordering_fields = ["price", "name", "created_at"]
