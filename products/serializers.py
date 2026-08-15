@@ -16,7 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model  = Product
         fields = [
             'id', 'name', 'slug',
-            'price', 'price_10pc', 'price_50pc', 'price_100pc',
+            'price', 'price_10pc', 'price_50pc', 'price_100pc', 'price_unit',
             'stone_type', 'material', 'bead_size', 'color',
             'gender', 'shape', 'size_info',
             'image_url', 'collection', 'category', 'whatsapp_link', 'is_featured',

@@ -22,7 +22,7 @@ const TAXONOMY = {
   "HOME & DECOR": ["Rough Stone", "Gemstone Ball", "Crystal Flowers", "Zibu Coin"],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm", "Gemstone Pendant", "Palm Stone", "Gemstone",
-    "Crystal Heart Stone", "Crystal Rakhi", "Roller And Guasha", "Tumbled Bracelets"
+    "Crystal Heart Stone", "Crystal Rakhi", "Roller And Guasha", "Tumbled Bracelets", "Anklets"
   ]
 };
 

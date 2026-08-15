@@ -31,3 +31,6 @@ frontend/node_modules/
 
 # Editor settings
 .vscode/
+
+# Local product images for migration (uploaded to ImageKit)
+frontend/public/images/products/

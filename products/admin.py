@@ -19,7 +19,7 @@ class ProductAdmin(admin.ModelAdmin):
             "fields": ("name", "slug", "collection", "category", "is_featured")
         }),
         ("Pricing", {
-            "fields": ("price",)
+            "fields": ("price", "price_unit", "price_10pc", "price_50pc", "price_100pc")
         }),
         ("Stone & Material Details", {
             "fields": ("stone_type", "material", "bead_size", "color", "gender", "shape", "size_info")

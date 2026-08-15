@@ -45,7 +45,8 @@ const TAXONOMY = {
     "Crystal Heart Stone",
     "Crystal Rakhi",
     "Roller And Guasha",
-    "Tumbled Bracelets"
+    "Tumbled Bracelets",
+    "Anklets"
   ]
 };
 
@@ -74,7 +75,8 @@ const CATEGORY_ICONS = {
   "Crystal Heart Stone": <FaHeart />,
   "Crystal Rakhi": <FaStar />,
   "Roller And Guasha": <FaSpa />,
-  "Tumbled Bracelets": <FaSyncAlt />
+  "Tumbled Bracelets": <FaSyncAlt />,
+  "Anklets": <FaSyncAlt />
 };
 
 const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;

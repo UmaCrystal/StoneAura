@@ -25,8 +25,9 @@ export default function ProductModal({ product, onClose }) {
   if (!product) return null;
 
   const handleQuote = () => {
+    const priceText = product.price ? ` priced at ₹${product.price}` : '';
     const msg = encodeURIComponent(
-      `Hi, I am interested in ${product.name} (Size: ${selectedSize}) priced at ₹${product.price}`
+      `Hi, I am interested in ${product.name} (Size: ${selectedSize})${priceText}`
     );
     window.open(`https://wa.me/919104139899?text=${msg}`, '_blank', 'noopener,noreferrer');
   };
@@ -62,7 +63,13 @@ export default function ProductModal({ product, onClose }) {
             <div className="modal-body">
               {product.stone_type && <div className="modal-stone-type">{product.stone_type}</div>}
               <h2 className="modal-title">{product.name}</h2>
-              <div className="modal-price">₹{product.price} <span className="modal-price-unit">/ piece</span></div>
+              {product.price ? (
+                <div className="modal-price">
+                  ₹{product.price} <span className="modal-price-unit">/ {product.price_unit ? product.price_unit.replace('per ', '') : 'piece'}</span>
+                </div>
+              ) : (
+                <div className="modal-price" style={{ color: '#c9a84c' }}>Price on Request</div>
+              )}
 
               {props.length > 0 && (
                 <div className="modal-props">
@@ -76,41 +83,43 @@ export default function ProductModal({ product, onClose }) {
               )}
 
               {/* Wholesale Pricing Table */}
-              <div className="modal-pricing">
-                <div className="modal-pricing-title">Wholesale Pricing</div>
-                <table className="pricing-table">
-                  <thead>
-                    <tr>
-                      <th>Qty</th>
-                      <th>Price / pc</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1 pc</td>
-                      <td className="pt-price">₹{product.price}</td>
-                    </tr>
-                    {product.price_10pc && (
+              {product.price && (
+                <div className="modal-pricing">
+                  <div className="modal-pricing-title">Wholesale Pricing</div>
+                  <table className="pricing-table">
+                    <thead>
                       <tr>
-                        <td>10 pcs</td>
-                        <td className="pt-price">₹{product.price_10pc}</td>
+                        <th>Qty</th>
+                        <th>Price / {product.price_unit ? product.price_unit.replace('per ', '') : 'pc'}</th>
                       </tr>
-                    )}
-                    {product.price_50pc && (
+                    </thead>
+                    <tbody>
                       <tr>
-                        <td>50 pcs</td>
-                        <td className="pt-price">₹{product.price_50pc}</td>
+                        <td>1 {product.price_unit ? product.price_unit.replace('per ', '') : 'pc'}</td>
+                        <td className="pt-price">₹{product.price}</td>
                       </tr>
-                    )}
-                    {product.price_100pc && (
-                      <tr>
-                        <td>100 pcs</td>
-                        <td className="pt-price">₹{product.price_100pc}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                      {product.price_10pc && (
+                        <tr>
+                          <td>10 {product.price_unit ? product.price_unit.replace('per ', 'pcs') : 'pcs'}</td>
+                          <td className="pt-price">₹{product.price_10pc}</td>
+                        </tr>
+                      )}
+                      {product.price_50pc && (
+                        <tr>
+                          <td>50 {product.price_unit ? product.price_unit.replace('per ', 'pcs') : 'pcs'}</td>
+                          <td className="pt-price">₹{product.price_50pc}</td>
+                        </tr>
+                      )}
+                      {product.price_100pc && (
+                        <tr>
+                          <td>100 {product.price_unit ? product.price_unit.replace('per ', 'pcs') : 'pcs'}</td>
+                          <td className="pt-price">₹{product.price_100pc}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
 
               {/* Wrist Size Selector */}
               <div className="modal-size-section">

@@ -41,7 +41,8 @@ const TAXONOMY = {
     "Crystal Heart Stone",
     "Crystal Rakhi",
     "Roller And Guasha",
-    "Tumbled Bracelets"
+    "Tumbled Bracelets",
+    "Anklets"
   ]
 };
 

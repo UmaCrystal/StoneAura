@@ -7,6 +7,7 @@ class Product(models.Model):
 
     # ── Tiered wholesale pricing (from AuraStone price sheet) ──────────────
     price       = models.DecimalField(max_digits=10, decimal_places=2,
+                                      null=True, blank=True,
                                       help_text="1 pc price (default display price)")
     price_10pc  = models.DecimalField(max_digits=10, decimal_places=2,
                                       null=True, blank=True, help_text="Price per pc for 10 pcs")
@@ -14,6 +15,7 @@ class Product(models.Model):
                                       null=True, blank=True, help_text="Price per pc for 50 pcs")
     price_100pc = models.DecimalField(max_digits=10, decimal_places=2,
                                       null=True, blank=True, help_text="Price per pc for 100 pcs")
+    price_unit  = models.CharField(max_length=50, default='per piece', blank=True)
 
     stone_type  = models.CharField(max_length=100, blank=True)
     material    = models.CharField(max_length=100, blank=True)

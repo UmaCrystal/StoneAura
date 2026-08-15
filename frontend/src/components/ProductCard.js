@@ -43,8 +43,9 @@ export default function ProductCard({ product, onOpenModal }) {
 
   const handleQuote = (e) => {
     e.stopPropagation();
+    const priceText = product.price ? ` priced at ₹${product.price}` : '';
     const text = encodeURIComponent(
-      `Hi, I am interested in ${product.name} (Size: ${selectedSize}) priced at ₹${product.price}`
+      `Hi, I am interested in ${product.name} (Size: ${selectedSize})${priceText}`
     );
     window.open(`https://wa.me/+919104139899?text=${text}`, '_blank', 'noopener,noreferrer');
   };
@@ -149,12 +150,18 @@ export default function ProductCard({ product, onOpenModal }) {
 
         {/* ── Footer: price + tiers + CTA ── */}
         <div className="card-footer">
-          <div className="price-wrap">
-            <span className="price">₹{product.price}</span>
-            <span className="price-unit">per piece</span>
-          </div>
+          {product.price ? (
+            <div className="price-wrap">
+              <span className="price">₹{product.price}</span>
+              <span className="price-unit">{product.price_unit || 'per piece'}</span>
+            </div>
+          ) : (
+            <div className="price-wrap">
+              <span className="price-request" style={{ fontSize: '0.9rem', color: '#c9a84c', fontWeight: '600' }}>Price on Request</span>
+            </div>
+          )}
 
-          {(product.price_10pc || product.price_50pc) && (
+          {product.price && (product.price_10pc || product.price_50pc) && (
             <div className="price-tiers" aria-label="Bulk pricing">
               {product.price_10pc && (
                 <span className="tier-tag">10pc: ₹{product.price_10pc}</span>
