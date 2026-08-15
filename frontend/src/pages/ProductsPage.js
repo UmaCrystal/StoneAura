@@ -12,27 +12,81 @@ const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 const TAXONOMY = {
   "BEST SELLERS": [
     "Gemstone Bracelets",
-    "TREE",
+    "Tumbled Stones",
     "TUMBLE STONE",
+    "Pyramid Stone",
     "PYRAMIDS",
+    "Gemstone Tree",
+    "TREE",
+    "Selenite Stone",
     "SELENITE PRODUCTS",
+    "Orgone Pyramid",
+    "Healing Crystals",
     "CHIPS"
   ],
-  "JEWELRY & ACCESSORIES": [
-    "ANKLET",
-    "BRACELET CHIP",
-    "PEDANTS",
-    "RING"
+  "SPIRITUAL & HEALING": [
+    "Rudraksha",
+    "Gemstone Angels",
+    "Unique Products",
+    "HANGINGS",
+    "Jap Mala",
+    "Fancy Product",
+    "Crystal Shivling"
   ],
   "HOME & DECOR": [
+    "Rough Stone",
     "ROUGH",
+    "Gemstone Ball",
+    "Crystal Flowers",
+    "Zibu Coin",
     "ZIBU COINS",
+    "Tortoise",
     "TORTOISE"
   ],
-  "SPIRITUAL & HEALING": [
-    "HANGINGS",
-    "Unique Products"
+  "JEWELRY & ACCESSORIES": [
+    "Beads String 8mm",
+    "Gemstone Pendant",
+    "PEDANTS",
+    "Palm Stone",
+    "Gemstone",
+    "RING",
+    "Crystal Heart Stone",
+    "Crystal Rakhi",
+    "Roller And Guasha",
+    "Tumbled Bracelets",
+    "BRACELET CHIP",
+    "Anklets",
+    "ANKLET"
   ]
+};
+
+const CATEGORY_ALIASES = {
+  "Gemstone Tree": ["Gemstone Tree", "TREE"],
+  "TREE": ["Gemstone Tree", "TREE"],
+  "Anklets": ["Anklets", "ANKLET"],
+  "ANKLET": ["Anklets", "ANKLET"],
+  "Tumbled Stones": ["Tumbled Stones", "TUMBLE STONE"],
+  "TUMBLE STONE": ["Tumbled Stones", "TUMBLE STONE"],
+  "Rough Stone": ["Rough Stone", "ROUGH"],
+  "ROUGH": ["Rough Stone", "ROUGH"],
+  "Zibu Coin": ["Zibu Coin", "ZIBU COINS"],
+  "ZIBU COINS": ["Zibu Coin", "ZIBU COINS"],
+  "Tumbled Bracelets": ["Tumbled Bracelets", "BRACELET CHIP"],
+  "BRACELET CHIP": ["Tumbled Bracelets", "BRACELET CHIP"],
+  "Pyramid Stone": ["Pyramid Stone", "PYRAMIDS"],
+  "PYRAMIDS": ["Pyramid Stone", "PYRAMIDS"],
+  "Selenite Stone": ["Selenite Stone", "SELENITE PRODUCTS"],
+  "SELENITE PRODUCTS": ["Selenite Stone", "SELENITE PRODUCTS"],
+  "Gemstone Pendant": ["Gemstone Pendant", "PEDANTS"],
+  "PEDANTS": ["Gemstone Pendant", "PEDANTS"],
+  "Gemstone": ["Gemstone", "RING"],
+  "RING": ["Gemstone", "RING"],
+  "Healing Crystals": ["Healing Crystals", "CHIPS"],
+  "CHIPS": ["Healing Crystals", "CHIPS"],
+  "Unique Products": ["Unique Products", "HANGINGS"],
+  "HANGINGS": ["Unique Products", "HANGINGS"],
+  "Tortoise": ["Tortoise", "TORTOISE"],
+  "TORTOISE": ["Tortoise", "TORTOISE"]
 };
 
 const STONE_FILTERS = [
@@ -112,7 +166,8 @@ export default function ProductsPage() {
       result = result.filter(p => (p.collection || 'BEST SELLERS').toLowerCase() === activeCollection.toLowerCase());
     }
     if (activeCategory !== 'All') {
-      result = result.filter(p => (p.category || 'Gemstone Bracelets').toLowerCase() === activeCategory.toLowerCase());
+      const allowed = (CATEGORY_ALIASES[activeCategory] || [activeCategory]).map(c => c.toLowerCase());
+      result = result.filter(p => allowed.includes((p.category || 'Gemstone Bracelets').toLowerCase()));
     }
     if (activeFilter !== 'All') {
       result = result.filter(p =>
