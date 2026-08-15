@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { 
   FaGem, FaCog, FaSignOutAlt, FaSignInAlt,
   FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, 
-  FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain, 
-  FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate, 
-  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaShieldAlt, FaMagic
+  FaStar, FaRing, FaMountain, FaCoins, FaCertificate, 
+  FaSyncAlt, FaShieldAlt, FaMagic
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import AccountButton from './AccountButton';
