@@ -150,13 +150,33 @@
 .form-group { display: flex; flex-direction: column; gap: 6px; }
 .form-group.full { margin-bottom: 18px; }
 .form-group label { font-size: 0.72rem; font-weight: 700; color: #4a3728; text-transform: uppercase; letter-spacing: 0.08em; }
-.form-group input {
+.form-group input,
+.form-group select {
   padding: 11px 14px; border-radius: 10px;
   border: 1.5px solid rgba(201,168,76,0.25); background: #fdf8f0;
   font-size: 0.88rem; color: #1a1208; font-family: inherit; outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s;
 }
-.form-group input:focus { border-color: #c9a84c; background: #fff; }
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a3728' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+.form-group select option {
+  background-color: #fff;
+  color: #1a1208;
+}
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #c9a84c;
+  background-color: #fff;
+}
 .featured-check { justify-content: flex-end; padding-bottom: 4px; }
 .checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #4a3728; }
 .checkbox-label input[type=checkbox] { width: 18px; height: 18px; accent-color: #c9a84c; }
