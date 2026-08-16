@@ -51,6 +51,15 @@
 .nav a:hover { color: var(--gold); }
 .nav a:hover::after { width: 100%; }
 
+/* Active nav link highlight */
+.nav a.active {
+  color: var(--gold);
+  font-weight: 700;
+}
+.nav a.active::after {
+  width: 100%;
+}
+
 .header-cta {
   background: linear-gradient(135deg, var(--gold), var(--gold-dark));
   color: var(--white); padding: 9px 18px; border-radius: 50px;
@@ -398,6 +407,8 @@
   gap: 4px;
   position: relative;
   padding-bottom: 4px;
+  cursor: pointer;
+  text-decoration: none;
 }
 .nav-dropdown-title::after {
   content: '';
@@ -413,6 +424,14 @@
   color: var(--gold);
 }
 .nav-dropdown-trigger:hover .nav-dropdown-title::after {
+  width: 100%;
+}
+/* Active state for Products nav link */
+.nav-dropdown-title.active {
+  color: var(--gold);
+  font-weight: 700;
+}
+.nav-dropdown-title.active::after {
   width: 100%;
 }
 .mega-menu {

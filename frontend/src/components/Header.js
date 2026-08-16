@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   FaGem, FaCog, FaSignOutAlt, FaSignInAlt,
   FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, 
   FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain, 
   FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate, 
-  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaShieldAlt, FaMagic
+  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaMagic
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import AccountButton from './AccountButton';
@@ -17,94 +17,64 @@ const TAXONOMY = {
   "BEST SELLERS": [
     "Gemstone Bracelets",
     "Tumbled Stones",
-    "TUMBLE STONE",
     "Pyramid Stone",
-    "PYRAMIDS",
     "Gemstone Tree",
-    "TREE",
     "Selenite Stone",
-    "SELENITE PRODUCTS",
     "Orgone Pyramid",
-    "Healing Crystals",
-    "CHIPS"
+    "Healing Crystals"
   ],
   "SPIRITUAL & HEALING": [
     "Rudraksha",
     "Gemstone Angels",
     "Unique Products",
-    "HANGINGS",
     "Jap Mala",
     "Fancy Product",
     "Crystal Shivling"
   ],
   "HOME & DECOR": [
     "Rough Stone",
-    "ROUGH",
     "Gemstone Ball",
     "Crystal Flowers",
-    "Zibu Coin",
-    "ZIBU COINS",
-    "Tortoise",
-    "TORTOISE"
+    "Zibu Coin"
   ],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm",
     "Gemstone Pendant",
-    "PEDANTS",
     "Palm Stone",
     "Gemstone",
-    "RING",
     "Crystal Heart Stone",
     "Crystal Rakhi",
     "Roller And Guasha",
-    "Tumbled Bracelets",
-    "BRACELET CHIP",
-    "Anklets",
-    "ANKLET"
+    "Tumbled Bracelets"
   ]
 };
 
 const CATEGORY_ICONS = {
   "Gemstone Bracelets": <FaCircleNotch />,
   "Tumbled Stones": <FaBoxes />,
-  "TUMBLE STONE": <FaBoxes />,
   "Pyramid Stone": <FaGem />,
-  "PYRAMIDS": <FaGem />,
   "Gemstone Tree": <FaTree />,
-  "TREE": <FaTree />,
   "Selenite Stone": <FaFeatherAlt />,
-  "SELENITE PRODUCTS": <FaFeatherAlt />,
   "Orgone Pyramid": <FaGem />,
   "Healing Crystals": <FaMagic />,
-  "CHIPS": <FaMagic />,
   "Rudraksha": <FaSun />,
   "Gemstone Angels": <FaPray />,
   "Unique Products": <FaStar />,
-  "HANGINGS": <FaStar />,
   "Jap Mala": <FaRing />,
   "Fancy Product": <FaCrown />,
   "Crystal Shivling": <FaOm />,
   "Rough Stone": <FaMountain />,
-  "ROUGH": <FaMountain />,
   "Gemstone Ball": <FaCircle />,
   "Crystal Flowers": <FaSeedling />,
   "Zibu Coin": <FaCoins />,
-  "ZIBU COINS": <FaCoins />,
-  "Tortoise": <FaShieldAlt />,
-  "TORTOISE": <FaShieldAlt />,
   "Beads String 8mm": <FaEllipsisH />,
   "Gemstone Pendant": <FaCertificate />,
-  "PEDANTS": <FaCertificate />,
   "Palm Stone": <FaHandPaper />,
   "Gemstone": <FaGem />,
-  "RING": <FaRing />,
   "Crystal Heart Stone": <FaHeart />,
   "Crystal Rakhi": <FaStar />,
   "Roller And Guasha": <FaSpa />,
-  "Tumbled Bracelets": <FaSyncAlt />,
-  "BRACELET CHIP": <FaCircleNotch />,
-  "Anklets": <FaSyncAlt />,
-  "ANKLET": <FaSyncAlt />
+  "Tumbled Bracelets": <FaSyncAlt />
 };
 
 const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;
@@ -112,8 +82,10 @@ const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeNav, setActiveNav] = useState('home');
   const { user, login, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Collapsible accordion for mobile
   const [mobileCollectionsOpen, setMobileCollectionsOpen] = useState(false);
@@ -136,10 +108,44 @@ export default function Header() {
   };
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const handleScrollAndRoute = () => {
+      setScrolled(window.scrollY > 20);
+      const path = location.pathname;
+
+      if (path === '/about') {
+        setActiveNav('about');
+        return;
+      }
+      if (path === '/contact') {
+        setActiveNav('contact');
+        return;
+      }
+      if (path === '/products') {
+        setActiveNav('products');
+        return;
+      }
+
+      // On home path "/"
+      const scrollPos = window.scrollY;
+      const contactEl = document.getElementById('contact');
+      const aboutEl = document.getElementById('about');
+      const productsEl = document.getElementById('products');
+
+      if (contactEl && scrollPos >= contactEl.offsetTop - 180) {
+        setActiveNav('contact');
+      } else if (aboutEl && scrollPos >= aboutEl.offsetTop - 180) {
+        setActiveNav('about');
+      } else if (productsEl && scrollPos >= productsEl.offsetTop - 180) {
+        setActiveNav('products');
+      } else {
+        setActiveNav('home');
+      }
+    };
+
+    handleScrollAndRoute();
+    window.addEventListener('scroll', handleScrollAndRoute);
+    return () => window.removeEventListener('scroll', handleScrollAndRoute);
+  }, [location.pathname]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -191,9 +197,11 @@ export default function Header() {
         </a>
 
         <nav className="nav">
-          <a href="/">Home</a>
+          <a href="/" className={activeNav === 'home' ? 'active' : ''}>Home</a>
           <div className="nav-dropdown-trigger">
-            <span className="nav-dropdown-title">Products</span>
+            <a href="/#products" className={`nav-dropdown-title ${activeNav === 'products' ? 'active' : ''}`}>
+              Products
+            </a>
             <div className="mega-menu">
               <div className="mega-menu-grid">
                 {Object.keys(TAXONOMY).map(col => (
@@ -213,8 +221,8 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <a href="/about">About</a>
-          <a href="/contact">Contact</a>
+          <a href="/about" className={activeNav === 'about' ? 'active' : ''}>About</a>
+          <a href="/contact" className={activeNav === 'contact' ? 'active' : ''}>Contact</a>
         </nav>
 
         <a

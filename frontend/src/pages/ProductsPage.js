@@ -13,80 +13,73 @@ const TAXONOMY = {
   "BEST SELLERS": [
     "Gemstone Bracelets",
     "Tumbled Stones",
-    "TUMBLE STONE",
     "Pyramid Stone",
-    "PYRAMIDS",
     "Gemstone Tree",
-    "TREE",
     "Selenite Stone",
-    "SELENITE PRODUCTS",
     "Orgone Pyramid",
-    "Healing Crystals",
-    "CHIPS"
+    "Healing Crystals"
   ],
   "SPIRITUAL & HEALING": [
     "Rudraksha",
     "Gemstone Angels",
     "Unique Products",
-    "HANGINGS",
     "Jap Mala",
     "Fancy Product",
     "Crystal Shivling"
   ],
   "HOME & DECOR": [
     "Rough Stone",
-    "ROUGH",
     "Gemstone Ball",
     "Crystal Flowers",
     "Zibu Coin",
-    "ZIBU COINS",
-    "Tortoise",
-    "TORTOISE"
+    "Tortoise"
   ],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm",
     "Gemstone Pendant",
-    "PEDANTS",
     "Palm Stone",
     "Gemstone",
-    "RING",
     "Crystal Heart Stone",
     "Crystal Rakhi",
     "Roller And Guasha",
     "Tumbled Bracelets",
-    "BRACELET CHIP",
-    "Anklets",
-    "ANKLET"
+    "Anklets"
   ]
 };
 
+// Maps clean display names -> all raw DB category codes they represent
 const CATEGORY_ALIASES = {
-  "Gemstone Tree": ["Gemstone Tree", "TREE"],
-  "TREE": ["Gemstone Tree", "TREE"],
-  "Anklets": ["Anklets", "ANKLET"],
-  "ANKLET": ["Anklets", "ANKLET"],
-  "Tumbled Stones": ["Tumbled Stones", "TUMBLE STONE"],
-  "TUMBLE STONE": ["Tumbled Stones", "TUMBLE STONE"],
-  "Rough Stone": ["Rough Stone", "ROUGH"],
-  "ROUGH": ["Rough Stone", "ROUGH"],
-  "Zibu Coin": ["Zibu Coin", "ZIBU COINS"],
-  "ZIBU COINS": ["Zibu Coin", "ZIBU COINS"],
-  "Tumbled Bracelets": ["Tumbled Bracelets", "BRACELET CHIP"],
-  "BRACELET CHIP": ["Tumbled Bracelets", "BRACELET CHIP"],
-  "Pyramid Stone": ["Pyramid Stone", "PYRAMIDS"],
-  "PYRAMIDS": ["Pyramid Stone", "PYRAMIDS"],
-  "Selenite Stone": ["Selenite Stone", "SELENITE PRODUCTS"],
+  // BEST SELLERS
+  "Gemstone Tree":      ["Gemstone Tree", "TREE"],
+  "Tumbled Stones":     ["Tumbled Stones", "TUMBLE STONE"],
+  "Pyramid Stone":      ["Pyramid Stone", "PYRAMIDS"],
+  "Selenite Stone":     ["Selenite Stone", "SELENITE PRODUCTS"],
+  "Healing Crystals":   ["Healing Crystals", "CHIPS"],
+  // SPIRITUAL & HEALING
+  "Unique Products":    ["Unique Products", "HANGINGS"],
+  // HOME & DECOR
+  "Rough Stone":        ["Rough Stone", "ROUGH"],
+  "Zibu Coin":          ["Zibu Coin", "ZIBU COINS"],
+  "Tortoise":           ["Tortoise", "TORTOISE"],
+  // JEWELRY & ACCESSORIES
+  "Gemstone Pendant":   ["Gemstone Pendant", "PEDANTS"],
+  "Gemstone":           ["Gemstone", "RING"],
+  "Tumbled Bracelets":  ["Tumbled Bracelets", "BRACELET CHIP"],
+  "Anklets":            ["Anklets", "ANKLET"],
+  // Also handle direct raw code lookups (from URL params)
+  "TREE":              ["Gemstone Tree", "TREE"],
+  "TUMBLE STONE":      ["Tumbled Stones", "TUMBLE STONE"],
+  "PYRAMIDS":          ["Pyramid Stone", "PYRAMIDS"],
   "SELENITE PRODUCTS": ["Selenite Stone", "SELENITE PRODUCTS"],
-  "Gemstone Pendant": ["Gemstone Pendant", "PEDANTS"],
-  "PEDANTS": ["Gemstone Pendant", "PEDANTS"],
-  "Gemstone": ["Gemstone", "RING"],
-  "RING": ["Gemstone", "RING"],
-  "Healing Crystals": ["Healing Crystals", "CHIPS"],
-  "CHIPS": ["Healing Crystals", "CHIPS"],
-  "Unique Products": ["Unique Products", "HANGINGS"],
-  "HANGINGS": ["Unique Products", "HANGINGS"],
-  "Tortoise": ["Tortoise", "TORTOISE"],
-  "TORTOISE": ["Tortoise", "TORTOISE"]
+  "CHIPS":             ["Healing Crystals", "CHIPS"],
+  "HANGINGS":          ["Unique Products", "HANGINGS"],
+  "ROUGH":             ["Rough Stone", "ROUGH"],
+  "ZIBU COINS":        ["Zibu Coin", "ZIBU COINS"],
+  "TORTOISE":          ["Tortoise", "TORTOISE"],
+  "PEDANTS":           ["Gemstone Pendant", "PEDANTS"],
+  "RING":              ["Gemstone", "RING"],
+  "BRACELET CHIP":     ["Tumbled Bracelets", "BRACELET CHIP"],
+  "ANKLET":            ["Anklets", "ANKLET"]
 };
 
 const STONE_FILTERS = [
