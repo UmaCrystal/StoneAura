@@ -37,10 +37,15 @@ IK_BASE = "https://ik.imagekit.io/stoneaura/products/"
 def ik_url(path: str) -> str:
     if not path or path == "*BLANK*":
         return ""
-    # Encode spaces and special characters cleanly for URL
     parts = path.split("/")
-    encoded_parts = [quote(p) for p in parts]
-    return IK_BASE + "/".join(encoded_parts)
+    if len(parts) > 1:
+        subfolder = parts[0]
+        filename = "/".join(parts[1:])
+        import re
+        clean_subfolder = re.sub(r'[^a-zA-Z0-9_\-/]', '_', subfolder)
+        clean_subfolder = re.sub(r'_+', '_', clean_subfolder).strip('_')
+        return f"{IK_BASE}{clean_subfolder}/{quote(filename)}"
+    return f"{IK_BASE}{quote(path)}"
 
 # Complete 147 Product Dataset directly aligned with Spreadsheet & ImageKit
 PRODUCTS_DATA = [
