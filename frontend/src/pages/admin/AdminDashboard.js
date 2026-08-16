@@ -13,18 +13,48 @@ const API = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
 const DB_TO_DISPLAY_CATEGORY = {
   "TREE": "Gemstone Tree",
+  "Gemstone Tree": "Gemstone Tree",
   "TUMBLE STONE": "Tumbled Stones",
+  "Tumbled Stones": "Tumbled Stones",
   "PYRAMIDS": "Pyramid Stone",
+  "Pyramid Stone": "Pyramid Stone",
+  "Orgone Pyramid": "Orgone Pyramid",
   "SELENITE PRODUCTS": "Selenite Stone",
+  "Selenite Stone": "Selenite Stone",
+  
   "CHIPS": "CHIPS",
+  "Chips": "CHIPS",
+  
   "HANGINGS": "HANGINGS",
+  "Hangings": "HANGINGS",
+  "Unique Products": "HANGINGS",
+  
   "ROUGH": "Rough Stone",
+  "Rough Stone": "Rough Stone",
+  
   "ZIBU COINS": "Zibu Coins",
+  "Zibu Coins": "Zibu Coins",
+  "Zibu Coin": "Zibu Coins",
+  
   "TORTOISE": "TORTOISE",
+  "Tortoise": "TORTOISE",
+  
   "PEDANTS": "Gemstone Pendant",
+  "Pendants": "Gemstone Pendant",
+  "Gemstone Pendant": "Gemstone Pendant",
+  
   "RING": "RING",
+  "Ring": "RING",
+  "Gemstone": "RING",
+  
   "BRACELET CHIP": "BRACELET CHIP",
+  "Bracelet Chip": "BRACELET CHIP",
+  "Tumbled Bracelets": "BRACELET CHIP",
+  
   "ANKLET": "ANKLET",
+  "Anklets": "ANKLET",
+  "Anklet": "ANKLET",
+  
   "Gemstone Bracelets": "Gemstone Bracelets"
 };
 

@@ -13,7 +13,6 @@ const BASE_TAXONOMY = {
     "Selenite Stone",
     "Orgone Pyramid",
     "Healing Crystals",
-    "Chips",
     "CHIPS"
   ],
   "SPIRITUAL & HEALING": [
@@ -23,7 +22,6 @@ const BASE_TAXONOMY = {
     "Jap Mala",
     "Fancy Product",
     "Crystal Shivling",
-    "Hangings",
     "HANGINGS"
   ],
   "HOME & DECOR": [
@@ -31,22 +29,15 @@ const BASE_TAXONOMY = {
     "Gemstone Ball",
     "Crystal Flowers",
     "Zibu Coins",
-    "Tortoise",
     "TORTOISE"
   ],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm",
     "Gemstone Pendant",
-    "Pendants",
     "Palm Stone",
-    "Gemstone",
     "Crystal Heart Stone",
     "Crystal Rakhi",
     "Roller And Guasha",
-    "Tumbled Bracelets",
-    "Anklets",
-    "Bracelet Chip",
-    "Ring",
     "ANKLET",
     "BRACELET CHIP",
     "RING"
@@ -55,18 +46,48 @@ const BASE_TAXONOMY = {
 
 const DB_TO_DISPLAY_CATEGORY = {
   "TREE": "Gemstone Tree",
+  "Gemstone Tree": "Gemstone Tree",
   "TUMBLE STONE": "Tumbled Stones",
+  "Tumbled Stones": "Tumbled Stones",
   "PYRAMIDS": "Pyramid Stone",
+  "Pyramid Stone": "Pyramid Stone",
+  "Orgone Pyramid": "Orgone Pyramid",
   "SELENITE PRODUCTS": "Selenite Stone",
+  "Selenite Stone": "Selenite Stone",
+  
   "CHIPS": "CHIPS",
+  "Chips": "CHIPS",
+  
   "HANGINGS": "HANGINGS",
+  "Hangings": "HANGINGS",
+  "Unique Products": "HANGINGS",
+  
   "ROUGH": "Rough Stone",
+  "Rough Stone": "Rough Stone",
+  
   "ZIBU COINS": "Zibu Coins",
+  "Zibu Coins": "Zibu Coins",
+  "Zibu Coin": "Zibu Coins",
+  
   "TORTOISE": "TORTOISE",
+  "Tortoise": "TORTOISE",
+  
   "PEDANTS": "Gemstone Pendant",
+  "Pendants": "Gemstone Pendant",
+  "Gemstone Pendant": "Gemstone Pendant",
+  
   "RING": "RING",
+  "Ring": "RING",
+  "Gemstone": "RING",
+  
   "BRACELET CHIP": "BRACELET CHIP",
+  "Bracelet Chip": "BRACELET CHIP",
+  "Tumbled Bracelets": "BRACELET CHIP",
+  
   "ANKLET": "ANKLET",
+  "Anklets": "ANKLET",
+  "Anklet": "ANKLET",
+  
   "Gemstone Bracelets": "Gemstone Bracelets"
 };
 
