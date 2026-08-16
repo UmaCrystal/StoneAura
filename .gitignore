@@ -11,6 +11,9 @@ db.sqlite3-journal
 /staticfiles/
 /media/
 
+# Product images (hosted on ImageKit.io)
+frontend/public/images/products/
+
 # Virtual Environments
 .venv/
 venv/
