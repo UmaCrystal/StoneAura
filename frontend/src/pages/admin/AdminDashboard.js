@@ -19,7 +19,8 @@ const TAXONOMY = {
     "Selenite Stone",
     "Orgone Pyramid",
     "Healing Crystals",
-    "Chips"
+    "Chips",
+    "CHIPS"
   ],
   "SPIRITUAL & HEALING": [
     "Rudraksha",
@@ -28,14 +29,16 @@ const TAXONOMY = {
     "Jap Mala",
     "Fancy Product",
     "Crystal Shivling",
-    "Hangings"
+    "Hangings",
+    "HANGINGS"
   ],
   "HOME & DECOR": [
     "Rough Stone",
     "Gemstone Ball",
     "Crystal Flowers",
     "Zibu Coins",
-    "Tortoise"
+    "Tortoise",
+    "TORTOISE"
   ],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm",
@@ -49,7 +52,10 @@ const TAXONOMY = {
     "Tumbled Bracelets",
     "Anklets",
     "Bracelet Chip",
-    "Ring"
+    "Ring",
+    "ANKLET",
+    "BRACELET CHIP",
+    "RING"
   ]
 };
 
@@ -58,15 +64,15 @@ const DB_TO_DISPLAY_CATEGORY = {
   "TUMBLE STONE": "Tumbled Stones",
   "PYRAMIDS": "Pyramid Stone",
   "SELENITE PRODUCTS": "Selenite Stone",
-  "CHIPS": "Chips",
-  "HANGINGS": "Hangings",
+  "CHIPS": "CHIPS",
+  "HANGINGS": "HANGINGS",
   "ROUGH": "Rough Stone",
   "ZIBU COINS": "Zibu Coins",
-  "TORTOISE": "Tortoise",
-  "PEDANTS": "Pendants",
-  "RING": "Ring",
-  "BRACELET CHIP": "Bracelet Chip",
-  "ANKLET": "Anklets",
+  "TORTOISE": "TORTOISE",
+  "PEDANTS": "Gemstone Pendant",
+  "RING": "RING",
+  "BRACELET CHIP": "BRACELET CHIP",
+  "ANKLET": "ANKLET",
   "Gemstone Bracelets": "Gemstone Bracelets"
 };
 
@@ -78,19 +84,25 @@ const DISPLAY_TO_DB_CATEGORY = {
   "Selenite Stone": "SELENITE PRODUCTS",
   "Healing Crystals": "CHIPS",
   "Chips": "CHIPS",
+  "CHIPS": "CHIPS",
   "Unique Products": "HANGINGS",
   "Hangings": "HANGINGS",
+  "HANGINGS": "HANGINGS",
   "Rough Stone": "ROUGH",
   "Zibu Coin": "ZIBU COINS",
   "Zibu Coins": "ZIBU COINS",
   "Tortoise": "TORTOISE",
+  "TORTOISE": "TORTOISE",
   "Gemstone Pendant": "PEDANTS",
   "Pendants": "PEDANTS",
   "Gemstone": "RING",
   "Ring": "RING",
+  "RING": "RING",
   "Tumbled Bracelets": "BRACELET CHIP",
   "Bracelet Chip": "BRACELET CHIP",
+  "BRACELET CHIP": "BRACELET CHIP",
   "Anklets": "ANKLET",
+  "ANKLET": "ANKLET",
   "Gemstone Bracelets": "Gemstone Bracelets"
 };
 
