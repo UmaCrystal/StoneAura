@@ -33,13 +33,13 @@ const TAXONOMY = {
     "Rough Stone",
     "Gemstone Ball",
     "Crystal Flowers",
-    "Zibu Coin",
     "Zibu Coins",
     "Tortoise"
   ],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm",
     "Gemstone Pendant",
+    "Pendants",
     "Palm Stone",
     "Gemstone",
     "Crystal Heart Stone",
@@ -67,11 +67,11 @@ const CATEGORY_ALIASES = {
   "Hangings":           ["Hangings", "HANGINGS"],
   // HOME & DECOR
   "Rough Stone":        ["Rough Stone", "ROUGH"],
-  "Zibu Coin":          ["Zibu Coin", "ZIBU COINS"],
   "Zibu Coins":         ["Zibu Coins", "ZIBU COINS"],
   "Tortoise":           ["Tortoise", "TORTOISE"],
   // JEWELRY & ACCESSORIES
   "Gemstone Pendant":   ["Gemstone Pendant", "PEDANTS"],
+  "Pendants":           ["Gemstone Pendant", "Pendants", "PEDANTS"],
   "Gemstone":           ["Gemstone", "RING"],
   "Tumbled Bracelets":  ["Tumbled Bracelets", "BRACELET CHIP"],
   "Anklets":            ["Anklets", "ANKLET"],
@@ -85,9 +85,9 @@ const CATEGORY_ALIASES = {
   "CHIPS":             ["Healing Crystals", "Chips", "CHIPS"],
   "HANGINGS":          ["Unique Products", "Hangings", "HANGINGS"],
   "ROUGH":             ["Rough Stone", "ROUGH"],
-  "ZIBU COINS":        ["Zibu Coin", "Zibu Coins", "ZIBU COINS"],
+  "ZIBU COINS":        ["Zibu Coins", "ZIBU COINS"],
   "TORTOISE":          ["Tortoise", "TORTOISE"],
-  "PEDANTS":           ["Gemstone Pendant", "PEDANTS"],
+  "PEDANTS":           ["Gemstone Pendant", "Pendants", "PEDANTS"],
   "RING":              ["Gemstone", "Ring", "RING"],
   "BRACELET CHIP":     ["Tumbled Bracelets", "Bracelet Chip", "BRACELET CHIP"],
   "ANKLET":            ["Anklets", "ANKLET"]
