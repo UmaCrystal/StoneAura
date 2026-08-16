@@ -12,23 +12,91 @@ const API = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
 const TAXONOMY = {
   "BEST SELLERS": [
-    "Gemstone Bracelets", "Tumbled Stones", "Pyramid Stone",
-    "Gemstone Tree", "Selenite Stone", "Orgone Pyramid", "Healing Crystals"
+    "Gemstone Bracelets",
+    "Tumbled Stones",
+    "Pyramid Stone",
+    "Gemstone Tree",
+    "Selenite Stone",
+    "Orgone Pyramid",
+    "Healing Crystals",
+    "Chips"
   ],
   "SPIRITUAL & HEALING": [
-    "Rudraksha", "Gemstone Angels", "Unique Products",
-    "Jap Mala", "Fancy Product", "Crystal Shivling"
+    "Rudraksha",
+    "Gemstone Angels",
+    "Unique Products",
+    "Jap Mala",
+    "Fancy Product",
+    "Crystal Shivling",
+    "Hangings"
   ],
-  "HOME & DECOR": ["Rough Stone", "Gemstone Ball", "Crystal Flowers", "Zibu Coin"],
+  "HOME & DECOR": [
+    "Rough Stone",
+    "Gemstone Ball",
+    "Crystal Flowers",
+    "Zibu Coins",
+    "Tortoise"
+  ],
   "JEWELRY & ACCESSORIES": [
-    "Beads String 8mm", "Gemstone Pendant", "Palm Stone", "Gemstone",
-    "Crystal Heart Stone", "Crystal Rakhi", "Roller And Guasha", "Tumbled Bracelets", "Anklets"
+    "Beads String 8mm",
+    "Gemstone Pendant",
+    "Pendants",
+    "Palm Stone",
+    "Gemstone",
+    "Crystal Heart Stone",
+    "Crystal Rakhi",
+    "Roller And Guasha",
+    "Tumbled Bracelets",
+    "Anklets",
+    "Bracelet Chip",
+    "Ring"
   ]
 };
 
+const DB_TO_DISPLAY_CATEGORY = {
+  "TREE": "Gemstone Tree",
+  "TUMBLE STONE": "Tumbled Stones",
+  "PYRAMIDS": "Pyramid Stone",
+  "SELENITE PRODUCTS": "Selenite Stone",
+  "CHIPS": "Chips",
+  "HANGINGS": "Hangings",
+  "ROUGH": "Rough Stone",
+  "ZIBU COINS": "Zibu Coins",
+  "TORTOISE": "Tortoise",
+  "PEDANTS": "Pendants",
+  "RING": "Ring",
+  "BRACELET CHIP": "Bracelet Chip",
+  "ANKLET": "Anklets",
+  "Gemstone Bracelets": "Gemstone Bracelets"
+};
+
+const DISPLAY_TO_DB_CATEGORY = {
+  "Gemstone Tree": "TREE",
+  "Tumbled Stones": "TUMBLE STONE",
+  "Pyramid Stone": "PYRAMIDS",
+  "Orgone Pyramid": "PYRAMIDS",
+  "Selenite Stone": "SELENITE PRODUCTS",
+  "Healing Crystals": "CHIPS",
+  "Chips": "CHIPS",
+  "Unique Products": "HANGINGS",
+  "Hangings": "HANGINGS",
+  "Rough Stone": "ROUGH",
+  "Zibu Coin": "ZIBU COINS",
+  "Zibu Coins": "ZIBU COINS",
+  "Tortoise": "TORTOISE",
+  "Gemstone Pendant": "PEDANTS",
+  "Pendants": "PEDANTS",
+  "Gemstone": "RING",
+  "Ring": "RING",
+  "Tumbled Bracelets": "BRACELET CHIP",
+  "Bracelet Chip": "BRACELET CHIP",
+  "Anklets": "ANKLET",
+  "Gemstone Bracelets": "Gemstone Bracelets"
+};
+
 const EMPTY = {
-  name: "", price: "", stone_type: "", material: "",
-  bead_size: "", color: "", gender: "", shape: "",
+  name: "", price: "", price_10pc: "", price_50pc: "", price_unit: "per piece",
+  stone_type: "", material: "", bead_size: "", color: "", gender: "", shape: "",
   size_info: "", image_url: "", collection: "BEST SELLERS",
   category: "Gemstone Bracelets", is_featured: false,
 };
@@ -88,11 +156,16 @@ export default function AdminDashboard() {
       const data = await res.json();
       const items = data.results || data;
       setProducts(items);
+      
+      const validPrices = items.map(p => parseFloat(p.price)).filter(v => !isNaN(v));
+      const minPrice = validPrices.length > 0 ? Math.min(...validPrices) : 0;
+      const maxPrice = validPrices.length > 0 ? Math.max(...validPrices) : 0;
+
       setStats({
         total: items.length,
         featured: items.filter(p => p.is_featured).length,
-        minPrice: Math.min(...items.map(p => parseFloat(p.price))),
-        maxPrice: Math.max(...items.map(p => parseFloat(p.price))),
+        minPrice: minPrice,
+        maxPrice: maxPrice,
       });
     } catch { showToast("Failed to load products", "error"); }
     finally { setFetching(false); }
@@ -116,12 +189,22 @@ export default function AdminDashboard() {
   const openEdit = (p) => {
     setEditing(p);
     setForm({
-      name: p.name, price: p.price, stone_type: p.stone_type || "",
-      material: p.material || "", bead_size: p.bead_size || "",
-      color: p.color || "", gender: p.gender || "", shape: p.shape || "",
-      size_info: p.size_info || "", image_url: p.image_url || "",
+      name: p.name,
+      price: p.price || "",
+      price_10pc: p.price_10pc || "",
+      price_50pc: p.price_50pc || "",
+      price_unit: p.price_unit || "per piece",
+      stone_type: p.stone_type || "",
+      material: p.material || "",
+      bead_size: p.bead_size || "",
+      color: p.color || "",
+      gender: p.gender || "",
+      shape: p.shape || "",
+      size_info: p.size_info || "",
+      image_url: p.image_url || "",
       collection: p.collection || "BEST SELLERS",
-      category: p.category || "Gemstone Bracelets", is_featured: p.is_featured,
+      category: DB_TO_DISPLAY_CATEGORY[p.category] || p.category || "Gemstone Bracelets",
+      is_featured: p.is_featured,
     });
     setSelectedFile(null); setPreviewUrl(""); setView("form");
   };
@@ -148,16 +231,30 @@ export default function AdminDashboard() {
 
     const formData = new FormData();
     Object.keys(form).forEach(key => {
-      if (key === "is_featured") formData.append(key, form[key] ? "true" : "false");
-      else if (key === "price")  formData.append(key, parseFloat(form[key]));
-      else if (form[key] !== null && form[key] !== undefined) formData.append(key, form[key]);
+      if (key === "is_featured") {
+        formData.append(key, form[key] ? "true" : "false");
+      } else if (key === "category") {
+        // Map clean display category name back to DB raw category code
+        const dbCategory = DISPLAY_TO_DB_CATEGORY[form[key]] || form[key];
+        formData.append(key, dbCategory);
+      } else if (key === "price" || key === "price_10pc" || key === "price_50pc") {
+        const val = parseFloat(form[key]);
+        if (!isNaN(val)) {
+          formData.append(key, val);
+        } else {
+          // If empty/null, send empty string so serializer handles it as null/blank
+          formData.append(key, "");
+        }
+      } else if (form[key] !== null && form[key] !== undefined) {
+        formData.append(key, form[key]);
+      }
     });
     if (selectedFile) formData.append("image", selectedFile);
 
     try {
       const res = await fetch(url, { method, headers: { Authorization: `Bearer ${token}` }, body: formData });
       if (!res.ok) { const err = await res.json(); throw new Error(JSON.stringify(err)); }
-      showToast(editing ? "Bracelet updated!" : "Bracelet added!");
+      showToast(editing ? "Product updated!" : "Product added!");
       await fetchProducts(); setView("grid");
     } catch (err) { showToast(err.message || "Save failed", "error"); }
     finally { setSaving(false); }
@@ -168,7 +265,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`${API}/products/${id}/`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
       if (!res.ok) throw new Error("Delete failed");
-      showToast("Bracelet deleted"); setDeleteId(null); await fetchProducts();
+      showToast("Product deleted"); setDeleteId(null); await fetchProducts();
     } catch { showToast("Delete failed", "error"); }
   };
 
@@ -307,7 +404,7 @@ export default function AdminDashboard() {
             className={`sidebar-item${activeTab === "products" ? " active" : ""}`}
             onClick={() => { setActiveTab("products"); setView("grid"); setSidebarOpen(false); }}
           >
-            <FaGem className="sidebar-icon-react" /> Bracelets
+            <FaGem className="sidebar-icon-react" /> Products
           </button>
           <button
             className={`sidebar-item${activeTab === "messages" ? " active" : ""}`}
@@ -345,8 +442,8 @@ export default function AdminDashboard() {
           <div>
             {activeTab === "products" ? (
               <>
-                <h1 className="admin-title">{view === "form" ? (editing ? "Edit Bracelet" : "Add New Bracelet") : "Bracelet Management"}</h1>
-                <p className="admin-sub">{view === "form" ? "Fill in the details below" : `Showing ${paginated.length} of ${filtered.length} bracelets`}</p>
+                <h1 className="admin-title">{view === "form" ? (editing ? "Edit Product" : "Add New Product") : "Product Management"}</h1>
+                <p className="admin-sub">{view === "form" ? "Fill in the details below" : `Showing ${paginated.length} of ${filtered.length} products`}</p>
               </>
             ) : (
               <>
@@ -359,7 +456,7 @@ export default function AdminDashboard() {
           </div>
           <div className="topbar-actions">
             {activeTab === "products" && view === "grid" && (
-              <button className="btn-add" onClick={openNew}><span>+</span> Add Bracelet</button>
+              <button className="btn-add" onClick={openNew}><span>+</span> Add Product</button>
             )}
             {activeTab === "products" && view === "form" && (
               <button className="btn-back" onClick={() => setView("grid")}>← Back to List</button>
@@ -375,7 +472,7 @@ export default function AdminDashboard() {
                 {/* STATS */}
                 <div className="admin-stats">
                   {[
-                    { icon: <FaGem />,      label: "Total Bracelets", value: stats.total },
+                    { icon: <FaGem />,      label: "Total Products",  value: stats.total },
                     { icon: <FaStar />,     label: "Featured",        value: stats.featured },
                     { icon: <FaArrowDown />,label: "Lowest Price",    value: `₹${stats.minPrice}` },
                     { icon: <FaArrowUp />,  label: "Highest Price",   value: `₹${stats.maxPrice}` },
@@ -481,12 +578,31 @@ export default function AdminDashboard() {
                   <div className="form-fields">
                     <div className="form-row two">
                       <div className="form-group">
-                        <label>Bracelet Name *</label>
+                        <label>Product Name *</label>
                         <input name="name" value={form.name} onChange={handleChange} placeholder="e.g. Rose Quartz Bracelet" required />
                       </div>
                       <div className="form-group">
-                        <label>Price (₹) *</label>
-                        <input name="price" type="number" min="1" value={form.price} onChange={handleChange} placeholder="e.g. 299" required />
+                        <label>Price 1 (1 PC / 1 KG / Single) (₹) *</label>
+                        <input name="price" type="number" min="0" value={form.price} onChange={handleChange} placeholder="e.g. 299" required />
+                      </div>
+                    </div>
+
+                    <div className="form-row three">
+                      <div className="form-group">
+                        <label>Price 2 (10 PC / Pair) (₹)</label>
+                        <input name="price_10pc" type="number" min="0" value={form.price_10pc} onChange={handleChange} placeholder="e.g. 250" />
+                      </div>
+                      <div className="form-group">
+                        <label>Price 3 (50 PC) (₹)</label>
+                        <input name="price_50pc" type="number" min="0" value={form.price_50pc} onChange={handleChange} placeholder="e.g. 220" />
+                      </div>
+                      <div className="form-group">
+                        <label>Pricing Unit</label>
+                        <select name="price_unit" value={form.price_unit} onChange={handleChange}>
+                          <option value="per piece">per piece</option>
+                          <option value="per kg">per kg</option>
+                          <option value="Single / Pair">Single / Pair</option>
+                        </select>
                       </div>
                     </div>
 
@@ -528,7 +644,7 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="form-group full">
-                      <label>Bracelet Image</label>
+                      <label>Product Image</label>
                       <div className="upload-container">
                         <label className="upload-box-btn">
                           <span className="upload-box-icon"><FaUpload /></span>
@@ -571,7 +687,7 @@ export default function AdminDashboard() {
                     <div className="form-actions">
                       <button type="button" className="btn-cancel" onClick={() => setView("grid")}>Cancel</button>
                       <button type="submit" className="btn-save" disabled={saving}>
-                        {saving ? "Saving…" : (editing ? "Update Bracelet" : "Add Bracelet")}
+                        {saving ? "Saving…" : (editing ? "Update Product" : "Add Product")}
                       </button>
                     </div>
                   </div>
@@ -700,7 +816,7 @@ export default function AdminDashboard() {
         <div className="confirm-overlay" onClick={() => setDeleteId(null)}>
           <div className="confirm-box" onClick={e => e.stopPropagation()}>
             <div className="confirm-icon"><FaTrash /></div>
-            <h3>Delete Bracelet?</h3>
+            <h3>Delete Product?</h3>
             <p>This action cannot be undone.</p>
             <div className="confirm-btns">
               <button className="btn-cancel" onClick={() => setDeleteId(null)}>Cancel</button>
