@@ -10,57 +10,11 @@ import {
   FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaMagic
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductContext';
 import AccountButton from './AccountButton';
 import './Header.css';
 
-const TAXONOMY = {
-  "BEST SELLERS": [
-    "Gemstone Bracelets",
-    "Tumbled Stones",
-    "Pyramid Stone",
-    "Gemstone Tree",
-    "Selenite Stone",
-    "Orgone Pyramid",
-    "Healing Crystals",
-    "Chips",
-    "CHIPS"
-  ],
-  "SPIRITUAL & HEALING": [
-    "Rudraksha",
-    "Gemstone Angels",
-    "Unique Products",
-    "Jap Mala",
-    "Fancy Product",
-    "Crystal Shivling",
-    "Hangings",
-    "HANGINGS"
-  ],
-  "HOME & DECOR": [
-    "Rough Stone",
-    "Gemstone Ball",
-    "Crystal Flowers",
-    "Zibu Coins",
-    "Tortoise",
-    "TORTOISE"
-  ],
-  "JEWELRY & ACCESSORIES": [
-    "Beads String 8mm",
-    "Gemstone Pendant",
-    "Pendants",
-    "Palm Stone",
-    "Gemstone",
-    "Crystal Heart Stone",
-    "Crystal Rakhi",
-    "Roller And Guasha",
-    "Tumbled Bracelets",
-    "Anklets",
-    "Bracelet Chip",
-    "Ring",
-    "ANKLET",
-    "BRACELET CHIP",
-    "RING"
-  ]
-};
+
 
 const CATEGORY_ICONS = {
   "Gemstone Bracelets": <FaCircleNotch />,
@@ -110,6 +64,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState('home');
   const { user, login, logout } = useAuth();
+  const { taxonomy: TAXONOMY } = useProducts();
   const navigate = useNavigate();
   const location = useLocation();
 

@@ -6,58 +6,10 @@ import {
   FaEnvelope, FaPhone, FaUser, FaClock, FaTimes
 } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
+import { useProducts } from "../../context/ProductContext";
 import "./AdminDashboard.css";
 
 const API = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
-
-const TAXONOMY = {
-  "BEST SELLERS": [
-    "Gemstone Bracelets",
-    "Tumbled Stones",
-    "Pyramid Stone",
-    "Gemstone Tree",
-    "Selenite Stone",
-    "Orgone Pyramid",
-    "Healing Crystals",
-    "Chips",
-    "CHIPS"
-  ],
-  "SPIRITUAL & HEALING": [
-    "Rudraksha",
-    "Gemstone Angels",
-    "Unique Products",
-    "Jap Mala",
-    "Fancy Product",
-    "Crystal Shivling",
-    "Hangings",
-    "HANGINGS"
-  ],
-  "HOME & DECOR": [
-    "Rough Stone",
-    "Gemstone Ball",
-    "Crystal Flowers",
-    "Zibu Coins",
-    "Tortoise",
-    "TORTOISE"
-  ],
-  "JEWELRY & ACCESSORIES": [
-    "Beads String 8mm",
-    "Gemstone Pendant",
-    "Pendants",
-    "Palm Stone",
-    "Gemstone",
-    "Crystal Heart Stone",
-    "Crystal Rakhi",
-    "Roller And Guasha",
-    "Tumbled Bracelets",
-    "Anklets",
-    "Bracelet Chip",
-    "Ring",
-    "ANKLET",
-    "BRACELET CHIP",
-    "RING"
-  ]
-};
 
 const DB_TO_DISPLAY_CATEGORY = {
   "TREE": "Gemstone Tree",
@@ -115,6 +67,7 @@ const EMPTY = {
 
 export default function AdminDashboard() {
   const { user, loading, getToken, logout } = useAuth();
+  const { taxonomy = {}, refreshProducts } = useProducts();
   const navigate = useNavigate();
 
   // ── tab: "products" | "messages"
@@ -128,6 +81,7 @@ export default function AdminDashboard() {
   const [editing, setEditing]     = useState(null);
   const [form, setForm]           = useState(EMPTY);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [customCategory, setCustomCategory] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
   const [saving, setSaving]       = useState(false);
   const [deleteId, setDeleteId]   = useState(null);
@@ -197,6 +151,7 @@ export default function AdminDashboard() {
   const openNew = () => {
     setEditing(null); setForm(EMPTY);
     setSelectedFile(null); setPreviewUrl(""); setView("form");
+    setCustomCategory("");
   };
   const openEdit = (p) => {
     setEditing(p);
@@ -219,15 +174,22 @@ export default function AdminDashboard() {
       is_featured: p.is_featured,
     });
     setSelectedFile(null); setPreviewUrl(""); setView("form");
+    setCustomCategory("");
   };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm(f => {
       const updated = { ...f, [name]: type === "checkbox" ? checked : value };
-      if (name === "collection") updated.category = TAXONOMY[value]?.[0] || "";
+      if (name === "collection") {
+        const cats = taxonomy[value] || [];
+        updated.category = cats[0] || "Other";
+      }
       return updated;
     });
+    if (name === "collection" || name === "category") {
+      setCustomCategory("");
+    }
   };
 
   const handleFileChange = (e) => {
@@ -241,13 +203,29 @@ export default function AdminDashboard() {
     const method = editing ? "PUT" : "POST";
     const url    = editing ? `${API}/products/${editing.id}/` : `${API}/products/`;
 
+    let finalCategory = form.category;
+    if (form.category === "Other") {
+      const trimmed = customCategory.trim();
+      if (!trimmed) {
+        showToast("Please enter a custom category name", "error");
+        setSaving(false);
+        return;
+      }
+      if (trimmed.length > 100) {
+        showToast("Category name must be 100 characters or less", "error");
+        setSaving(false);
+        return;
+      }
+      finalCategory = trimmed;
+    }
+
     const formData = new FormData();
     Object.keys(form).forEach(key => {
       if (key === "is_featured") {
         formData.append(key, form[key] ? "true" : "false");
       } else if (key === "category") {
         // Map clean display category name back to DB raw category code
-        const dbCategory = DISPLAY_TO_DB_CATEGORY[form[key]] || form[key];
+        const dbCategory = DISPLAY_TO_DB_CATEGORY[finalCategory] || finalCategory;
         formData.append(key, dbCategory);
       } else if (key === "price" || key === "price_10pc" || key === "price_50pc") {
         const val = parseFloat(form[key]);
@@ -267,7 +245,11 @@ export default function AdminDashboard() {
       const res = await fetch(url, { method, headers: { Authorization: `Bearer ${token}` }, body: formData });
       if (!res.ok) { const err = await res.json(); throw new Error(JSON.stringify(err)); }
       showToast(editing ? "Product updated!" : "Product added!");
-      await fetchProducts(); setView("grid");
+      await fetchProducts();
+      if (refreshProducts) {
+        refreshProducts();
+      }
+      setView("grid");
     } catch (err) { showToast(err.message || "Save failed", "error"); }
     finally { setSaving(false); }
   };
@@ -278,6 +260,9 @@ export default function AdminDashboard() {
       const res = await fetch(`${API}/products/${id}/`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
       if (!res.ok) throw new Error("Delete failed");
       showToast("Product deleted"); setDeleteId(null); await fetchProducts();
+      if (refreshProducts) {
+        refreshProducts();
+      }
     } catch { showToast("Delete failed", "error"); }
   };
 
@@ -290,6 +275,9 @@ export default function AdminDashboard() {
         body: JSON.stringify({ is_featured: !p.is_featured }),
       });
       await fetchProducts();
+      if (refreshProducts) {
+        refreshProducts();
+      }
     } catch { showToast("Update failed", "error"); }
   };
 
@@ -380,6 +368,12 @@ export default function AdminDashboard() {
       <p>Loading dashboard…</p>
     </div>
   );
+
+  const collectionCategories = taxonomy[form.collection] || [];
+  const dropdownCategories = [...collectionCategories];
+  if (form.category && form.category !== "Other" && !dropdownCategories.includes(form.category)) {
+    dropdownCategories.push(form.category);
+  }
 
   // ──────────────────────────── RENDER ────────────────────────────
   return (
@@ -675,16 +669,33 @@ export default function AdminDashboard() {
                       <div className="form-group">
                         <label>Collection</label>
                         <select name="collection" value={form.collection} onChange={handleChange}>
-                          {Object.keys(TAXONOMY).map(col => <option key={col} value={col}>{col}</option>)}
+                          {Object.keys(taxonomy).map(col => <option key={col} value={col}>{col}</option>)}
                         </select>
                       </div>
                       <div className="form-group">
                         <label>Category</label>
                         <select name="category" value={form.category} onChange={handleChange}>
-                          {(TAXONOMY[form.collection] || []).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                          {dropdownCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                          <option value="Other">Other...</option>
                         </select>
                       </div>
                     </div>
+
+                    {form.category === "Other" && (
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label>New Category Name <span style={{ color: "red" }}>*</span></label>
+                          <input
+                            type="text"
+                            name="customCategory"
+                            value={customCategory}
+                            onChange={(e) => setCustomCategory(e.target.value)}
+                            placeholder="Enter new category name"
+                            required
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     <div className="form-row two">
                       <div className="form-group featured-check">

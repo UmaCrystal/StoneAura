@@ -4,53 +4,10 @@ import { FaGem, FaTruck, FaWhatsapp, FaExclamationTriangle } from 'react-icons/f
 import { HiSparkles } from 'react-icons/hi';
 import ProductCard from '../components/ProductCard';
 import ProductModal from '../components/ProductModal';
+import { useProducts } from '../context/ProductContext';
 import './ProductsPage.css';
 
-// Relative URL fallback — works whether running on port 8000, 3000, or any host
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
-const TAXONOMY = {
-  "BEST SELLERS": [
-    "Gemstone Bracelets",
-    "Tumbled Stones",
-    "Pyramid Stone",
-    "Gemstone Tree",
-    "Selenite Stone",
-    "Orgone Pyramid",
-    "Healing Crystals",
-    "Chips"
-  ],
-  "SPIRITUAL & HEALING": [
-    "Rudraksha",
-    "Gemstone Angels",
-    "Unique Products",
-    "Jap Mala",
-    "Fancy Product",
-    "Crystal Shivling",
-    "Hangings"
-  ],
-  "HOME & DECOR": [
-    "Rough Stone",
-    "Gemstone Ball",
-    "Crystal Flowers",
-    "Zibu Coins",
-    "Tortoise"
-  ],
-  "JEWELRY & ACCESSORIES": [
-    "Beads String 8mm",
-    "Gemstone Pendant",
-    "Pendants",
-    "Palm Stone",
-    "Gemstone",
-    "Crystal Heart Stone",
-    "Crystal Rakhi",
-    "Roller And Guasha",
-    "Tumbled Bracelets",
-    "Anklets",
-    "Bracelet Chip",
-    "Ring"
-  ]
-};
 
 // Maps clean display names -> all raw DB category codes they represent
 const CATEGORY_ALIASES = {
@@ -115,10 +72,8 @@ export default function ProductsPage() {
   const activeCollection = searchParams.get('collection') || 'All';
   const activeCategory = searchParams.get('category') || 'All';
 
-  const [products, setProducts]         = useState([]);
+  const { products, fetching: loading, error, taxonomy: TAXONOMY, refreshProducts: loadProducts } = useProducts();
   const [filtered, setFiltered]         = useState([]);
-  const [loading, setLoading]           = useState(true);
-  const [error, setError]               = useState(null);
   const [search, setSearch]             = useState('');
   const [sortBy, setSortBy]             = useState('name');
   const [modalProduct, setModalProduct] = useState(null);
@@ -130,38 +85,6 @@ export default function ProductsPage() {
   const catFilterRef = useRef(null);
   const sortRef   = useRef(null);
   const searchRef = useRef(null);
-
-  /* ── Fetch products ─────────────────────────────────────────────────────── */
-  const loadProducts = useCallback(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    fetch(`${API_BASE}/products/?ordering=${sortBy}&page_size=200`, {
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        const items = Array.isArray(data) ? data : (data.results || []);
-        setProducts(items);
-        setLoading(false);
-      })
-      .catch(err => {
-        if (err.name !== 'AbortError') {
-          setError(err.message);
-          setLoading(false);
-        }
-      });
-    return () => controller.abort();
-  }, [sortBy]);
-
-  useEffect(() => {
-    const cleanup = loadProducts();
-    return cleanup;
-  }, [loadProducts]);
 
   /* ── Filter + search ────────────────────────────────────────────────────── */
   useEffect(() => {
@@ -188,8 +111,20 @@ export default function ProductsPage() {
         p.material?.toLowerCase().includes(q)
       );
     }
+
+    // Client-side sorting
+    if (sortBy === 'name') {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === '-name') {
+      result.sort((a, b) => b.name.localeCompare(a.name));
+    } else if (sortBy === 'price') {
+      result.sort((a, b) => (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0));
+    } else if (sortBy === '-price') {
+      result.sort((a, b) => (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0));
+    }
+
     setFiltered(result);
-  }, [search, activeFilter, activeCollection, activeCategory, products]);
+  }, [search, activeFilter, activeCollection, activeCategory, products, sortBy]);
 
   // Scroll to products grid when filters change to specific choices
   useEffect(() => {
