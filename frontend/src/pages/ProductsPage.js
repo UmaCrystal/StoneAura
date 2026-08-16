@@ -125,7 +125,7 @@ export default function ProductsPage() {
     const controller = new AbortController();
     setLoading(true);
     setError(null);
-    fetch(`${API_BASE}/products/?ordering=${sortBy}&page_size=100`, {
+    fetch(`${API_BASE}/products/?ordering=${sortBy}&page_size=200`, {
       signal: controller.signal,
       headers: { Accept: 'application/json' },
     })

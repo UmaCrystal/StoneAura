@@ -84,7 +84,7 @@ export default function AdminDashboard() {
   const fetchProducts = useCallback(async () => {
     setFetching(true);
     try {
-      const res = await fetch(`${API}/products/?page_size=100&ordering=name`);
+      const res = await fetch(`${API}/products/?page_size=200&ordering=name`);
       const data = await res.json();
       const items = data.results || data;
       setProducts(items);
