@@ -17,7 +17,8 @@ const TAXONOMY = {
     "Gemstone Tree",
     "Selenite Stone",
     "Orgone Pyramid",
-    "Healing Crystals"
+    "Healing Crystals",
+    "Chips"
   ],
   "SPIRITUAL & HEALING": [
     "Rudraksha",
@@ -25,13 +26,15 @@ const TAXONOMY = {
     "Unique Products",
     "Jap Mala",
     "Fancy Product",
-    "Crystal Shivling"
+    "Crystal Shivling",
+    "Hangings"
   ],
   "HOME & DECOR": [
     "Rough Stone",
     "Gemstone Ball",
     "Crystal Flowers",
     "Zibu Coin",
+    "Zibu Coins",
     "Tortoise"
   ],
   "JEWELRY & ACCESSORIES": [
@@ -43,7 +46,9 @@ const TAXONOMY = {
     "Crystal Rakhi",
     "Roller And Guasha",
     "Tumbled Bracelets",
-    "Anklets"
+    "Anklets",
+    "Bracelet Chip",
+    "Ring"
   ]
 };
 
@@ -54,31 +59,37 @@ const CATEGORY_ALIASES = {
   "Tumbled Stones":     ["Tumbled Stones", "TUMBLE STONE"],
   "Pyramid Stone":      ["Pyramid Stone", "PYRAMIDS"],
   "Selenite Stone":     ["Selenite Stone", "SELENITE PRODUCTS"],
+  "Orgone Pyramid":     ["Orgone Pyramid", "PYRAMIDS"],
   "Healing Crystals":   ["Healing Crystals", "CHIPS"],
+  "Chips":              ["Chips", "CHIPS"],
   // SPIRITUAL & HEALING
   "Unique Products":    ["Unique Products", "HANGINGS"],
+  "Hangings":           ["Hangings", "HANGINGS"],
   // HOME & DECOR
   "Rough Stone":        ["Rough Stone", "ROUGH"],
   "Zibu Coin":          ["Zibu Coin", "ZIBU COINS"],
+  "Zibu Coins":         ["Zibu Coins", "ZIBU COINS"],
   "Tortoise":           ["Tortoise", "TORTOISE"],
   // JEWELRY & ACCESSORIES
   "Gemstone Pendant":   ["Gemstone Pendant", "PEDANTS"],
   "Gemstone":           ["Gemstone", "RING"],
   "Tumbled Bracelets":  ["Tumbled Bracelets", "BRACELET CHIP"],
   "Anklets":            ["Anklets", "ANKLET"],
+  "Bracelet Chip":      ["Bracelet Chip", "BRACELET CHIP"],
+  "Ring":               ["Ring", "RING"],
   // Also handle direct raw code lookups (from URL params)
   "TREE":              ["Gemstone Tree", "TREE"],
   "TUMBLE STONE":      ["Tumbled Stones", "TUMBLE STONE"],
-  "PYRAMIDS":          ["Pyramid Stone", "PYRAMIDS"],
+  "PYRAMIDS":          ["Pyramid Stone", "Orgone Pyramid", "PYRAMIDS"],
   "SELENITE PRODUCTS": ["Selenite Stone", "SELENITE PRODUCTS"],
-  "CHIPS":             ["Healing Crystals", "CHIPS"],
-  "HANGINGS":          ["Unique Products", "HANGINGS"],
+  "CHIPS":             ["Healing Crystals", "Chips", "CHIPS"],
+  "HANGINGS":          ["Unique Products", "Hangings", "HANGINGS"],
   "ROUGH":             ["Rough Stone", "ROUGH"],
-  "ZIBU COINS":        ["Zibu Coin", "ZIBU COINS"],
+  "ZIBU COINS":        ["Zibu Coin", "Zibu Coins", "ZIBU COINS"],
   "TORTOISE":          ["Tortoise", "TORTOISE"],
   "PEDANTS":           ["Gemstone Pendant", "PEDANTS"],
-  "RING":              ["Gemstone", "RING"],
-  "BRACELET CHIP":     ["Tumbled Bracelets", "BRACELET CHIP"],
+  "RING":              ["Gemstone", "Ring", "RING"],
+  "BRACELET CHIP":     ["Tumbled Bracelets", "Bracelet Chip", "BRACELET CHIP"],
   "ANKLET":            ["Anklets", "ANKLET"]
 };
 

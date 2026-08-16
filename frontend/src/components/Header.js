@@ -21,7 +21,8 @@ const TAXONOMY = {
     "Gemstone Tree",
     "Selenite Stone",
     "Orgone Pyramid",
-    "Healing Crystals"
+    "Healing Crystals",
+    "Chips"
   ],
   "SPIRITUAL & HEALING": [
     "Rudraksha",
@@ -29,13 +30,16 @@ const TAXONOMY = {
     "Unique Products",
     "Jap Mala",
     "Fancy Product",
-    "Crystal Shivling"
+    "Crystal Shivling",
+    "Hangings"
   ],
   "HOME & DECOR": [
     "Rough Stone",
     "Gemstone Ball",
     "Crystal Flowers",
-    "Zibu Coin"
+    "Zibu Coin",
+    "Zibu Coins",
+    "Tortoise"
   ],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm",
@@ -45,7 +49,10 @@ const TAXONOMY = {
     "Crystal Heart Stone",
     "Crystal Rakhi",
     "Roller And Guasha",
-    "Tumbled Bracelets"
+    "Tumbled Bracelets",
+    "Anklets",
+    "Bracelet Chip",
+    "Ring"
   ]
 };
 
@@ -57,9 +64,11 @@ const CATEGORY_ICONS = {
   "Selenite Stone": <FaFeatherAlt />,
   "Orgone Pyramid": <FaGem />,
   "Healing Crystals": <FaMagic />,
+  "Chips": <FaMagic />,
   "Rudraksha": <FaSun />,
   "Gemstone Angels": <FaPray />,
   "Unique Products": <FaStar />,
+  "Hangings": <FaStar />,
   "Jap Mala": <FaRing />,
   "Fancy Product": <FaCrown />,
   "Crystal Shivling": <FaOm />,
@@ -67,6 +76,8 @@ const CATEGORY_ICONS = {
   "Gemstone Ball": <FaCircle />,
   "Crystal Flowers": <FaSeedling />,
   "Zibu Coin": <FaCoins />,
+  "Zibu Coins": <FaCoins />,
+  "Tortoise": <FaSeedling />,
   "Beads String 8mm": <FaEllipsisH />,
   "Gemstone Pendant": <FaCertificate />,
   "Palm Stone": <FaHandPaper />,
@@ -74,7 +85,10 @@ const CATEGORY_ICONS = {
   "Crystal Heart Stone": <FaHeart />,
   "Crystal Rakhi": <FaStar />,
   "Roller And Guasha": <FaSpa />,
-  "Tumbled Bracelets": <FaSyncAlt />
+  "Tumbled Bracelets": <FaSyncAlt />,
+  "Anklets": <FaSpa />,
+  "Bracelet Chip": <FaSyncAlt />,
+  "Ring": <FaRing />
 };
 
 const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;
