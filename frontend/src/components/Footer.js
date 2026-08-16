@@ -6,7 +6,7 @@ import {
   FaGem, FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, FaMagic,
   FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain,
   FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate,
-  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaLocationArrow
+  FaHandPaper, FaHeart, FaSpa, FaSyncAlt
 } from 'react-icons/fa';
 import './Footer.css';
 
@@ -18,7 +18,8 @@ const TAXONOMY = {
     "Gemstone Tree",
     "Selenite Stone",
     "Orgone Pyramid",
-    "Healing Crystals"
+    "Healing Crystals",
+    "Chips"
   ],
   "SPIRITUAL & HEALING": [
     "Rudraksha",
@@ -26,13 +27,16 @@ const TAXONOMY = {
     "Unique Products",
     "Jap Mala",
     "Fancy Product",
-    "Crystal Shivling"
+    "Crystal Shivling",
+    "Hangings"
   ],
   "HOME & DECOR": [
     "Rough Stone",
     "Gemstone Ball",
     "Crystal Flowers",
-    "Zibu Coin"
+    "Zibu Coin",
+    "Zibu Coins",
+    "Tortoise"
   ],
   "JEWELRY & ACCESSORIES": [
     "Beads String 8mm",
@@ -43,7 +47,9 @@ const TAXONOMY = {
     "Crystal Rakhi",
     "Roller And Guasha",
     "Tumbled Bracelets",
-    "Anklets"
+    "Anklets",
+    "Bracelet Chip",
+    "Ring"
   ]
 };
 
@@ -53,11 +59,13 @@ const CATEGORY_ICONS = {
   "Pyramid Stone": <FaGem />,
   "Gemstone Tree": <FaTree />,
   "Selenite Stone": <FaFeatherAlt />,
-  "Orgone Pyramid": <FaLocationArrow />,
+  "Orgone Pyramid": <FaGem />,
   "Healing Crystals": <FaMagic />,
+  "Chips": <FaMagic />,
   "Rudraksha": <FaSun />,
   "Gemstone Angels": <FaPray />,
   "Unique Products": <FaStar />,
+  "Hangings": <FaStar />,
   "Jap Mala": <FaRing />,
   "Fancy Product": <FaCrown />,
   "Crystal Shivling": <FaOm />,
@@ -65,6 +73,8 @@ const CATEGORY_ICONS = {
   "Gemstone Ball": <FaCircle />,
   "Crystal Flowers": <FaSeedling />,
   "Zibu Coin": <FaCoins />,
+  "Zibu Coins": <FaCoins />,
+  "Tortoise": <FaSeedling />,
   "Beads String 8mm": <FaEllipsisH />,
   "Gemstone Pendant": <FaCertificate />,
   "Palm Stone": <FaHandPaper />,
@@ -72,7 +82,10 @@ const CATEGORY_ICONS = {
   "Crystal Heart Stone": <FaHeart />,
   "Crystal Rakhi": <FaStar />,
   "Roller And Guasha": <FaSpa />,
-  "Tumbled Bracelets": <FaSyncAlt />
+  "Tumbled Bracelets": <FaSyncAlt />,
+  "Anklets": <FaSpa />,
+  "Bracelet Chip": <FaSyncAlt />,
+  "Ring": <FaRing />
 };
 
 const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;
@@ -104,13 +117,13 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand Column */}
           <div className="footer-brand">
-            <div className="logo-brand-wrap" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <img src="/images/logo.jpeg" alt="Aurastone" className="logo-img" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(201,168,76,0.3)' }} />
+            <a href="/" className="logo-brand-wrap">
+              <img src="/images/logo.jpeg" alt="Aurastone" className="footer-logo-img" />
               <div>
-                <div className="logo-text" style={{ fontSize: '1.4rem', fontFamily: "'Cormorant Garamond', serif", fontWeight: '600', color: '#fff' }}>Aura<span>stone</span></div>
-                <div className="logo-tagline" style={{ fontSize: '0.6rem', marginTop: '-2px', textTransform: 'uppercase', color: 'var(--gold-light)', letterSpacing: '0.15em' }}>"MORE THAN BEAUTIFUL"</div>
+                <div className="logo-text">Aura<span>stone</span></div>
+                <div className="logo-tagline">More Than Beautiful</div>
               </div>
-            </div>
+            </a>
             <p className="brand-desc">
               A fresh startup dedicated to premium gemstones and healing crystals. Crafted by nature, curated with passion. We represent a new generation of quality and transparency in the world of crystals.
             </p>

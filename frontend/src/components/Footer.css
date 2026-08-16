@@ -15,24 +15,44 @@ footer {
   margin-bottom: clamp(40px, 6vw, 60px);
 }
 
+.logo-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+.footer-logo-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.35);
+  transition: var(--transition);
+}
+.logo-brand-wrap:hover .footer-logo-img {
+  transform: scale(1.05);
+  box-shadow: 0 0 22px rgba(201, 168, 76, 0.6);
+}
 .footer-brand .logo-text {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: #fff;
   letter-spacing: 0.05em;
+  line-height: 1.2;
 }
 .footer-brand .logo-text span {
-  color: var(--gold-light);
+  color: var(--gold);
 }
 .footer-brand .logo-tagline {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.85rem;
+  font-size: 0.6rem;
+  font-family: 'Montserrat', sans-serif;
   color: var(--gold-light);
-  font-style: italic;
-  letter-spacing: 0.1em;
-  margin-top: 4px;
-  margin-bottom: 16px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 .brand-desc {
   font-family: 'Montserrat', sans-serif;
