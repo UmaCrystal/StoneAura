@@ -169,14 +169,16 @@ export default function Header() {
   return (
     <header className={`header${scrolled ? ' scrolled' : ''}`}>
       <div className="header-inner">
-        <a href="/" className="logo">
-          <img src="/images/logo.jpeg" alt="Aurastone" className="logo-img" />
+        {/* <a href="/" className="logo">
+          <img src="/images/logo-removebg-preview.png" alt="Aurastone" className="logo-img" />
           <div>
-            <div className="logo-text">Aura<span>stone</span></div>
+            <div className="logo-text">Aura<span>Stone</span></div>
             <div className="logo-tagline">More Than Beautiful</div>
           </div>
+        </a> */}
+        <a href="/" className="logo">
+          <img src="/images/logo-removebg-preview.png" alt="Aurastone" className="logo-img" />
         </a>
-
         <nav className="nav">
           <a href="/" className={activeNav === 'home' ? 'active' : ''}>Home</a>
           <div className="nav-dropdown-trigger">

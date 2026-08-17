@@ -16,22 +16,16 @@
   height: 68px; gap: 12px;
 }
 
-.logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.logo { display: flex; align-items: center; flex-shrink: 0; }
 .logo-img {
-  width: 46px;
-  height: 46px;
-  min-width: 46px;
-  border-radius: 12px;
+  height: 160px; /* લોગોની ઊંચાઈ સેટ કરી, પહોળાઈ આપમેળે સેટ થશે */
+  width: auto;
   object-fit: contain;
-  background: #fff;
-  border: 1.5px solid rgba(201, 168, 76, 0.35);
-  box-shadow: 0 2px 10px rgba(201, 168, 76, 0.2);
-  transition: var(--transition);
-  padding: 2px;
+  transition: transform 0.3s ease;
+  /* બોર્ડર, બેકગ્રાઉન્ડ અને પેડિંગ કાઢી નાખ્યું છે જેથી તે 3rd ઈમેજ જેવું ક્લીન દેખાય */
 }
 .logo:hover .logo-img {
-  transform: scale(1.05);
-  box-shadow: 0 4px 16px rgba(201, 168, 76, 0.45);
+  transform: scale(1.05); /* માઉસ લઈ જવાથી થોડો મોટો થશે */
 }
 .logo-icon {
   width: 40px; height: 40px; min-width: 40px;
@@ -410,7 +404,7 @@
   .header-inner { height: 58px; }
   .logo-text { font-size: 1.2rem; }
   .logo-tagline { display: none; }
-  .logo-img { width: 38px; height: 38px; min-width: 38px; }
+  .logo-img { height: 100px; }
   .logo-icon { width: 34px; height: 34px; min-width: 34px; font-size: 1rem; }
 }
 
