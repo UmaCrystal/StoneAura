@@ -84,7 +84,7 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand Column */}
           <div className="footer-brand">
-            <Link href="/" className="logo-brand-wrap">
+            <Link to="/" className="logo-brand-wrap">
               <img src="/images/logo1.png" alt="Aurastone" className="footer-logo-img" />
             </Link>
             <p className="brand-desc">
@@ -116,10 +116,10 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Quick Links</h4>
             <ul className="quick-links-list">
-              <li><Link href="/">Home</Link></li>
-              <li><Link href="/#products" onClick={handleScrollToProducts}>Products</Link></li>
-              <li><Link href="/about">About Us</Link></li>
-              <li><Link href="/contact">Contact Us</Link></li>
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/#products" onClick={handleScrollToProducts}>Products</Link></li>
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
             </ul>
 
             <div className="footer-contact-info">

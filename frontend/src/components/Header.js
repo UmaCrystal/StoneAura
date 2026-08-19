@@ -182,7 +182,7 @@ export default function Header() {
         <nav className="nav">
           <Link to="/" className={activeNav === 'home' ? 'active' : ''}>Home</Link>
           <div className="nav-dropdown-trigger">
-            <Link href="/#products" className={`nav-dropdown-title ${activeNav === 'products' ? 'active' : ''}`}>
+            <Link to="/#products" className={`nav-dropdown-title ${activeNav === 'products' ? 'active' : ''}`}>
               Products
             </Link>
             <div className="mega-menu">
@@ -193,7 +193,7 @@ export default function Header() {
                     <ul className="mega-menu-links">
                       {TAXONOMY[col].map(cat => (
                         <li key={cat}>
-                          <Link href={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`} onClick={(e) => handleCategoryClick(e, col, cat)}>
+                          <Link to={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`} onClick={(e) => handleCategoryClick(e, col, cat)}>
                             <span className="cat-icon-inline">{getCategoryIcon(cat)}</span> {cat}
                           </Link>
                         </li>
@@ -204,8 +204,8 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <Link href="/about" className={activeNav === 'about' ? 'active' : ''}>About</Link>
-          <Link href="/contact" className={activeNav === 'contact' ? 'active' : ''}>Contact</Link>
+          <Link to="/about" className={activeNav === 'about' ? 'active' : ''}>About</Link>
+          <Link to="/contact" className={activeNav === 'contact' ? 'active' : ''}>Contact</Link>
         </nav>
 
         <a
@@ -242,7 +242,7 @@ export default function Header() {
           <div className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
             <button className="mobile-nav-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
             <div className="mobile-nav-links">
-              <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
+              <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
 
               <div className="mobile-accordion">
                 <button
@@ -268,7 +268,7 @@ export default function Header() {
                             {TAXONOMY[col].map(cat => (
                               <Link
                                 key={cat}
-                                href={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`}
+                                to={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`}
                                 onClick={(e) => {
                                   handleCategoryClick(e, col, cat);
                                   setMenuOpen(false);
@@ -285,8 +285,8 @@ export default function Header() {
                 )}
               </div>
 
-              <Link href="/about" onClick={() => setMenuOpen(false)}>About</Link>
-              <Link href="/contact" onClick={() => setMenuOpen(false)}>Contact</Link>
+              <Link to="/about" onClick={() => setMenuOpen(false)}>About</Link>
+              <Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link>
 
               <a
                 href="https://wa.me/+919104139899"
