@@ -58,7 +58,7 @@ export default function ContactPage() {
         <div className="contact-hero-content">
           <div className="contact-badge">✦ Let's Connect ✦</div>
           <h1>Contact <em>Us</em></h1>
-          <p>We are a fresh startup and we love hearing from our community. Get in touch for inquiries, collaborations, or just to say hi!</p>
+          <p>Get in touch with us for wholesale inquiries, bulk orders, or any support you need. Our team is always here to help!</p>
         </div>
       </section>
 

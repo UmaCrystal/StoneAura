@@ -18,14 +18,14 @@
 
 .logo { display: flex; align-items: center; flex-shrink: 0; }
 .logo-img {
-  height: 160px; /* લોગોની ઊંચાઈ સેટ કરી, પહોળાઈ આપમેળે સેટ થશે */
+  height: 50px; 
   width: auto;
   object-fit: contain;
   transition: transform 0.3s ease;
-  /* બોર્ડર, બેકગ્રાઉન્ડ અને પેડિંગ કાઢી નાખ્યું છે જેથી તે 3rd ઈમેજ જેવું ક્લીન દેખાય */
+  display: block;
 }
 .logo:hover .logo-img {
-  transform: scale(1.05); /* માઉસ લઈ જવાથી થોડો મોટો થશે */
+  transform: scale(1.05); 
 }
 .logo-icon {
   width: 40px; height: 40px; min-width: 40px;
@@ -404,7 +404,7 @@
   .header-inner { height: 58px; }
   .logo-text { font-size: 1.2rem; }
   .logo-tagline { display: none; }
-  .logo-img { height: 150px; }
+  .logo-img { height: 38px; }
   .logo-icon { width: 34px; height: 34px; min-width: 34px; font-size: 1rem; }
 }
 

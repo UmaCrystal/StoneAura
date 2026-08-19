@@ -16,25 +16,30 @@ footer {
 }
 
 .logo-brand-wrap {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
   margin-bottom: 20px;
   text-decoration: none;
 }
+
 .footer-logo-img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--gold);
-  box-shadow: 0 0 15px rgba(201, 168, 76, 0.35);
+  height: 55px; 
+  width: auto;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 8px 16px; 
+  border-radius: 8px; 
+  border: 1px solid rgba(201, 168, 76, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: var(--transition);
+  display: block;
 }
+
 .logo-brand-wrap:hover .footer-logo-img {
-  transform: scale(1.05);
-  box-shadow: 0 0 22px rgba(201, 168, 76, 0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
 }
+
 .footer-brand .logo-text {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.6rem;

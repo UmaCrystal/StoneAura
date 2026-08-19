@@ -165,6 +165,9 @@ def featured_products(request):
 def health_check(request):
     return Response({"status": "ok", "message": "Aurastone API is running"})
 
+@api_view(['GET'])
+def ping_server(request):
+    return Response({"status": "awake", "message": "Server is ready!"})
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])

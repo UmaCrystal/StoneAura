@@ -84,15 +84,20 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand Column */}
           <div className="footer-brand">
-            <a href="/" className="logo-brand-wrap">
-              <img src="/images/logo.jpeg" alt="Aurastone" className="footer-logo-img" />
-              <div>
-                <div className="logo-text">Aura<span>stone</span></div>
-                <div className="logo-tagline">More Than Beautiful</div>
-              </div>
-            </a>
+            <Link href="/" className="logo-brand-wrap">
+              <img src="/images/logo1.png" alt="Aurastone" className="footer-logo-img" />
+            </Link>
             <p className="brand-desc">
-              A fresh startup dedicated to premium gemstones and healing crystals. Crafted by nature, curated with passion. We represent a new generation of quality and transparency in the world of crystals.
+              With 15+ years of experience in the crystal & spiritual products industry, we offer premium-quality products at competitive wholesale prices.
+            </p>
+            <p className="brand-desc">
+              💎 Quality Products
+            </p>
+            <p className="brand-desc">
+              📦 Bulk Orders 
+            </p>
+            <p className="brand-desc">
+              🤝 Trusted Wholesale Partner
             </p>
             <div className="footer-social">
               <a href="https://wa.me/9104139899" target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="WhatsApp">
@@ -111,10 +116,10 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Quick Links</h4>
             <ul className="quick-links-list">
-              <li><a href="/">Home</a></li>
-              <li><a href="/#products" onClick={handleScrollToProducts}>Products</a></li>
-              <li><a href="/about">About Us</a></li>
-              <li><a href="/contact">Contact Us</a></li>
+              <li><Link href="/">Home</Link></li>
+              <li><Link href="/#products" onClick={handleScrollToProducts}>Products</Link></li>
+              <li><Link href="/about">About Us</Link></li>
+              <li><Link href="/contact">Contact Us</Link></li>
             </ul>
 
             <div className="footer-contact-info">
@@ -128,7 +133,7 @@ export default function Footer() {
               </div>
               <div className="contact-item">
                 <span className="contact-icon"><FaEnvelope /></span>
-                <span>Aurastonewholesale@gmail.com</span>
+                <span>aurastonewholesale@gmail.com</span>
               </div>
               {/* <div className="contact-item">
                 <span className="contact-icon"><FaBuilding /></span>

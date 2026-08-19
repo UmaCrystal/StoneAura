@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation,Link } from 'react-router-dom';
 import { 
   FaGem, FaCog, FaSignOutAlt, FaSignInAlt,
   FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, 
@@ -176,15 +176,15 @@ export default function Header() {
             <div className="logo-tagline">More Than Beautiful</div>
           </div>
         </a> */}
-        <a href="/" className="logo">
-          <img src="/images/logo-removebg-preview.png" alt="Aurastone" className="logo-img" />
-        </a>
+        <Link to="/" className="logo">
+          <img src="/images/logo1.png" alt="Aurastone" className="logo-img" />
+        </Link>
         <nav className="nav">
-          <a href="/" className={activeNav === 'home' ? 'active' : ''}>Home</a>
+          <Link to="/" className={activeNav === 'home' ? 'active' : ''}>Home</Link>
           <div className="nav-dropdown-trigger">
-            <a href="/#products" className={`nav-dropdown-title ${activeNav === 'products' ? 'active' : ''}`}>
+            <Link href="/#products" className={`nav-dropdown-title ${activeNav === 'products' ? 'active' : ''}`}>
               Products
-            </a>
+            </Link>
             <div className="mega-menu">
               <div className="mega-menu-grid">
                 {Object.keys(TAXONOMY).map(col => (
@@ -193,9 +193,9 @@ export default function Header() {
                     <ul className="mega-menu-links">
                       {TAXONOMY[col].map(cat => (
                         <li key={cat}>
-                          <a href={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`} onClick={(e) => handleCategoryClick(e, col, cat)}>
+                          <Link href={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`} onClick={(e) => handleCategoryClick(e, col, cat)}>
                             <span className="cat-icon-inline">{getCategoryIcon(cat)}</span> {cat}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -204,8 +204,8 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <a href="/about" className={activeNav === 'about' ? 'active' : ''}>About</a>
-          <a href="/contact" className={activeNav === 'contact' ? 'active' : ''}>Contact</a>
+          <Link href="/about" className={activeNav === 'about' ? 'active' : ''}>About</Link>
+          <Link href="/contact" className={activeNav === 'contact' ? 'active' : ''}>Contact</Link>
         </nav>
 
         <a
@@ -242,7 +242,7 @@ export default function Header() {
           <div className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
             <button className="mobile-nav-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
             <div className="mobile-nav-links">
-              <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
+              <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
 
               <div className="mobile-accordion">
                 <button
@@ -266,7 +266,7 @@ export default function Header() {
                         {activeMobileColl === col && (
                           <div className="mobile-sub-links">
                             {TAXONOMY[col].map(cat => (
-                              <a
+                              <Link
                                 key={cat}
                                 href={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`}
                                 onClick={(e) => {
@@ -275,7 +275,7 @@ export default function Header() {
                                 }}
                               >
                                 <span className="cat-icon-inline">{getCategoryIcon(cat)}</span> {cat}
-                              </a>
+                              </Link>
                             ))}
                           </div>
                         )}
@@ -285,8 +285,8 @@ export default function Header() {
                 )}
               </div>
 
-              <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-              <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
+              <Link href="/about" onClick={() => setMenuOpen(false)}>About</Link>
+              <Link href="/contact" onClick={() => setMenuOpen(false)}>Contact</Link>
 
               <a
                 href="https://wa.me/+919104139899"

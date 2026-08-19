@@ -22,8 +22,9 @@ export default function AboutPage() {
         <div className="about-story-grid">
           <div className="about-story-visual">
             <div className="visual-card">
-              <span className="visual-icon"><FaGem /></span>
-              <h3>Aurastone</h3>
+              <div className="visual-logo-box">
+                <img src="/images/logo1.png" alt="Aurastone Logo" className="about-logo-img" />
+              </div>
               <p className="visual-tag">More Than Beautiful</p>
               <div className="visual-gold-strip"></div>
             </div>
@@ -35,20 +36,23 @@ export default function AboutPage() {
               <div className="title-divider"></div>
             </div>
             <p>
-              Aurastone is a fresh, passionate startup born out of a deep love for natural gemstones and the healing power of crystals. We represent a new generation of crystal enthusiasts dedicated to bringing authenticity, clarity, and beauty to the modern world.
+              With 15+ years of experience in the natural gemstones, crystals, and spiritual products industry, AuraStone Wholesale is a trusted name in quality wholesale products.
             </p>
             <p>
-              Our journey began in Khambhat, the heart of gemstone craftsmanship. With a simple mission to make high-quality, authentic crystals accessible to everyone, we are driven by energy, transparency, and an absolute commitment to quality in every piece we source.
+              Our journey is built on strong sourcing relationships, industry expertise, and a commitment to providing authentic, premium-quality products at competitive wholesale prices.
             </p>
             <p>
-              Every bracelet and item in our collection is carefully selected, hand-polished to highlight its natural beauty, and checked for energetic purity. Whether you are looking for spiritual guidance, decor for your home, or a meaningful gift, we are here to connect you with the power of nature.
+              We proudly serve retailers, resellers, crystal stores, spiritual brands, and bulk buyers with a wide range of carefully selected products.
+            </p>
+            <p>
+              AuraStone Wholesale — Quality. Trust. Experience.
             </p>
 
             <div className="story-stats-grid">
               <div className="story-stat-card">
                 <span className="stat-icon"><FaHistory /></span>
                 <div className="stat-label">Founded</div>
-                <div className="stat-value">2021</div>
+                <div className="stat-value">2011</div>
               </div>
               <div className="story-stat-card">
                 <span className="stat-icon"><FaGlobeAsia /></span>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ProductProvider } from "./context/ProductContext";
@@ -56,6 +56,23 @@ function AppRoutes() {
 }
 
 function App() {
+  useEffect(() => {
+    const wakeUpBackend = async () => {
+      try {
+        const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
+        await fetch(`${API_URL}/products/?page_size=1`);
+      } catch (error) {
+        console.log("Waking up server in background...");
+      }
+    };
+
+    wakeUpBackend();
+
+    const interval = setInterval(wakeUpBackend, 600000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <AuthProvider>
       <ProductProvider>
