@@ -199,7 +199,11 @@ export default function Header() {
           <img src="/images/logo1.png" alt="Aurastone" className="logo-img" />
         </Link>
         <nav className="nav">
-          <Link to="/" className={activeNav === "home" ? "active" : ""}>
+          <Link
+            to="/"
+            className={activeNav === "home" ? "active" : ""}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
             Home
           </Link>
           <div className="nav-dropdown-trigger">
@@ -297,7 +301,13 @@ export default function Header() {
               ✕
             </button>
             <div className="mobile-nav-links">
-              <Link to="/" onClick={() => setMenuOpen(false)}>
+              <Link
+                to="/"
+                onClick={() => {
+                  setMenuOpen(false);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
                 Home
               </Link>
 
