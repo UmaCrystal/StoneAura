@@ -1,20 +1,37 @@
-
-import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { useNavigate, useLocation,Link } from 'react-router-dom';
-import { 
-  FaGem, FaCog, FaSignOutAlt, FaSignInAlt,
-  FaCircleNotch, FaBoxes, FaTree, FaFeatherAlt, 
-  FaSun, FaPray, FaStar, FaRing, FaCrown, FaOm, FaMountain, 
-  FaCircle, FaSeedling, FaCoins, FaEllipsisH, FaCertificate, 
-  FaHandPaper, FaHeart, FaSpa, FaSyncAlt, FaMagic
-} from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';
-import { useProducts } from '../context/ProductContext';
-import AccountButton from './AccountButton';
-import './Header.css';
-
-
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import {
+  FaGem,
+  FaCog,
+  FaSignOutAlt,
+  FaSignInAlt,
+  FaCircleNotch,
+  FaBoxes,
+  FaTree,
+  FaFeatherAlt,
+  FaSun,
+  FaPray,
+  FaStar,
+  FaRing,
+  FaCrown,
+  FaOm,
+  FaMountain,
+  FaCircle,
+  FaSeedling,
+  FaCoins,
+  FaEllipsisH,
+  FaCertificate,
+  FaHandPaper,
+  FaHeart,
+  FaSpa,
+  FaSyncAlt,
+  FaMagic,
+} from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
+import { useProducts } from "../context/ProductContext";
+import AccountButton from "./AccountButton";
+import "./Header.css";
 
 const CATEGORY_ICONS = {
   "Gemstone Bracelets": <FaCircleNotch />,
@@ -24,13 +41,13 @@ const CATEGORY_ICONS = {
   "Selenite Stone": <FaFeatherAlt />,
   "Orgone Pyramid": <FaGem />,
   "Healing Crystals": <FaMagic />,
-  "Chips": <FaMagic />,
-  "CHIPS": <FaMagic />,
-  "Rudraksha": <FaSun />,
+  Chips: <FaMagic />,
+  CHIPS: <FaMagic />,
+  Rudraksha: <FaSun />,
   "Gemstone Angels": <FaPray />,
   "Unique Products": <FaStar />,
-  "Hangings": <FaStar />,
-  "HANGINGS": <FaStar />,
+  Hangings: <FaStar />,
+  HANGINGS: <FaStar />,
   "Jap Mala": <FaRing />,
   "Fancy Product": <FaCrown />,
   "Crystal Shivling": <FaOm />,
@@ -38,23 +55,23 @@ const CATEGORY_ICONS = {
   "Gemstone Ball": <FaCircle />,
   "Crystal Flowers": <FaSeedling />,
   "Zibu Coins": <FaCoins />,
-  "Tortoise": <FaSeedling />,
-  "TORTOISE": <FaSeedling />,
+  Tortoise: <FaSeedling />,
+  TORTOISE: <FaSeedling />,
   "Beads String 8mm": <FaEllipsisH />,
   "Gemstone Pendant": <FaCertificate />,
-  "Pendants": <FaCertificate />,
+  Pendants: <FaCertificate />,
   "Palm Stone": <FaHandPaper />,
-  "Gemstone": <FaGem />,
+  Gemstone: <FaGem />,
   "Crystal Heart Stone": <FaHeart />,
   "Crystal Rakhi": <FaStar />,
   "Roller And Guasha": <FaSpa />,
   "Tumbled Bracelets": <FaSyncAlt />,
-  "Anklets": <FaSpa />,
+  Anklets: <FaSpa />,
   "Bracelet Chip": <FaSyncAlt />,
-  "Ring": <FaRing />,
-  "ANKLET": <FaSpa />,
+  Ring: <FaRing />,
+  ANKLET: <FaSpa />,
   "BRACELET CHIP": <FaSyncAlt />,
-  "RING": <FaRing />
+  RING: <FaRing />,
 };
 
 const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;
@@ -62,7 +79,7 @@ const getCategoryIcon = (cat) => CATEGORY_ICONS[cat] || <FaGem />;
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeNav, setActiveNav] = useState('home');
+  const [activeNav, setActiveNav] = useState("home");
   const { user, login, logout } = useAuth();
   const { taxonomy: TAXONOMY } = useProducts();
   const navigate = useNavigate();
@@ -81,10 +98,12 @@ export default function Header() {
 
   const handleCategoryClick = (e, col, cat) => {
     e.preventDefault();
-    navigate(`/?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`);
+    navigate(
+      `/?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`,
+    );
     setTimeout(() => {
-      const el = document.getElementById('products');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      const el = document.getElementById("products");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
     }, 100);
   };
 
@@ -93,50 +112,50 @@ export default function Header() {
       setScrolled(window.scrollY > 20);
       const path = location.pathname;
 
-      if (path === '/about') {
-        setActiveNav('about');
+      if (path === "/about") {
+        setActiveNav("about");
         return;
       }
-      if (path === '/contact') {
-        setActiveNav('contact');
+      if (path === "/contact") {
+        setActiveNav("contact");
         return;
       }
-      if (path === '/products') {
-        setActiveNav('products');
+      if (path === "/products") {
+        setActiveNav("products");
         return;
       }
 
       // On home path "/"
       const scrollPos = window.scrollY;
-      const contactEl = document.getElementById('contact');
-      const aboutEl = document.getElementById('about');
-      const productsEl = document.getElementById('products');
+      const contactEl = document.getElementById("contact");
+      const aboutEl = document.getElementById("about");
+      const productsEl = document.getElementById("products");
 
       if (contactEl && scrollPos >= contactEl.offsetTop - 180) {
-        setActiveNav('contact');
+        setActiveNav("contact");
       } else if (aboutEl && scrollPos >= aboutEl.offsetTop - 180) {
-        setActiveNav('about');
+        setActiveNav("about");
       } else if (productsEl && scrollPos >= productsEl.offsetTop - 180) {
-        setActiveNav('products');
+        setActiveNav("products");
       } else {
-        setActiveNav('home');
+        setActiveNav("home");
       }
     };
 
     handleScrollAndRoute();
-    window.addEventListener('scroll', handleScrollAndRoute);
-    return () => window.removeEventListener('scroll', handleScrollAndRoute);
+    window.addEventListener("scroll", handleScrollAndRoute);
+    return () => window.removeEventListener("scroll", handleScrollAndRoute);
   }, [location.pathname]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (menuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [menuOpen]);
 
@@ -167,7 +186,7 @@ export default function Header() {
   };
 
   return (
-    <header className={`header${scrolled ? ' scrolled' : ''}`}>
+    <header className={`header${scrolled ? " scrolled" : ""}`}>
       <div className="header-inner">
         {/* <a href="/" className="logo">
           <img src="/images/logo-removebg-preview.png" alt="Aurastone" className="logo-img" />
@@ -180,21 +199,38 @@ export default function Header() {
           <img src="/images/logo1.png" alt="Aurastone" className="logo-img" />
         </Link>
         <nav className="nav">
-          <Link to="/" className={activeNav === 'home' ? 'active' : ''}>Home</Link>
+          <Link to="/" className={activeNav === "home" ? "active" : ""}>
+            Home
+          </Link>
           <div className="nav-dropdown-trigger">
-            <Link to="/#products" className={`nav-dropdown-title ${activeNav === 'products' ? 'active' : ''}`}>
+            <Link
+              to="/#products"
+              className={`nav-dropdown-title ${activeNav === "products" ? "active" : ""}`}
+              onClick={(e) => {
+                if (location.pathname === "/") {
+                  const el = document.getElementById("products");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
               Products
             </Link>
             <div className="mega-menu">
               <div className="mega-menu-grid">
-                {Object.keys(TAXONOMY).map(col => (
+                {Object.keys(TAXONOMY).map((col) => (
                   <div key={col} className="mega-menu-column">
                     <div className="mega-menu-header">{col}</div>
                     <ul className="mega-menu-links">
-                      {TAXONOMY[col].map(cat => (
+                      {TAXONOMY[col].map((cat) => (
                         <li key={cat}>
-                          <Link to={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`} onClick={(e) => handleCategoryClick(e, col, cat)}>
-                            <span className="cat-icon-inline">{getCategoryIcon(cat)}</span> {cat}
+                          <Link
+                            to={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`}
+                            onClick={(e) => handleCategoryClick(e, col, cat)}
+                          >
+                            <span className="cat-icon-inline">
+                              {getCategoryIcon(cat)}
+                            </span>{" "}
+                            {cat}
                           </Link>
                         </li>
                       ))}
@@ -204,8 +240,15 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <Link to="/about" className={activeNav === 'about' ? 'active' : ''}>About</Link>
-          <Link to="/contact" className={activeNav === 'contact' ? 'active' : ''}>Contact</Link>
+          <Link to="/about" className={activeNav === "about" ? "active" : ""}>
+            About
+          </Link>
+          <Link
+            to="/contact"
+            className={activeNav === "contact" ? "active" : ""}
+          >
+            Contact
+          </Link>
         </nav>
 
         <a
@@ -226,7 +269,7 @@ export default function Header() {
         </div>
 
         <button
-          className={`hamburger${menuOpen ? ' active' : ''}`}
+          className={`hamburger${menuOpen ? " active" : ""}`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
@@ -238,34 +281,55 @@ export default function Header() {
       </div>
 
       {createPortal(
-        <div className={`mobile-nav-overlay${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)}>
-          <div className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
-            <button className="mobile-nav-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
+        <div
+          className={`mobile-nav-overlay${menuOpen ? " open" : ""}`}
+          onClick={() => setMenuOpen(false)}
+        >
+          <div
+            className="mobile-nav-drawer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="mobile-nav-close"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              ✕
+            </button>
             <div className="mobile-nav-links">
-              <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+              <Link to="/" onClick={() => setMenuOpen(false)}>
+                Home
+              </Link>
 
               <div className="mobile-accordion">
                 <button
                   type="button"
-                  className={`mobile-accordion-btn${mobileCollectionsOpen ? ' open' : ''}`}
-                  onClick={() => setMobileCollectionsOpen(!mobileCollectionsOpen)}
+                  className={`mobile-accordion-btn${mobileCollectionsOpen ? " open" : ""}`}
+                  onClick={() =>
+                    setMobileCollectionsOpen(!mobileCollectionsOpen)
+                  }
                 >
-                  Collections <span>{mobileCollectionsOpen ? '▼' : '▶'}</span>
+                  Collections <span>{mobileCollectionsOpen ? "▼" : "▶"}</span>
                 </button>
                 {mobileCollectionsOpen && (
                   <div className="mobile-accordion-content">
-                    {Object.keys(TAXONOMY).map(col => (
+                    {Object.keys(TAXONOMY).map((col) => (
                       <div key={col} className="mobile-sub-accordion">
                         <button
                           type="button"
-                          className={`mobile-sub-accordion-btn${activeMobileColl === col ? ' active' : ''}`}
-                          onClick={() => setActiveMobileColl(activeMobileColl === col ? null : col)}
+                          className={`mobile-sub-accordion-btn${activeMobileColl === col ? " active" : ""}`}
+                          onClick={() =>
+                            setActiveMobileColl(
+                              activeMobileColl === col ? null : col,
+                            )
+                          }
                         >
-                          {col} <span>{activeMobileColl === col ? '−' : '+'}</span>
+                          {col}{" "}
+                          <span>{activeMobileColl === col ? "−" : "+"}</span>
                         </button>
                         {activeMobileColl === col && (
                           <div className="mobile-sub-links">
-                            {TAXONOMY[col].map(cat => (
+                            {TAXONOMY[col].map((cat) => (
                               <Link
                                 key={cat}
                                 to={`/#products?collection=${encodeURIComponent(col)}&category=${encodeURIComponent(cat)}`}
@@ -274,7 +338,10 @@ export default function Header() {
                                   setMenuOpen(false);
                                 }}
                               >
-                                <span className="cat-icon-inline">{getCategoryIcon(cat)}</span> {cat}
+                                <span className="cat-icon-inline">
+                                  {getCategoryIcon(cat)}
+                                </span>{" "}
+                                {cat}
                               </Link>
                             ))}
                           </div>
@@ -285,8 +352,12 @@ export default function Header() {
                 )}
               </div>
 
-              <Link to="/about" onClick={() => setMenuOpen(false)}>About</Link>
-              <Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link>
+              <Link to="/about" onClick={() => setMenuOpen(false)}>
+                About
+              </Link>
+              <Link to="/contact" onClick={() => setMenuOpen(false)}>
+                Contact
+              </Link>
 
               <a
                 href="https://wa.me/+919104139899"
@@ -304,30 +375,59 @@ export default function Header() {
               {user ? (
                 <div className="mobile-user-section">
                   <div className="mobile-user-info">
-                    <div className="mobile-avatar">{user.username[0].toUpperCase()}</div>
+                    <div className="mobile-avatar">
+                      {user.username[0].toUpperCase()}
+                    </div>
                     <div>
                       <div className="mobile-username">{user.username}</div>
-                      <div className="mobile-userole">{user.is_admin ? "Administrator" : "User"}</div>
+                      <div className="mobile-userole">
+                        {user.is_admin ? "Administrator" : "User"}
+                      </div>
                     </div>
                   </div>
                   {user.is_admin && (
-                    <button className="mobile-nav-btn admin-btn" onClick={() => { navigate("/admin-dashboard"); setMenuOpen(false); }}>
+                    <button
+                      className="mobile-nav-btn admin-btn"
+                      onClick={() => {
+                        navigate("/admin-dashboard");
+                        setMenuOpen(false);
+                      }}
+                    >
                       <FaCog /> Admin Dashboard
                     </button>
                   )}
-                  <button className="mobile-nav-btn logout-btn" onClick={() => { logout(); setMenuOpen(false); }}>
+                  <button
+                    className="mobile-nav-btn logout-btn"
+                    onClick={() => {
+                      logout();
+                      setMenuOpen(false);
+                    }}
+                  >
                     <FaSignOutAlt /> Log Out
                   </button>
                 </div>
               ) : !mobileLoginOpen ? (
-                <button className="mobile-nav-btn login-btn" onClick={() => { setMobileLoginOpen(true); setError(""); }}>
+                <button
+                  className="mobile-nav-btn login-btn"
+                  onClick={() => {
+                    setMobileLoginOpen(true);
+                    setError("");
+                  }}
+                >
                   <FaSignInAlt /> Log In
                 </button>
               ) : (
-                <form onSubmit={handleMobileLogin} className="mobile-login-form">
+                <form
+                  onSubmit={handleMobileLogin}
+                  className="mobile-login-form"
+                >
                   <div className="mobile-login-header">
                     <h3>Sign In</h3>
-                    <button type="button" className="mobile-login-back" onClick={() => setMobileLoginOpen(false)}>
+                    <button
+                      type="button"
+                      className="mobile-login-back"
+                      onClick={() => setMobileLoginOpen(false)}
+                    >
                       ← Back
                     </button>
                   </div>
@@ -336,7 +436,7 @@ export default function Header() {
                     <input
                       type="text"
                       value={username}
-                      onChange={e => setUsername(e.target.value)}
+                      onChange={(e) => setUsername(e.target.value)}
                       placeholder="Enter username"
                       required
                     />
@@ -346,13 +446,17 @@ export default function Header() {
                     <input
                       type="password"
                       value={password}
-                      onChange={e => setPassword(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter password"
                       required
                     />
                   </div>
                   {error && <div className="mobile-login-error">{error}</div>}
-                  <button type="submit" className="mobile-login-submit" disabled={loading}>
+                  <button
+                    type="submit"
+                    className="mobile-login-submit"
+                    disabled={loading}
+                  >
                     {loading ? "Signing in..." : "Sign In"}
                   </button>
                 </form>
@@ -360,7 +464,7 @@ export default function Header() {
             </div>
           </div>
         </div>,
-        document.body
+        document.body,
       )}
     </header>
   );
