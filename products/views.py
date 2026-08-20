@@ -6,7 +6,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db.models import Q
 from .models import Product, WristSize, ContactMessage
 from .serializers import ProductSerializer, WristSizeSerializer, ContactMessageSerializer
-
+from rest_framework.pagination import PageNumberPagination
 
 from rest_framework.pagination import PageNumberPagination
 
@@ -30,6 +30,11 @@ class ProductViewSet(viewsets.ModelViewSet):
             return [AllowAny()]
         return [IsAdminUser()]
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response['Cache-Control'] = 'public, s-maxage=3600, stale-while-revalidate=86400'
+        return response
+
     def get_queryset(self):
         qs = super().get_queryset()
         collection = self.request.query_params.get("collection")
@@ -37,6 +42,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         min_price = self.request.query_params.get("min_price")
         max_price = self.request.query_params.get("max_price")
         stone     = self.request.query_params.get("stone_type")
+        
         if collection:
             qs = qs.filter(collection__icontains=collection)
         if category:
