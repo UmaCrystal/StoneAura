@@ -1,10 +1,11 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env file if it exists
 load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production-use-env-var')
@@ -27,7 +28,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # serve static files reliably
+    'whitenoise.middleware.WhiteNoiseMiddleware',   
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,7 +59,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 import dj_database_url
 
-# Database Configuration
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
@@ -102,12 +102,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = []
 
-# React production build static assets
 _REACT_STATIC = BASE_DIR / 'frontend' / 'build' / 'static'
 if _REACT_STATIC.exists():
     STATICFILES_DIRS.append(_REACT_STATIC)
 
-# Collect and serve local product images as static files under /static/images/ prefix
 _REACT_IMAGES = BASE_DIR / 'frontend' / 'build' / 'images'
 _PUBLIC_IMAGES = BASE_DIR / 'frontend' / 'public' / 'images'
 if _REACT_IMAGES.exists():
@@ -117,7 +115,6 @@ elif _PUBLIC_IMAGES.exists():
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# WhiteNoise: serve compressed static files efficiently
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
@@ -125,7 +122,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ── REST Framework ──────────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -143,33 +139,28 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 40,
 }
 
-from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
 }
 
-# ── CORS & CSRF ──────────────────────────────────────────────────────────────
-CORS_ALLOWED_ORIGINS = [
+
+DEFAULT_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'https://stone-aura-nu.vercel.app',
 ]
+
+CORS_ALLOWED_ORIGINS = list(DEFAULT_ORIGINS)
 _cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS')
 if _cors_origins:
-    # CORS_ALLOWED_ORIGINS (https:// સાથે હોવું જોઈએ)
-    CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'https://stone-aura-nu.vercel.app').split(',')
+    CORS_ALLOWED_ORIGINS.extend([o.strip() for o in _cors_origins.split(',') if o.strip()])
 
-    # CSRF_TRUSTED_ORIGINS (https:// સાથે હોવું જોઈએ)
-    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://stone-aura-nu.vercel.app').split(',')
-
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-]
+CSRF_TRUSTED_ORIGINS = list(DEFAULT_ORIGINS)
 _csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS')
 if _csrf_origins:
-    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in _csrf_origins.split(',') if origin.strip()]
+    CSRF_TRUSTED_ORIGINS.extend([o.strip() for o in _csrf_origins.split(',') if o.strip()])
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
@@ -178,7 +169,10 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken', 'x-requested-with',
 ]
 
-# ── Security Headers ─────────────────────────────────────────────────────────
+
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
