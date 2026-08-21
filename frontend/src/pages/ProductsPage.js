@@ -12,14 +12,13 @@ import ProductModal from "../components/ProductModal";
 import { useProducts } from "../context/ProductContext";
 import "./ProductsPage.css";
 
-// Maps clean display names -> all raw DB category codes they represent
 const CATEGORY_ALIASES = {
   "Gemstone Tree": ["Gemstone Tree", "TREE"],
   "Tumbled Stones": ["Tumbled Stones", "TUMBLE STONE"],
   "Pyramid Stone": ["Pyramid Stone", "PYRAMIDS"],
   "Selenite Stone": ["Selenite Stone", "SELENITE PRODUCTS"],
   "Orgone Pyramid": ["Orgone Pyramid", "PYRAMIDS"],
-  "Healing Crystals": ["Healing Crystals", "CHIPS"],
+  "Healing Crystals": ["Healing Crystals"],
   Chips: ["Chips", "CHIPS"],
   "Unique Products": ["Unique Products", "HANGINGS"],
   Hangings: ["Hangings", "HANGINGS"],
@@ -37,7 +36,7 @@ const CATEGORY_ALIASES = {
   "TUMBLE STONE": ["Tumbled Stones", "TUMBLE STONE"],
   PYRAMIDS: ["Pyramid Stone", "Orgone Pyramid", "PYRAMIDS"],
   "SELENITE PRODUCTS": ["Selenite Stone", "SELENITE PRODUCTS"],
-  CHIPS: ["Healing Crystals", "Chips", "CHIPS"],
+  CHIPS: ["Chips", "CHIPS"],
   HANGINGS: ["Unique Products", "Hangings", "HANGINGS"],
   ROUGH: ["Rough Stone", "ROUGH"],
   "ZIBU COINS": ["Zibu Coins", "ZIBU COINS"],
@@ -103,8 +102,7 @@ export default function ProductsPage() {
   const [catFilterOpen, setCatFilterOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
-  // ── Infinite Scrolling States ──
-  const [visibleCount, setVisibleCount] = useState(12); // શરૂઆતમાં 12 પ્રોડક્ટ દેખાશે
+  const [visibleCount, setVisibleCount] = useState(12); 
   const loaderRef = useRef(null);
 
   const filterRef = useRef(null);
@@ -112,24 +110,24 @@ export default function ProductsPage() {
   const sortRef = useRef(null);
   const searchRef = useRef(null);
 
-  /* ── Filter + search ────────────────────────────────────────────────────── */
   useEffect(() => {
     let result = [...products];
-    if (activeCollection !== "All") {
+    if (activeCategory !== "All") {
+      const allowed = (
+        CATEGORY_ALIASES[activeCategory] || [activeCategory]
+      ).map((c) => c.toLowerCase());
+
+      result = result.filter((p) =>
+        allowed.includes((p.category || "Gemstone Bracelets").toLowerCase()),
+      );
+    } else if (activeCollection !== "All") {
       result = result.filter(
         (p) =>
           (p.collection || "BEST SELLERS").toLowerCase() ===
           activeCollection.toLowerCase(),
       );
     }
-    if (activeCategory !== "All") {
-      const allowed = (
-        CATEGORY_ALIASES[activeCategory] || [activeCategory]
-      ).map((c) => c.toLowerCase());
-      result = result.filter((p) =>
-        allowed.includes((p.category || "Gemstone Bracelets").toLowerCase()),
-      );
-    }
+
     if (activeFilter !== "All") {
       result = result.filter(
         (p) =>
@@ -137,6 +135,7 @@ export default function ProductsPage() {
           p.name?.toLowerCase().includes(activeFilter.toLowerCase()),
       );
     }
+
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -148,7 +147,6 @@ export default function ProductsPage() {
       );
     }
 
-    // Client-side sorting
     if (sortBy === "name") {
       result.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortBy === "-name") {
@@ -164,7 +162,6 @@ export default function ProductsPage() {
     }
 
     setFiltered(result);
-    // જ્યારે પણ ફિલ્ટર બદલાય, ત્યારે સ્ક્રીન પર પાછી 12 પ્રોડક્ટ કરી દો
     setVisibleCount(12);
   }, [
     search,
@@ -175,7 +172,6 @@ export default function ProductsPage() {
     sortBy,
   ]);
 
-  // Scroll to products grid when filters change to specific choices
   useEffect(() => {
     if (
       activeFilter !== "All" ||
@@ -189,11 +185,9 @@ export default function ProductsPage() {
     }
   }, [activeFilter, activeCollection, activeCategory]);
 
-  /* ── Infinite Scroll Observer ──────────────────────────────────────────── */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // જો યુઝર છેલ્લે પહોંચે અને હજુ પ્રોડક્ટ્સ બાકી હોય, તો બીજી 12 ઉમેરો
         if (entries[0].isIntersecting && visibleCount < filtered.length) {
           setVisibleCount((prevCount) => prevCount + 12);
         }
@@ -213,7 +207,6 @@ export default function ProductsPage() {
     };
   }, [visibleCount, filtered.length]);
 
-  /* ── Close dropdowns on outside click ──────────────────────────────────── */
   useEffect(() => {
     const handler = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target))
@@ -227,14 +220,12 @@ export default function ProductsPage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /* ── Back-to-top ────────────────────────────────────────────────────────── */
   useEffect(() => {
     const onScroll = () => setBackTop(window.scrollY > 400);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ── Fade-in observer ───────────────────────────────────────────────────── */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) =>
@@ -245,9 +236,8 @@ export default function ProductsPage() {
     );
     document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [filtered, visibleCount]); // Added visibleCount to dependency
+  }, [filtered, visibleCount]);
 
-  /* ── Particles ──────────────────────────────────────────────────────────── */
   useEffect(() => {
     const container = document.getElementById("particles");
     if (!container || container.childElementCount > 0) return;
@@ -311,12 +301,10 @@ export default function ProductsPage() {
     setSortOpen(false);
   };
 
-  // માત્ર એટલી જ પ્રોડક્ટ લો જે visibleCount માં સેટ કરી છે
   const displayedProducts = filtered.slice(0, visibleCount);
 
   return (
     <>
-      {/* ── HERO ── */}
       <section className="hero" id="home">
         <div className="hero-particles" id="particles"></div>
         <div className="hero-content">
@@ -364,7 +352,6 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* ── TRUST STRIP ── */}
       <div className="trust-strip">
         <div className="trust-inner">
           {[
@@ -400,7 +387,6 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* ── STUNNING COLLECTIONS HIGHLIGHT SECTION ── */}
       <section className="home-collections-showcase">
         <div className="showcase-inner">
           <div className="section-header">
@@ -483,10 +469,8 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* ── TOOLBAR ── */}
       <div className="toolbar" id="products">
         <div className="toolbar-inner">
-          {/* Search */}
           <div className="tb-search">
             <svg
               className="tb-search-icon"
@@ -520,7 +504,6 @@ export default function ProductsPage() {
             )}
           </div>
 
-          {/* Filter dropdown */}
           <div className="tb-dropdown-wrap" ref={filterRef}>
             <button
               className={`tb-btn${filterOpen ? " open" : ""}${activeFilter !== "All" ? " active" : ""}`}
@@ -610,7 +593,6 @@ export default function ProductsPage() {
             )}
           </div>
 
-          {/* Category filter dropdown */}
           <div className="tb-dropdown-wrap" ref={catFilterRef}>
             <button
               className={`tb-btn${catFilterOpen ? " open" : ""}${activeCategory !== "All" ? " active" : ""}`}
@@ -727,7 +709,6 @@ export default function ProductsPage() {
             )}
           </div>
 
-          {/* Sort dropdown */}
           <div className="tb-dropdown-wrap" ref={sortRef}>
             <button
               className={`tb-btn${sortOpen ? " open" : ""}`}
@@ -794,7 +775,6 @@ export default function ProductsPage() {
             )}
           </div>
 
-          {/* Active filter pill + clear */}
           {(activeFilter !== "All" ||
             activeCollection !== "All" ||
             activeCategory !== "All" ||
@@ -814,7 +794,6 @@ export default function ProductsPage() {
             </button>
           )}
 
-          {/* Count */}
           {!loading && !error && (
             <span className="tb-count">
               <strong>{filtered.length}</strong>{" "}
@@ -824,7 +803,6 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* ── PRODUCTS SECTION ── */}
       <section className="products-section">
         <div className="section-header fade-in">
           <h2>
@@ -851,7 +829,6 @@ export default function ProductsPage() {
           </p>
         </div>
 
-        {/* Loading skeletons */}
         {loading && (
           <div className="products-grid">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -867,7 +844,6 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Error state */}
         {error && !loading && (
           <div className="error-state">
             <div className="error-icon">
@@ -880,7 +856,6 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Empty filter result */}
         {!loading && !error && filtered.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon">
@@ -904,7 +879,6 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Product grid (with Infinite Scrolling support) */}
         {!loading && !error && filtered.length > 0 && (
           <>
             <div className="products-grid">
@@ -915,7 +889,6 @@ export default function ProductsPage() {
               ))}
             </div>
 
-            {/* Infinite Scroll Loader (આ ભાગ દેખાશે એટલે નવી પ્રોડક્ટ્સ લોડ થશે) */}
             {visibleCount < filtered.length && (
               <div
                 ref={loaderRef}
@@ -938,12 +911,10 @@ export default function ProductsPage() {
         )}
       </section>
 
-      {/* Modal */}
       {modalProduct && (
         <ProductModal product={modalProduct} onClose={closeModal} />
       )}
 
-      {/* Back to top */}
       <button
         className={`back-top${backTop ? " visible" : ""}`}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
