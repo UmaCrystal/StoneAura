@@ -108,10 +108,10 @@ export default function ProductCard({ product, onOpenModal }) {
           {product.stone_type && (
             <span className="stone-type">{product.stone_type}</span>
           )}
-          <div className="card-rating" aria-label="4.8 out of 5 stars">
+          {/* <div className="card-rating" aria-label="4.8 out of 5 stars">
             <span className="stars" aria-hidden="true">★★★★★</span>
             <span>(4.8)</span>
-          </div>
+          </div> */}
         </div>
 
         <h3 className="card-title">{product.name}</h3>
@@ -153,10 +153,10 @@ export default function ProductCard({ product, onOpenModal }) {
 
         {/* ── Footer: price + tiers + CTA ── */}
         <div className="card-footer">
-          {product.price ? (
+          {product.price_50pc || product.price ? (
             <div className="price-wrap">
-              <span className="price">₹{product.price}</span>
-              <span className="price-unit">{product.price_unit || 'per piece'}</span>
+              <span className="price">₹{product.price_50pc || product.price}</span>
+              <span className="price-unit">{product.price_50pc ? '50pc' : (product.price_unit || 'per piece')}</span>
             </div>
           ) : (
             <div className="price-wrap">
@@ -169,8 +169,8 @@ export default function ProductCard({ product, onOpenModal }) {
               {product.price_10pc && (
                 <span className="tier-tag">10pc: ₹{product.price_10pc}</span>
               )}
-              {product.price_50pc && (
-                <span className="tier-tag">50pc: ₹{product.price_50pc}</span>
+              {product.price && (
+                <span className="tier-tag">per piece: ₹{product.price}</span>
               )}
             </div>
           )}
